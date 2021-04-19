@@ -1,0 +1,13 @@
+:root {
+  /* colors */
+  --primary-clr: #ff6600;
+  --black-clr: #1c1c1c;
+  --light-gary-clr: #e6ecf0;
+  --water-gary-clr: #f5f8fa;
+  --cement-gary-clr: #657786;
+}
+
+* {
+  font-size: 16px;
+  font-family: 'Noto Sans TC';
+}

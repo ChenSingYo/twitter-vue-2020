@@ -7,16 +7,16 @@
 </template>
 
 <script>
-  import 'bootstrap'
-  import 'bootstrap/dist/css/bootstrap.min.css'
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-  export default {
-    name: 'App',
-  }
+export default {
+  name: "App"
+};
 </script>
 
 <style lang="scss" scoped>
-  main {
-    height: 100vh;
-  }
+main {
+  height: 100vh;
+}
 </style>

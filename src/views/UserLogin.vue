@@ -74,3 +74,67 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.container {
+  margin-top: 50px;
+  width: 50%;
+  justify-content: center;
+
+  .header {
+  text-align: center;
+  margin-bottom: 20px;
+  }
+  .title-bar {
+  font-weight: 700;
+  }
+  .form-label-group {
+    position: relative;
+    height: 50px;
+    margin-bottom: 30px;
+    background: #f5f8fa;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    label {
+      position: absolute;
+      font-size: .8rem;
+      height: 25px;
+      width: 100%;
+      padding: 5px 0 0 10px;
+      top: 0;
+      cursor: text;
+    }
+    .form-control {
+      height: 25px;
+      background: #f5f8fa;
+      padding: 0px 10px;
+      outline-width: 0;
+    }
+    .button-div {
+      height: auto;
+      background: none;
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+    }
+    .submit-button {
+      margin-bottom: 20px;
+    }
+    .form-bottom {
+      text-align: end;
+    }
+    .form-control:focus {
+      box-shadow: none;
+      border-color: #ff6600;
+    }
+  }
+}
+
+/* mobile 尺寸 */
+@media screen and (max-width: 768px) {
+  .container {
+    width: 80%;
+  }
+}
+</style>

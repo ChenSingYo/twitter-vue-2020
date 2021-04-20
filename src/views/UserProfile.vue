@@ -12,18 +12,18 @@
 </template>
 
 <script>
-  import NavSidebar from '../components/NavSidebar'
-  import UserInfo from '../components/UserInfo'
-  import RecommendSidebar from '../components/RecommendSidebar'
+import NavSidebar from '../components/NavSidebar'
+import UserInfo from '../components/UserInfo'
+import RecommendSidebar from '../components/RecommendSidebar'
 
-  export default {
-    name: 'UserProfile',
-    components: {
-      NavSidebar,
-      UserInfo,
-      RecommendSidebar,
-    },
+export default {
+  name: 'UserProfile',
+  components: {
+    NavSidebar,
+    UserInfo,
+    RecommendSidebar
   }
+}
 </script>
 
 <style lang="scss" scoped>

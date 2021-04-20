@@ -5,13 +5,13 @@
 </template>
 
 <script>
-  export default {
-    name: 'UserInfo',
-  }
+export default {
+  name: 'UserInfo'
+}
 </script>
 
 <style lang="scss" scoped>
-  .info {
-    flex-grow: 1;
-  }
+.info {
+  flex-grow: 1;
+}
 </style>

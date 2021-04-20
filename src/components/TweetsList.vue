@@ -23,14 +23,14 @@
 </template>
 
 <script>
-import TweetMessageCell from "../components/TweetMessageCell";
+import TweetMessageCell from '../components/TweetMessageCell'
 
 export default {
-  name: "TweetsList",
+  name: 'TweetsList',
   components: {
     TweetMessageCell
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -7,20 +7,20 @@
 </template>
 
 <script>
-  import NavSidebar from '../components/NavSidebar'
+import NavSidebar from '../components/NavSidebar'
 
-  export default {
-    name: 'UserAccountSetting',
-    components: {
-      NavSidebar,
-    },
+export default {
+  name: 'UserAccountSetting',
+  components: {
+    NavSidebar
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  .setting-container {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-  }
+.setting-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
 </style>

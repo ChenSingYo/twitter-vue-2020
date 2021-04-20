@@ -96,13 +96,13 @@
 
 <script>
 export default {
-  name: "NavSiderBar",
-  data() {
+  name: 'NavSiderBar',
+  data () {
     return {
       // isActive: false
-    };
+    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

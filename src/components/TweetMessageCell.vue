@@ -29,8 +29,8 @@
 
 <script>
 export default {
-  name: "TweetMessageCell"
-};
+  name: 'TweetMessageCell'
+}
 </script>
 
 <style lang="scss" scoped>
@@ -63,7 +63,7 @@ export default {
   .time {
     &::before {
       display: inline-block;
-      content: "・";
+      content: '・';
     }
   }
 

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import TweetsMain from '../views/TweetsMain.vue'
 import UserLogin from './../views/UserLogin.vue'
 import UserRegist from './../views/UserRegist.vue'
+import AdminLogin from './../views/AdminLogin.vue'
 
 Vue.use(VueRouter)
 
@@ -25,6 +26,24 @@ const routes = [
     name: 'user-regist',
     component: UserRegist
   },
+  // admin login
+  {
+    path: '/admin-login',
+    name: 'admin-login',
+    component: AdminLogin
+  },
+  // admin tweets
+  {
+    path: '/admin-tweets',
+    name: 'admin-tweets',
+    component: () => import('../views/AdminTweets.vue')
+  },
+  // admin users
+  {
+    path: '/admin-users',
+    name: 'admin-users',
+    component: () => import('../views/AdminUsers.vue')
+  },
   {
     path: '/tweets',
     name: 'tweets-main',
@@ -33,12 +52,12 @@ const routes = [
   {
     path: '/profile',
     name: 'user-profile',
-    component: () => import('../views/UserProfile.vue'),
+    component: () => import('../views/UserProfile.vue')
   },
   {
     path: '/setting',
     name: 'setting',
-    component: () => import('../views/UserAccountSetting.vue'),
+    component: () => import('../views/UserAccountSetting.vue')
   },
   // not found
   {
@@ -46,7 +65,6 @@ const routes = [
     name: 'not-found',
     component: () => import('./../views/NotFound.vue')
   }
-  
 ]
 
 const router = new VueRouter({

@@ -2,7 +2,7 @@
   <div class="container">
     <!-- logo bar-->
     <div class="logo-bar header">
-      <img src="./../img/Logo.svg" alt="logo" />
+      <img src="../assets/icon/Icon.png" alt="logo" />
     </div>
     <!-- title bar-->
     <div class="title-bar header">

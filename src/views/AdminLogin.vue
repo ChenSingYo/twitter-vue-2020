@@ -47,7 +47,7 @@
         </button>
       </div>
       <div class="form-bottom">
-        <router-link class="text-link" to="/admin-login">
+        <router-link class="text-link" to="/login">
           前台登入
         </router-link>
       </div>

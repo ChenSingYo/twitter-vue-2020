@@ -7,28 +7,62 @@
       <nav>
         <ul>
           <li>
-            <a>
-              <img src="../assets/icon/icon_home.png" alt="Tweets" />推文清單
-            </a>
+            <router-link
+              to="/admin-tweets"
+              custom
+              v-slot="{ navigate, isActive, isExactActive }"
+            >
+              <a
+                :class="[
+                  isActive && 'router-link-active',
+                  isExactActive && 'router-link-exact-active'
+                ]"
+                @click="navigate"
+                ><img
+                  :src="[
+                    isActive
+                      ? require('../assets/icon/icon_home_active.png')
+                      : require('../assets/icon/icon_home.png')
+                  ]"
+                  alt=""
+                />推文清單</a
+              ></router-link
+            >
           </li>
           <li>
-            <a class="">
-              <img
-                src="../assets/icon/icon_user.png"
-                alt="Users"
-              />
-              使用者列表
-            </a>
+            <router-link
+              :to="{ name: 'admin-users' }"
+              custom
+              v-slot="{ navigate, isActive, isExactActive }"
+            >
+              <a
+                :class="[
+                  isActive && 'router-link-active',
+                  isExactActive && 'router-link-exact-active'
+                ]"
+                @click="navigate"
+                ><img
+                  :src="[
+                    isActive
+                      ? require('../assets/icon/icon_user_active.png')
+                      : require('../assets/icon/icon_user.png')
+                  ]"
+                  alt=""
+                />使用者列表</a
+              >
+            </router-link>
           </li>
         </ul>
       </nav>
       <div class="logout">
-        <a to="/">
-          <img
-            src="../assets/icon/icon_logout.png"
-            alt="" />
+        <router-link
+          to="/"
+        >
+          <a href="">
+          <img src="../assets/icon/icon_logout.png" alt="" />
           登出
-        </a>
+          </a>
+        </router-link>
       </div>
     </div>
   </div>
@@ -36,10 +70,10 @@
 
 <script>
 export default {
-  name: 'NavSiderBar',
+  name: 'AdminSiderBar',
   data () {
     return {
-      isActive: false
+      // isActive: false
     }
   }
 }
@@ -48,18 +82,17 @@ export default {
 <style lang="scss" scoped>
 
 .nav-container {
-  width: 378px;
+  width: 26.2%;
   height: 100%;
   border-right: 1px solid var(--light-gary-clr);
 
   .nav-wrapper {
-    margin-left: 103px;
+    margin-left: 27.2%;
 
     .logo {
       display: flex;
       align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
+      justify-content: left;
       margin-top: 4px;
       width: 50px;
       height: 50px;
@@ -71,20 +104,7 @@ export default {
     }
 
     nav {
-      margin-left: 10px;
-
-      .post-wrapper {
-        width: 210px;
-        height: 45px;
-        border-radius: 22.5px;
-        background-color: var(--primary-clr);
-        text-align: center;
-        cursor: pointer;
-        a {
-          color: white;
-          line-height: 45px;
-        }
-      }
+      margin-top: 1rem;
 
       li {
         display: flex;
@@ -123,5 +143,17 @@ a {
 
 a.router-link-active {
   color: var(--primary-clr);
+}
+
+/* for mobile */
+@media screen and (max-width: 768px) {
+  .nav-container {
+    .nav-wrapper {
+      margin-left: 10px;
+      .logout {
+        bottom: 70%;
+      }
+    }
+  }
 }
 </style>

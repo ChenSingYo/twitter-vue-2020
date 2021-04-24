@@ -122,6 +122,16 @@ $border-style: 1px solid var(--light-gary-clr);
         }
       }
     }
+
+    .more-footer {
+      padding: 10px 15px 8px;
+      border-top: $border-style;
+
+      .more-btn {
+        padding: 0;
+        color: var(--primary-clr);
+      }
+    }
   }
 }
 </style>

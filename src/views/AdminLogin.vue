@@ -56,7 +56,11 @@
 </template>
 
 <script>
+import authorizationAPI from '../apis/authorization'
+import { Toast } from '../utils/helpers'
+
 export default {
+  name: 'AdminLogin',
   data () {
     return {
       account: '',
@@ -66,7 +70,43 @@ export default {
   },
   methods: {
     async handleSubmit () {
+      try {
+        this.isProcessing = true
+        if (!this.account || !this.password) {
+          Toast.fire({
+            icon: 'warning',
+            title: '請輸入帳號(e.g. @alphacamp)和密碼 '
+          })
+        }
+        // post request to API and get response.data
+        const { data } = await authorizationAPI.adminSignIn({
+          account: this.account,
+          password: this.password
+        })
+        console.log(data)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        // keep token in localStorage
+        localStorage.setItem('token', data.token)
+        // this.$store.commit('revokeCurrentUser')
+        this.$router.push('/admin/tweets')
+        this.isProcessing = false
+      } catch (err) {
+        this.isProcessing = false
+        Toast.fire({
+          icon: 'warning',
+          title: `帳號密碼有誤: ${err.message}`
+        })
+        this.password = ''
+      }
+    },
+    autoFocus () {
+      this.$refs.account.focus()
     }
+  },
+  mounted () {
+    this.autoFocus()
   }
 }
 </script>

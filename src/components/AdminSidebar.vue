@@ -8,7 +8,7 @@
         <ul>
           <li>
             <router-link
-              to="/admin-tweets"
+              to="/admin/tweets"
               custom
               v-slot="{ navigate, isActive, isExactActive }"
             >

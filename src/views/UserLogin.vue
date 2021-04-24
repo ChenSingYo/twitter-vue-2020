@@ -2,7 +2,7 @@
   <div class="container">
     <!-- logo bar-->
     <div class="logo-bar header">
-      <img src="../assets/icon/Icon.png" alt="logo" width="40px"/>
+      <img src="../assets/icon/Icon.png" alt="logo" width="40px" />
     </div>
     <!-- title bar-->
     <div class="title-bar header">
@@ -14,14 +14,12 @@
         <label for="account">帳號</label>
         <input
           v-model="account"
-          id="account"
           ref="account"
+          id="account"
           name="account"
           type="text"
           class="form-control"
           autocomplete="useraccount"
-          required
-          autofocus
         />
       </div>
       <!-- 密碼 -->
@@ -33,8 +31,6 @@
           name="password"
           type="password"
           class="form-control"
-          autocomplete="new-password"
-          required
         />
       </div>
       <div class="form-label-group button-wrapper">
@@ -51,7 +47,7 @@
           註冊 Alphitter
         </router-link>
         <span>·</span>
-        <router-link class="text-link" to="/admin-login">
+        <router-link class="text-link" to="/admin">
           後台登入
         </router-link>
       </div>
@@ -60,7 +56,11 @@
 </template>
 
 <script>
+import authorizationAPI from './../apis/authorization'
+import { Toast } from './../utils/helpers'
+
 export default {
+  name: 'UserLogin',
   data () {
     return {
       account: '',
@@ -70,13 +70,48 @@ export default {
   },
   methods: {
     async handleSubmit () {
+      try {
+        this.isProcessing = true
+        if (!this.account || !this.password) {
+          Toast.fire({
+            icon: 'warning',
+            title: '請輸入帳號(e.g. @alphacamp)和密碼 '
+          })
+        }
+        // post request to API and get response.data
+        const { data } = await authorizationAPI.userSignIn({
+          account: this.account,
+          password: this.password
+        })
+        console.log(data)
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        // keep token in localStorage
+        localStorage.setItem('token', data.token)
+        // this.$store.commit('revokeCurrentUser')
+        this.$router.push('/tweets')
+        this.isProcessing = false
+      } catch (err) {
+        this.isProcessing = false
+        Toast.fire({
+          icon: 'warning',
+          title: `帳號密碼有誤: ${err.message}`
+        })
+        this.password = ''
+      }
+    },
+    autoFocus () {
+      this.$refs.account.focus()
     }
+  },
+  mounted () {
+    this.autoFocus()
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .container {
   margin-top: 50px;
   width: 50%;
@@ -146,19 +181,19 @@ export default {
       height: 50px;
       border: none;
       border-radius: 50px;
-      color:white;
-      background-color:#ff6600;
+      color: white;
+      background-color: #ff6600;
     }
   }
   .form-bottom {
     text-align: end;
     .text-link {
-      color: #0099FF;
+      color: #0099ff;
       text-decoration: underline;
       font-weight: 900;
     }
     span {
-      color: #0099FF;
+      color: #0099ff;
       font-weight: bolder;
     }
   }

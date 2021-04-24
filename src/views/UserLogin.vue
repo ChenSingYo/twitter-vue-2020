@@ -143,7 +143,7 @@ export default {
       padding: 3px 0 0 8px;
       width: 100%;
       height: 25px;
-      color: #657786;
+      color: var(--cement-gary-clr);
       font-size: 15px;
       cursor: text;
     }
@@ -152,7 +152,7 @@ export default {
       height: 25px;
       outline-width: 0;
       border: none;
-      border-bottom: 3px solid #657786;
+      border-bottom: 3px solid var(--cement-gary-clr);
       border-bottom-right-radius: 2px;
       border-bottom-left-radius: 2px;
       background: #f5f8fa;
@@ -163,7 +163,7 @@ export default {
     }
     .form-control:focus,
     .form-control:hover {
-      border-color: #ff6600;
+      border-color: var(--primary-clr);
       box-shadow: none;
     }
   }
@@ -179,7 +179,7 @@ export default {
       height: 50px;
       border: none;
       border-radius: 50px;
-      background-color: #ff6600;
+      background-color: var(--primary-clr);
       color: white;
       font-weight: 500;
     }
@@ -187,12 +187,12 @@ export default {
   .form-bottom {
     text-align: end;
     .text-link {
-      color: #0099ff;
+      color: var(--link-blue-clr);
       text-decoration: underline;
       font-weight: 900;
     }
     span {
-      color: #0099ff;
+      color: var(--link-blue-clr);
       font-weight: bolder;
     }
   }

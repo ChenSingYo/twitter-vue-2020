@@ -135,13 +135,7 @@ export default {
           title: `帳號密碼有誤: ${err.message}`
         })
       }
-    },
-    autoFocus () {
-      this.$refs.account.focus()
     }
-  },
-  mounted () {
-    this.autoFocus()
   }
 }
 </script>
@@ -170,13 +164,13 @@ export default {
     position: relative;
     height: 50px;
     margin-bottom: 20px;
-    background: #f5f8fa;
+    background: var(--water-gary-clr);
     display: flex;
     align-items: flex-end;
     justify-content: center;
 
     label {
-      color: #657786;
+      color: var(--cement-gary-clr);
       position: absolute;
       font-size: 0.8rem;
       font-size: 15px;
@@ -188,18 +182,18 @@ export default {
     }
     .form-control {
       border: none;
-      border-bottom: 3px solid #657786;
+      border-bottom: 3px solid var(--cement-gary-clr);
       border-bottom-right-radius: 2px;
       border-bottom-left-radius: 2px;
       height: 25px;
-      background: #f5f8fa;
+      background: var(--water-gary-clr);
       padding: 0px 10px;
       outline-width: 0;
     }
     .form-control:hover,
     .form-control:focus {
       box-shadow: none;
-      border-color: #ff6600;
+      border-color: var(--primary-clr);
     }
   }
   .button-wrapper {
@@ -216,13 +210,13 @@ export default {
       position: absolute;
       border: none;
       color: white;
-      background-color: #ff6600;
+      background-color: var(--primary-clr);
     }
   }
   .button-wrapper :last-child {
     top: 75px;
     position: absolute;
-    color: #0099ff;
+    color: var(--link-blue-clr);
     font-weight: bold;
     text-decoration: underline;
   }

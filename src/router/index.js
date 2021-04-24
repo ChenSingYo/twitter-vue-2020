@@ -28,19 +28,19 @@ const routes = [
   },
   // admin login
   {
-    path: '/admin-login',
+    path: '/admin',
     name: 'admin-login',
     component: AdminLogin
   },
   // admin tweets
   {
-    path: '/admin-tweets',
+    path: '/admin/tweets',
     name: 'admin-tweets',
     component: () => import('../views/AdminTweets.vue')
   },
   // admin users
   {
-    path: '/admin-users',
+    path: '/admin/users',
     name: 'admin-users',
     component: () => import('../views/AdminUsers.vue')
   },

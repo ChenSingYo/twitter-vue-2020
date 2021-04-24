@@ -19,8 +19,7 @@
           name="account"
           type="text"
           class="form-control"
-          autocomplete="useraccount"
-          autofocus
+          required
         />
       </div>
       <!-- 名稱 -->
@@ -33,7 +32,7 @@
           name="name"
           type="text"
           class="form-control"
-          autocomplete="username"
+          required
         />
       </div>
       <!-- email -->
@@ -43,10 +42,10 @@
           v-model="email"
           id="email"
           ref="email"
-          name="email"
           type="email"
+          name="email"
           class="form-control"
-          autocomplete="useremail"
+          required
         />
       </div>
       <!-- 密碼 -->
@@ -59,20 +58,20 @@
           name="password"
           type="password"
           class="form-control"
-          autocomplete="new-password"
+          required
         />
       </div>
       <!-- 密碼確認 -->
       <div class="form-label-group">
-        <label for="check-password">密碼確認</label>
+        <label for="confirm-password">密碼確認</label>
         <input
-          v-model="checkPassword"
-          id="check-password"
-          ref="checkPassword"
-          name="checkPassword"
+          v-model="confirmPassword"
+          id="confirm-password"
+          ref="confirmPassword"
+          name="confirmPassword"
           type="password"
           class="form-control"
-          autocomplete="new-password"
+          required
         />
       </div>
       <div class="form-label-group button-wrapper">
@@ -91,8 +90,62 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<script>
+import usersAPI from './../apis/users'
+import { Toast } from './../utils/helpers'
 
+export default {
+  name: 'Regist',
+  data () {
+    return {
+      account: '',
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      isProcessing: false
+    }
+  },
+  methods: {
+    async handleSubmit (e) {
+      try {
+        this.isProcessing = true
+        const formData = new FormData(e.target)
+
+        for (const [name, value] of formData.entries()) {
+          console.log(name + ': ' + value)
+        }
+
+        const { data } = await usersAPI.signUp({
+          account: this.account,
+          email: this.email,
+          password: this.password,
+          confirmPassword: this.confirmPassword,
+          name: this.name
+        })
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.$router.push('/login')
+      } catch (err) {
+        this.isProcessing = false
+        Toast.fire({
+          icon: 'warning',
+          title: `帳號密碼有誤: ${err.message}`
+        })
+      }
+    },
+    autoFocus () {
+      this.$refs.account.focus()
+    }
+  },
+  mounted () {
+    this.autoFocus()
+  }
+}
+</script>
+<style lang="scss" scoped>
 .container {
   margin-top: 50px;
   width: 50%;
@@ -125,7 +178,7 @@
     label {
       color: #657786;
       position: absolute;
-      font-size: .8rem;
+      font-size: 0.8rem;
       font-size: 15px;
       height: 25px;
       width: 100%;
@@ -162,14 +215,14 @@
       top: 10px;
       position: absolute;
       border: none;
-      color:white;
-      background-color:#ff6600;
+      color: white;
+      background-color: #ff6600;
     }
   }
   .button-wrapper :last-child {
     top: 75px;
     position: absolute;
-    color: #0099FF;
+    color: #0099ff;
     font-weight: bold;
     text-decoration: underline;
   }

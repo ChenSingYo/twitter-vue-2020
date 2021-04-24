@@ -1,6 +1,7 @@
 :root {
   /* colors */
   --primary-clr: #ff6600;
+  --primary-hover-clr: #c25003;
   --black-clr: #1c1c1c;
   --light-gary-clr: #e6ecf0;
   --water-gary-clr: #f5f8fa;

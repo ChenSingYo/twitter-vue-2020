@@ -31,9 +31,19 @@ const routes = [
     component: TweetsMain
   },
   {
+    path: '/tweets/:id',
+    name: 'tweet-page',
+    component: () => import('../views/TweetPage.vue')
+  },
+  {
     path: '/profile',
     name: 'user-profile',
     component: () => import('../views/UserProfile.vue'),
+  },
+  {
+    path: '/profile/follow',
+    name: 'user-follow',
+    component: () => import('../views/UserFollow.vue'),
   },
   {
     path: '/setting',

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <!-- logo bar-->
+    <!-- logo bar -->
     <div class="logo-bar header">
       <img src="../assets/icon/Icon.png" alt="logo" />
     </div>
@@ -61,7 +61,7 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       account: '',
       password: '',
@@ -69,8 +69,7 @@ export default {
     }
   },
   methods: {
-    async handleSubmit () {
-    }
+    async handleSubmit() {}
   }
 }
 </script>

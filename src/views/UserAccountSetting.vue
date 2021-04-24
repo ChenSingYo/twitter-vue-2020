@@ -2,25 +2,27 @@
   <div class="setting-container">
     <NavSidebar />
 
-    設定頁面
+    <UserSettingForm />
   </div>
 </template>
 
 <script>
-  import NavSidebar from '../components/NavSidebar'
+import NavSidebar from '../components/NavSidebar'
+import UserSettingForm from '../components/UserSettingForm'
 
-  export default {
-    name: 'UserAccountSetting',
-    components: {
-      NavSidebar,
-    },
+export default {
+  name: 'UserAccountSetting',
+  components: {
+    NavSidebar,
+    UserSettingForm
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  .setting-container {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-  }
+.setting-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
 </style>

@@ -13,12 +13,22 @@
           possimus sapiente architecto accusantium voluptate asperiores ab ex?
         </p>
         <div class="social-container">
-          <div class="message">
-            <img src="" alt="" />
+          <div class="message" @click="replyHandle">
+            <unicon
+              name="comment"
+              fill="#657786"
+              width="15px"
+              height="15px"
+            ></unicon>
             <span>123</span>
           </div>
           <div class="favorite">
-            <img src="" alt="" />
+            <unicon
+              name="heart-alt"
+              fill="#657786"
+              width="15px"
+              height="15px"
+            ></unicon>
             <span>76</span>
           </div>
         </div>
@@ -29,8 +39,13 @@
 
 <script>
 export default {
-  name: "TweetMessageCell"
-};
+  name: 'TweetMessageCell',
+  methods: {
+    replyHandle() {
+      this.$emit('after-reply-message')
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -63,7 +78,7 @@ export default {
   .time {
     &::before {
       display: inline-block;
-      content: "・";
+      content: '・';
     }
   }
 
@@ -85,6 +100,7 @@ export default {
 
     .message span,
     .favorite span {
+      margin-left: 10px;
       color: var(--cement-gary-clr);
       font-weight: 500;
       font-size: 0.812rem;

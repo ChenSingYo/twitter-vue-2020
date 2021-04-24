@@ -1,10 +1,10 @@
 <template>
-  <div class="profile-container">
+  <div class="follow-container">
     <!-- 左側 bar -->
     <NavSidebar />
 
-    <!-- 使用者資訊 -->
-    <UserInfo />
+    <!-- 使用者跟隨者、正在跟隨 -->
+    <UserFollowPanels />
 
     <!-- 右側 bar -->
     <RecommendSidebar />
@@ -13,24 +13,23 @@
 
 <script>
 import NavSidebar from '../components/NavSidebar'
-import UserInfo from '../components/UserInfo'
 import RecommendSidebar from '../components/RecommendSidebar'
+import UserFollowPanels from '../components/UserFollowPanels'
 
 export default {
-  name: 'UserProfile',
+  name: 'UserFollow',
   components: {
     NavSidebar,
-    UserInfo,
-    RecommendSidebar
+    RecommendSidebar,
+    UserFollowPanels
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.profile-container {
+.follow-container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
   height: 100%;
 }
 </style>

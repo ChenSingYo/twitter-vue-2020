@@ -12,25 +12,24 @@
 </template>
 
 <script>
-  import NavSidebar from '../components/NavSidebar'
-  import TweetsList from '../components/TweetsList'
-  import RecommendSidebar from '../components/RecommendSidebar'
+import NavSidebar from '../components/NavSidebar'
+import TweetsList from '../components/TweetsList'
+import RecommendSidebar from '../components/RecommendSidebar'
 
-  export default {
-    name: 'TweetsMain',
-    components: {
-      NavSidebar,
-      TweetsList,
-      RecommendSidebar,
-    },
+export default {
+  name: 'TweetsMain',
+  components: {
+    NavSidebar,
+    TweetsList,
+    RecommendSidebar
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  .main-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    height: 100%;
-  }
+.main-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
 </style>

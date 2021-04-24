@@ -1,7 +1,7 @@
 <template>
   <div class="tweets">
-    <header><h4>首頁</h4></header>
-    <section class="post">
+    <header ref="header"><h4>首頁</h4></header>
+    <section ref="post" class="post">
       <div class="post-container">
         <img class="avatar" src="https://picsum.photos/50" />
         <textarea
@@ -17,26 +17,67 @@
         </div>
       </div>
     </section>
+    <section
+      class="tweet-cell"
+      :style="{ 'padding-bottom': postContainerHeight + 'px' }"
+    >
+      <TweetMessageCell
+        v-for="index in 10"
+        :key="index"
+        @after-reply-message="afterReplyHandle"
+      />
+    </section>
 
-    <TweetMessageCell />
+    <section>
+      <ReplyTweetPopup
+        :show-popup-view="showReplyPopup"
+        @after-close="handleClose"
+      />
+    </section>
   </div>
 </template>
 
 <script>
-import TweetMessageCell from "../components/TweetMessageCell";
+import TweetMessageCell from '../components/TweetMessageCell'
+import ReplyTweetPopup from '../components/ReplyTweetPopup'
 
 export default {
-  name: "TweetsList",
+  name: 'TweetsList',
   components: {
-    TweetMessageCell
+    TweetMessageCell,
+    ReplyTweetPopup
+  },
+  data() {
+    return {
+      isMounted: false,
+      showReplyPopup: false
+    }
+  },
+  computed: {
+    postContainerHeight() {
+      if (!this.isMounted) return '0px'
+      const headerHeight = this.$refs.header.offsetHeight
+      const postHeight = this.$refs.post.offsetHeight
+      return headerHeight + postHeight
+    }
+  },
+  mounted() {
+    this.isMounted = true
+  },
+  methods: {
+    afterReplyHandle() {
+      this.showReplyPopup = true
+    },
+    handleClose() {
+      this.showReplyPopup = false
+    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
 .tweets {
-  flex-grow: 1;
-  min-width: 600px;
+  overflow: hidden;
 
   header {
     border-bottom: 1px solid var(--light-gary-clr);
@@ -44,7 +85,7 @@ export default {
       margin: 0;
       padding: 1rem;
       font-weight: 700;
-      font-size: 1.25;
+      font-size: 1.25rem;
     }
   }
 
@@ -83,6 +124,15 @@ export default {
       background-color: var(--primary-clr);
       color: #fff;
       line-height: 1;
+    }
+  }
+
+  .tweet-cell {
+    overflow-y: scroll;
+    height: 100%;
+
+    &::-webkit-scrollbar {
+      display: none;
     }
   }
 }

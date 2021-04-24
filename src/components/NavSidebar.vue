@@ -80,7 +80,7 @@
           </li>
           <li>
             <div class="post-wrapper">
-              <router-link to="/">推文</router-link>
+              <button class="btn post-btn" @click="showPostHandle">推文</button>
             </div>
           </li>
         </ul>
@@ -91,22 +91,40 @@
         >
       </div>
     </div>
+
+    <UserPostPopup :show-popup-view="showPostView" @after-close="handleClose" />
   </div>
 </template>
 
 <script>
+import UserPostPopup from '../components/UserPostPopup'
+
 export default {
-  name: "NavSiderBar",
+  name: 'NavSiderBar',
+  components: {
+    UserPostPopup
+  },
   data() {
     return {
-      // isActive: false
-    };
+      showPostView: false
+    }
+  },
+  methods: {
+    showPostHandle() {
+      this.showPostView = true
+    },
+    handleClose() {
+      this.showPostView = false
+    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
 .nav-container {
+  flex-grow: 0;
+  min-width: 378px;
+  max-width: 378px;
   width: 378px;
   height: 100%;
   border-right: 1px solid var(--light-gary-clr);
@@ -139,9 +157,16 @@ export default {
         background-color: var(--primary-clr);
         text-align: center;
         cursor: pointer;
-        a {
+        .post-btn {
+          padding: 0;
+          width: 100%;
+          height: 100%;
           color: white;
           line-height: 45px;
+        }
+
+        .btn {
+          box-shadow: none;
         }
       }
 
@@ -180,7 +205,7 @@ a {
   cursor: pointer;
 }
 
-a.router-link-active {
+a.router-link-exact-active {
   color: var(--primary-clr);
 }
 </style>

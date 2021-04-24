@@ -25,7 +25,7 @@
                       : require('../assets/icon/icon_home.png')
                   ]"
                   alt=""
-                />推文清單</a
+                /><span>推文清單</span></a
               ></router-link
             >
           </li>
@@ -48,7 +48,7 @@
                       : require('../assets/icon/icon_user.png')
                   ]"
                   alt=""
-                />使用者列表</a
+                /><span>使用者列表</span></a
               >
             </router-link>
           </li>
@@ -60,7 +60,7 @@
         >
           <a href="">
           <img src="../assets/icon/icon_logout.png" alt="" />
-          登出
+          <span>登出</span>
           </a>
         </router-link>
       </div>
@@ -149,10 +149,33 @@ a.router-link-active {
 @media screen and (max-width: 768px) {
   .nav-container {
     .nav-wrapper {
+      display: flex;
+      justify-content: space-between;
       margin-left: 10px;
-      .logout {
-        bottom: 70%;
+      nav {
+        li {
+          display: inline;
+          margin-right: 20px;
+        }
+        img {
+          margin-right: 6px;
+        }
       }
+      .logout {
+        padding-bottom: 8px;
+        position: relative;
+        span {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .nav-container {
+    span {
+      display: none;
     }
   }
 }

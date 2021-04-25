@@ -55,14 +55,13 @@
         </ul>
       </nav>
       <div class="logout">
-        <router-link
-          to="/"
+        <button
+          class="btn"
+          @click="logout"
         >
-          <a href="">
           <img src="../assets/icon/icon_logout.png" alt="" />
           <span>登出</span>
-          </a>
-        </router-link>
+        </button>
       </div>
     </div>
   </div>
@@ -73,7 +72,14 @@ export default {
   name: 'AdminSiderBar',
   data () {
     return {
-      // isActive: false
+      isActive: false
+    }
+  },
+  methods: {
+    logout () {
+      console.log('logout')
+      this.$store.commit('revokeCurrentUser')
+      this.$router.push('/admin')
     }
   }
 }
@@ -130,6 +136,9 @@ export default {
         margin-right: 20px;
         width: 24px;
         height: 24px;
+      }
+      span {
+        font-weight: bold;
       }
     }
   }

@@ -63,12 +63,12 @@
       </div>
       <!-- 密碼確認 -->
       <div class="form-label-group">
-        <label for="confirm-password">密碼確認</label>
+        <label for="check-password">密碼確認</label>
         <input
-          v-model="confirmPassword"
-          id="confirm-password"
-          ref="confirmPassword"
-          name="confirmPassword"
+          v-model="checkPassword"
+          id="check-password"
+          ref="checkPassword"
+          name="checkPassword"
           type="password"
           class="form-control"
           required
@@ -102,7 +102,7 @@ export default {
       name: '',
       email: '',
       password: '',
-      confirmPassword: '',
+      checkPassword: '',
       isProcessing: false
     }
   },
@@ -120,7 +120,7 @@ export default {
           account: this.account,
           email: this.email,
           password: this.password,
-          confirmPassword: this.confirmPassword,
+          checkPassword: this.checkPassword,
           name: this.name
         })
 

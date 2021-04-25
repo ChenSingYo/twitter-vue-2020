@@ -20,6 +20,7 @@
           type="text"
           class="form-control"
           autocomplete="useraccount"
+          autofocus
         />
       </div>
       <!-- 密碼 -->
@@ -74,7 +75,7 @@ export default {
         if (!this.account || !this.password) {
           Toast.fire({
             icon: 'warning',
-            title: '請輸入帳號(e.g. @alphacamp)和密碼 '
+            title: '請輸入帳號與密碼 '
           })
         }
         // post request to API and get response.data
@@ -88,7 +89,7 @@ export default {
         }
         // keep token in localStorage
         localStorage.setItem('token', data.token)
-        // this.$store.commit('revokeCurrentUser')
+        this.$store.commit('setCurrentUser', data.user)
         this.$router.push('/tweets')
         this.isProcessing = false
       } catch (err) {
@@ -99,13 +100,7 @@ export default {
         })
         this.password = ''
       }
-    },
-    autoFocus() {
-      this.$refs.account.focus()
     }
-  },
-  mounted() {
-    this.autoFocus()
   }
 }
 </script>

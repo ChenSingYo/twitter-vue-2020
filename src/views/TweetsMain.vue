@@ -16,13 +16,22 @@ import NavSidebar from '../components/NavSidebar'
 import TweetsList from '../components/TweetsList'
 import RecommendSidebar from '../components/RecommendSidebar'
 
+// 從 Vuex 抓取使用者資料
+import { mapState } from 'vuex'
+
 export default {
   name: 'TweetsMain',
   components: {
     NavSidebar,
     TweetsList,
     RecommendSidebar
-  }
+  },
+  computed: {
+    ...mapState([
+      'currentUser',
+      'isAuthenticated',
+    ])
+  },
 }
 </script>
 

@@ -4,12 +4,13 @@ import TweetsMain from '../views/TweetsMain.vue'
 import UserLogin from './../views/UserLogin.vue'
 import UserRegist from './../views/UserRegist.vue'
 import AdminLogin from './../views/AdminLogin.vue'
-import store from './../store/index'
+import store from './../store'
 
 Vue.use(VueRouter)
 
 const authorizeIsAdmin = (to, from, next) => {
   const currentUser = store.state.currentUser
+  console.log('currentUser:', currentUser)
   if (currentUser && !currentUser.role === 'admin') {
     next('/404')
     return
@@ -19,6 +20,7 @@ const authorizeIsAdmin = (to, from, next) => {
 
 const authorizeIsUser = (to, from, next) => {
   const currentUser = store.state.currentUser
+  console.log('currentUser:', currentUser)
   if (currentUser.role !== 'user') {
     next('/login')
     return
@@ -89,7 +91,8 @@ const routes = [
   {
     path: '/setting',
     name: 'setting',
-    component: () => import('../views/UserAccountSetting.vue')
+    component: () => import('../views/UserAccountSetting.vue'),
+    beforeEnter: authorizeIsUser
   },
   // not found
   {
@@ -105,38 +108,40 @@ const router = new VueRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  console.log('to', to)
-  console.log('from', from)
-  const token = localStorage.getItem('token')
+  console.log('to', to.name)
 
-  // 取得驗證狀態
+  // 取得 驗證狀態、role、token in local、token in Vuex
   let isAuthenticated = store.state.isAuthenticated
-  let isAdmin = store.state.currentUser.role
+  const currentUserRole = store.state.currentUser.role
+  const tokenInLocal = localStorage.getItem('token')
+  const tokenInStore = store.state.token
 
-  // 如果有 token 的話才驗證
-  console.log('token', token)
-  if (token) {
-    // 再次驗證token是否有效
+  console.log('currentUser:', currentUserRole)
+
+  // 如果有 token in local，而兩種token不同，則再次驗證
+  if (tokenInLocal && tokenInLocal !== tokenInStore) {
     isAuthenticated = store.dispatch('fetchCurrentUser')
   }
   console.log('isAuthenticated', isAuthenticated)
 
-  // 不需要驗證 token 的頁面
+  // 不需驗證 token 的頁面
   const pathsWithoutAuthentication = ['user-login', 'user-regist', 'admin-login']
 
-  // token無效則轉到登入頁
+  // token無效則轉到不需認證token的頁面
   if (!isAuthenticated && !pathsWithoutAuthentication.includes(to.name)) {
     next('/login')
     return
   }
-  // token有效則轉址到首頁，按照使用／管理者身份轉址(待修正)
-  // if (isAuthenticated && pathsWithoutAuthentication.includes(to.name)) {
-  //     if (isAdmin) {
-  //       next('/admin/tweets')
-  //     }
-  //  next()
-  //  return
+  // token有效則轉址到首頁，按照使用／管理者身份轉址
+  // if (isAuthenticated) {
+  //   if (currentUserRole === 'user' && pathsWithoutAuthentication.includes(to.name)) {
+  //     next('/tweets')
+  //   } else if (currentUserRole === 'admin') {
+  //     next('/admin/tweets')
+  //   }
+  //   return
   // }
+  console.log('success to next page')
   next()
 })
 

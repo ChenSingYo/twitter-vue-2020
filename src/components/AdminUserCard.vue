@@ -1,35 +1,50 @@
 <template>
   <div class="user-card">
-    <img class="user-cover" src="https://picsum.photos/245/140" />
+    <img class="user-cover" :src="user.cover | emptyImage" />
     <div class="avatar-container">
-      <img src="https://picsum.photos/id/64/100/100" />
+      <img :src="user.avatar" />
     </div>
     <div class="user-profile">
-      <div class="user-name">Jane Doe</div>
-      <div class="user-account">@heyjohn</div>
+      <div class="user-name">{{user.name}}</div>
+      <div class="user-account">@{{user.account}}</div>
       <div class="activity">
         <div class="activity-reply">
           <img src="../assets/icon/icon_reply.svg" alt="relpy" />
-          <span class="reply-count">1.5k</span>
+          <span class="reply-count">{{user.tweetCount}}</span>
         </div>
         <div class="activity-like">
           <img src="../assets/icon/icon_like.svg" alt="like" />
-          <span class="like-count">20k</span>
+          <span class="like-count">{{user.tweetsLikedCount}}</span>
         </div>
       </div>
       <div class="followship">
         <div class="followings-info">
-          <span class="followship-count">34 個</span>
+          <span class="followship-count">{{user.followingsCount}} 個</span>
           <span class="followship-unit">跟隨中 </span>
         </div>
         <div class="followers-info">
-          <span class="followship-count"> 59 位</span>
+          <span class="followship-count">{{user.followersCount}} 位</span>
           <span class="followship-unit">跟隨者</span>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+import { emptyImageFilter } from "./../utils/mixins";
+
+export default {
+  mixins: [emptyImageFilter],
+  name: 'AdminUserCard',
+  props: {
+    user: {
+      type: Object,
+      required: true
+    }
+  }
+}
+</script>
 
 <style lang="scss" scoped>
 .user-card {
@@ -40,7 +55,7 @@
   height: 314px;
   border-radius: 10px;
   transition: all 100ms ease-out;
-  transform: scale(1.0, 1.0);
+  transform: scale(1, 1);
 
   .user-cover {
     width: 245px;

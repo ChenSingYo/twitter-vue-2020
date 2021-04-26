@@ -1,14 +1,8 @@
 import { apiHelper } from '../utils/helpers'
 
 export default {
-  signUp({ account, name, email, password, confirmPassword }) {
-    return apiHelper.post('/users', {
-      account,
-      name,
-      email,
-      password,
-      confirmPassword
-    })
+  getCurrentUser() {
+    return apiHelper.get('/users/currentUser')
   },
   getCurrentUserTweets({ id }) {
     return apiHelper.get(`/users/${id}/tweets`)
@@ -25,10 +19,19 @@ export default {
   getCurrentUserFollowing({id}) {
     return apiHelper.get(`/users/${id}/followings`)
   },
+  getUser({ userId }) {
+    return apiHelper.get(`/users/${userId}`)
+  },
   signUp ({ account, name, email, password, checkPassword }) {
     return apiHelper.post('/users', { account, name, email, password, checkPassword })
   },
-  getUser({ userId }) {
-    return apiHelper.get(`/users/${userId}`)
-  }
+  editAccount({ id, account, name, email, password, checkPassword }) {
+    return apiHelper.put(`users/${id}/account`, {
+      account,
+      name,
+      email,
+      password,
+      checkPassword,
+    })
+  },
 }

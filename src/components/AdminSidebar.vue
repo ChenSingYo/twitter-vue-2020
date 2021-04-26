@@ -77,7 +77,6 @@ export default {
   },
   methods: {
     logout () {
-      console.log('logout')
       this.$store.commit('revokeCurrentUser')
       this.$router.push('/admin')
     }

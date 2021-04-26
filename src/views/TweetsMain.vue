@@ -17,6 +17,9 @@ import TweetsList from '../components/TweetsList'
 import RecommendSidebar from '../components/RecommendSidebar'
 import { mapState } from 'vuex'
 
+// 從 Vuex 抓取使用者資料
+import { mapState } from 'vuex'
+
 export default {
   name: 'TweetsMain',
   components: {
@@ -25,10 +28,13 @@ export default {
     RecommendSidebar
   },
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState([
+      'currentUser',
+      'isAuthenticated',
+    ])
   },
   created() {
-    console.log(this.currentUser)
+
   }
 }
 </script>

@@ -161,7 +161,7 @@ export default {
     .form-control:focus,
     .form-control:hover {
       box-shadow: none;
-      border-color: var(--cement-gary-clr);
+      border-color: var(--primary-clr);
     }
   }
   .button-wrapper {

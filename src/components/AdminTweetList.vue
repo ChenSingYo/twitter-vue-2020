@@ -7,7 +7,7 @@
         <span class="tag">@{{tweet.user.account}}</span>
         <span class="time">{{tweet.createdAt | fromNow}}</span>
         <p class="content">
-          {{tweet.description}}
+          {{tweet.description | countText}}
         </p>
       </div>
       <button
@@ -23,10 +23,10 @@
 <script>
 import adminAPI from './../apis/admin'
 import { Toast } from './../utils/helpers'
-import { fromNowFilter, emptyImageFilter } from './../utils/mixins'
+import { fromNowFilter, emptyImageFilter, countText } from './../utils/mixins'
 
 export default {
-  mixins: [fromNowFilter, emptyImageFilter],
+  mixins: [fromNowFilter, emptyImageFilter, countText],
   name: 'AdminTweetList',
   props: {
     initialTweet: {
@@ -118,7 +118,7 @@ export default {
   .content {
     text-align:justify;
     margin-bottom: 10px;
-    padding-right: 2rem;
+    padding-right: 1rem;
     font-style: normal;
     font-weight: 500;
     font-size: 15px;

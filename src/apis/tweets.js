@@ -2,24 +2,24 @@ import { apiHelper } from '../utils/helpers'
 
 export default {
   getTweets() {
-    return apiHelper.get('/api/tweets/')
+    return apiHelper.get('/tweets/')
   },
   createTweet({ description }) {
-    return apiHelper.post('/api/tweets/', { description })
+    return apiHelper.post('/tweets/', { description })
   },
   getTweet({ id }) {
-    return apiHelper.get(`/api/tweets/${id}`)
+    return apiHelper.get(`/tweets/${id}`)
   },
   getTweetReplies({ id }) {
-    return apiHelper.get(`/api/tweets/${id}/replies`)
+    return apiHelper.get(`/tweets/${id}/replies`)
   },
   createTweetReply({ id, comment }) {
-    return apiHelper.post(`/api/tweets/${id}/replies`, { comment })
+    return apiHelper.post(`/tweets/${id}/replies`, { comment })
   },
   addLike({ id }) {
-    return apiHelper.post(`/api/tweets/${id}/like`)
+    return apiHelper.post(`/tweets/${id}/like`)
   },
   removeLike({ id }) {
-    return apiHelper.post(`/api/tweets/${id}/unlike`)
+    return apiHelper.post(`/tweets/${id}/unlike`)
   }
 }

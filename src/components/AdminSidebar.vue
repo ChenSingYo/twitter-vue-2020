@@ -25,7 +25,7 @@
                       : require('../assets/icon/icon_home.png')
                   ]"
                   alt=""
-                />推文清單</a
+                /><span>推文清單</span></a
               ></router-link
             >
           </li>
@@ -48,21 +48,20 @@
                       : require('../assets/icon/icon_user.png')
                   ]"
                   alt=""
-                />使用者列表</a
+                /><span>使用者列表</span></a
               >
             </router-link>
           </li>
         </ul>
       </nav>
       <div class="logout">
-        <router-link
-          to="/"
+        <button
+          class="btn"
+          @click="logout"
         >
-          <a href="">
           <img src="../assets/icon/icon_logout.png" alt="" />
-          登出
-          </a>
-        </router-link>
+          <span>登出</span>
+        </button>
       </div>
     </div>
   </div>
@@ -73,7 +72,14 @@ export default {
   name: 'AdminSiderBar',
   data () {
     return {
-      // isActive: false
+      isActive: false
+    }
+  },
+  methods: {
+    logout () {
+      console.log('logout')
+      this.$store.commit('revokeCurrentUser')
+      this.$router.push('/admin')
     }
   }
 }
@@ -131,6 +137,9 @@ export default {
         width: 24px;
         height: 24px;
       }
+      span {
+        font-weight: bold;
+      }
     }
   }
 }
@@ -149,10 +158,33 @@ a.router-link-active {
 @media screen and (max-width: 768px) {
   .nav-container {
     .nav-wrapper {
+      display: flex;
+      justify-content: space-between;
       margin-left: 10px;
-      .logout {
-        bottom: 70%;
+      nav {
+        li {
+          display: inline;
+          margin-right: 20px;
+        }
+        img {
+          margin-right: 6px;
+        }
       }
+      .logout {
+        padding-bottom: 8px;
+        position: relative;
+        span {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .nav-container {
+    span {
+      display: none;
     }
   }
 }

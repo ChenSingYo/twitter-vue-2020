@@ -15,7 +15,6 @@
         <input
           v-model="account"
           id="account"
-          ref="account"
           name="account"
           type="text"
           class="form-control"
@@ -87,9 +86,11 @@ export default {
         if (data.status !== 'success') {
           throw new Error(data.message)
         }
-        // keep token in localStorage
+        // keep token and userId in localStorage
         localStorage.setItem('token', data.token)
-        // this.$store.commit('revokeCurrentUser')
+        localStorage.setItem('userId', data.user.id)
+
+        this.$store.commit('setCurrentUser', data.user)
         this.$router.push('/admin/tweets')
         this.isProcessing = false
       } catch (err) {
@@ -100,13 +101,7 @@ export default {
         })
         this.password = ''
       }
-    },
-    autoFocus () {
-      this.$refs.account.focus()
     }
-  },
-  mounted () {
-    this.autoFocus()
   }
 }
 </script>
@@ -134,13 +129,13 @@ export default {
     position: relative;
     height: 50px;
     margin-bottom: 20px;
-    background: #f5f8fa;
+    background: var(--water-gary-clr);
     display: flex;
     align-items: flex-end;
     justify-content: center;
 
     label {
-      color: #657786;
+      color: var(--cement-gary-clr);
       position: absolute;
       font-size: 15px;
       height: 25px;
@@ -151,11 +146,11 @@ export default {
     }
     .form-control {
       border: none;
-      border-bottom: 3px solid #657786;
+      border-bottom: 3px solid var(--cement-gary-clr);
       border-bottom-right-radius: 2px;
       border-bottom-left-radius: 2px;
       height: 25px;
-      background: #f5f8fa;
+      background: var(--water-gary-clr);
       padding: 0px 10px;
       outline-width: 0;
 
@@ -166,7 +161,7 @@ export default {
     .form-control:focus,
     .form-control:hover {
       box-shadow: none;
-      border-color: #ff6600;
+      border-color: var(--cement-gary-clr);
     }
   }
   .button-wrapper {
@@ -183,18 +178,18 @@ export default {
       border: none;
       border-radius: 50px;
       color:white;
-      background-color:#ff6600;
+      background-color: var(--primary-clr);
     }
   }
   .form-bottom {
     text-align: end;
     .text-link {
-      color: #0099FF;
+      color: var(--link-blue-clr);
       text-decoration: underline;
       font-weight: 900;
     }
     span {
-      color: #0099FF;
+      color: var(--link-blue-clr);
       font-weight: bolder;
     }
   }

@@ -10,22 +10,25 @@ export default {
       confirmPassword
     })
   },
-  getCurrentUser({ id }) {
-    return apiHelper.get(`/api/users/${id}`)
-  },
   getCurrentUserTweets({ id }) {
-    return apiHelper.get(`/api/users/${id}/tweets`)
+    return apiHelper.get(`/users/${id}/tweets`)
   },
   getCurrentUserReplied({ id }) {
-    return apiHelper.get(`/api/users/${id}/replied_tweets`)
+    return apiHelper.get(`/users/${id}/replied_tweets`)
   },
   getCurrentUserLikes({ id }) {
-    return apiHelper.get(`/api/users/${id}/likes`)
+    return apiHelper.get(`/users/${id}/likes`)
   },
   getCurrentUserFollowers({id}) {
-    return apiHelper.get(`/api/users/${id}/followers`)
+    return apiHelper.get(`/users/${id}/followers`)
   },
   getCurrentUserFollowing({id}) {
-    return apiHelper.get(`/api/users/${id}/followings`)
+    return apiHelper.get(`/users/${id}/followings`)
+  },
+  signUp ({ account, name, email, password, checkPassword }) {
+    return apiHelper.post('/users', { account, name, email, password, checkPassword })
+  },
+  getUser({ userId }) {
+    return apiHelper.get(`/users/${userId}`)
   }
 }

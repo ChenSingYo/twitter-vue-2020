@@ -125,9 +125,10 @@ export default {
     afterCloseHandle() {
       this.showPopupView = false
     },
+    // TODO: 使用 vuex
     async fetchCurrentUser({ id }) {
       try {
-        const { data } = await usersAPI.getCurrentUser({ id })
+        // const { data } = await usersAPI.getCurrentUser({ id })
         this.currentUser = data
       } catch (error) {
         console.log(error)

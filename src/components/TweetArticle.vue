@@ -2,34 +2,29 @@
   <div class="tweet">
     <div class="tweet-container">
       <Header title="推文" :enable-back-btn="true" />
-
       <section ref="tweetBoard" class="tweet-board">
         <div class="borad-container">
           <div class="user-info">
-            <img class="avatar" src="https://picsum.photos/50" />
-            <div class="name">Name</div>
-            <div class="tag">@Tag</div>
+            <img class="avatar" :src="tweet.user.avatar" />
+            <div class="name">{{ tweet.user.name || '使用者' }}</div>
+            <div class="tag">{{ tweet.user.account || '@account' }}</div>
           </div>
           <div class="info-container">
             <p class="content">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti
-              mollitia aliquid voluptas corporis voluptatibus exercitationem!
-              Consequatur dolor repellat, reprehenderit minus beatae
-              perspiciatis possimus sapiente architecto accusantium voluptate
-              asperiores ab ex?
+              {{ tweet.description }}
             </p>
             <div class="time-wrapper">
-              <span>time</span>
-              <span>date</span>
+              <span>{{ time }}</span>
+              <span>{{ fullYear }}</span>
             </div>
           </div>
           <div class="count-container">
             <div class="reply-wrapper">
-              <span class="count">34</span>
+              <span class="count">{{ tweet.repliedCount }}</span>
               <span class="text"> 回覆</span>
             </div>
             <div class="like-wrapper">
-              <span class="count">808</span>
+              <span class="count">{{ tweet.likedCount }}</span>
               <span class="text"> 喜歡次數</span>
             </div>
           </div>
@@ -39,6 +34,7 @@
               fill="#657786"
               width="30px"
               height="30px"
+              @click="replyPopupHandle"
             ></unicon>
             <unicon
               name="heart-alt"
@@ -51,10 +47,24 @@
       </section>
 
       <section
+        v-if="tweet.tweetReplies"
         class="reply-cell"
         :style="{ 'padding-bottom': tweetBoardHeight + 'px' }"
       >
-        <ReplyCell v-for="index in 10" :key="index" />
+        <ReplyCell
+          v-for="reply in tweet.tweetReplies"
+          :key="reply.id"
+          :reply="reply"
+          :user="tweet.user"
+        />
+      </section>
+
+      <section>
+        <ReplyTweetPopup
+          :tweet="tweet"
+          :show-popup-view="showReplyPopup"
+          @after-close="handleClose"
+        />
       </section>
     </div>
   </div>
@@ -63,15 +73,39 @@
 <script>
 import Header from '../components/Header'
 import ReplyCell from '../components/ReplyCell'
+import ReplyTweetPopup from '../components/ReplyTweetPopup'
+
+import tweetsAPI from '../apis/tweets'
+import { Toast } from '../utils/helpers'
+import moment from 'moment'
+
 export default {
   name: 'TweetArticle',
   components: {
     Header,
-    ReplyCell
+    ReplyCell,
+    ReplyTweetPopup
   },
   data() {
     return {
-      isMounted: false
+      isMounted: false,
+      isLoading: false, // TODO: 用在外層時 tweetBoardHeight 高度會抓不到，尚未修正。暫時無用此變數
+      showReplyPopup: false,
+      tweet: {
+        id: -1,
+        UserId: -1,
+        description: '',
+        createdAt: '',
+        updatedAt: '',
+        likedCount: -1,
+        repliedCount: -1,
+        user: {
+          avatar: '',
+          name: '',
+          account: ''
+        },
+        tweetReplies: []
+      }
     }
   },
   computed: {
@@ -79,10 +113,59 @@ export default {
       if (!this.isMounted) return '0px'
       const boardHeight = this.$refs.tweetBoard.offsetHeight + 55 // 55 為 header 固定高度
       return boardHeight
+    },
+    time() {
+      moment.locale('zh_TW')
+      return moment.utc(this.tweet.createdAt).format('A HH:mm')
+    },
+    fullYear() {
+      return moment.utc(this.tweet.createdAt).format('YYYY年MM月DD日')
     }
   },
   mounted() {
     this.isMounted = true
+  },
+  created() {
+    const { id } = this.$route.params
+    this.fetchTweet({ id })
+  },
+  methods: {
+    replyPopupHandle() {
+      this.showReplyPopup = true
+    },
+    handleClose() {
+      this.showReplyPopup = false
+    },
+    fetchTweet({ id }) {
+      try {
+        this.isLoading = true
+        const tweetResponse = tweetsAPI.getTweet({ id })
+        const tweetRepliesResponse = tweetsAPI.getTweetReplies({ id })
+
+        Promise.all([tweetResponse, tweetRepliesResponse])
+          .then(result => {
+            const { data: tweetData } = result[0]
+            const { data: replies } = result[1]
+
+            this.tweet = tweetData
+            this.tweet.tweetReplies = replies
+          })
+          .catch(error => {
+            console.log(error)
+          })
+          .finally(() => {
+            this.isLoading = false
+          })
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '取得推文錯誤'
+        })
+
+        this.isLoading = false
+        console.log(error)
+      }
+    }
   }
 }
 </script>

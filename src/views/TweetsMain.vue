@@ -30,6 +30,7 @@ export default {
 .main-container {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   height: 100%;
 }
 </style>

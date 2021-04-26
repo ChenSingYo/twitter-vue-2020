@@ -12,37 +12,56 @@
           </header>
           <section>
             <div class="cover-img">
-              <img src="https://picsum.photos/600/200" alt="" />
+              <img :src="currentUser.cover" alt="" />
               <div class="edit-img-wrapper">
-                <button class="btn">
-                  <unicon name="camera-plus" fill="white"></unicon>
-                </button>
-                <button class="btn">
-                  <unicon name="multiply" fill="white"></unicon>
-                </button>
+                <div class="cover-input">
+                  <label for="cover">
+                    <unicon name="camera-plus" fill="white"></unicon>
+                  </label>
+                  <input
+                    id="cover"
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    @change="handleCoverFileChange"
+                  />
+                </div>
+                <div class="remove-cover">
+                  <button class="btn">
+                    <unicon name="multiply" fill="white"></unicon>
+                  </button>
+                </div>
               </div>
             </div>
             <div class="avatar-container">
-              <img src="https://picsum.photos/120" alt="" />
-              <button class="btn">
+              <img :src="currentUser.avatar" alt="" />
+              <label for="avatar">
                 <unicon name="camera-plus" fill="white"></unicon>
-              </button>
+              </label>
+              <input
+                id="avatar"
+                type="file"
+                name="image"
+                accept="image/*"
+                @change="handleAvatarFileChange"
+              />
             </div>
           </section>
           <section class="input">
             <label for="">名稱</label>
-            <input type="text" maxlength="50" />
-            <span>8/50</span>
+            <input v-model="currentUser.name" type="text" maxlength="50" />
+            <span> {{ currentUser.name.length }}/50</span>
           </section>
           <section class="input">
             <label for="summary">自我介紹</label>
             <textarea
+              v-model="currentUser.introduction"
               id="summary"
               cols="20"
               rows="4"
               maxlength="160"
             ></textarea>
-            <span>8/160</span>
+            <span>{{ currentUser.name.length }}/160</span>
           </section>
         </div>
       </div>
@@ -58,11 +77,58 @@ export default {
       type: Boolean,
       require: true,
       default: false
+    },
+    initialCurrentUser: {
+      id: -1,
+      account: '',
+      name: '',
+      avatar: '',
+      cover: '',
+      introduction: ''
+    }
+  },
+  data() {
+    return {
+      currentUser: {
+        id: -1,
+        account: '',
+        name: '',
+        avatar: '',
+        cover: '',
+        introduction: ''
+      }
+    }
+  },
+  watch: {
+    showPopupView(newValue) {
+      if (newValue) {
+        this.currentUser = { ...this.initialCurrentUser }
+      }
     }
   },
   methods: {
     handleClose() {
       this.$emit('after-close')
+    },
+    handleAvatarFileChange(e) {
+      const { files } = e.target
+      if (files.length === 0) {
+        // 使用者沒有選擇上傳的檔案
+        this.currentUser.avatar = ''
+      } else {
+        const imageURL = window.URL.createObjectURL(files[0])
+        this.currentUser.avatar = imageURL
+      }
+    },
+    handleCoverFileChange(e) {
+      const { files } = e.target
+      if (files.length === 0) {
+        // 使用者沒有選擇上傳的檔案
+        this.currentUser.cover = ''
+      } else {
+        const imageURL = window.URL.createObjectURL(files[0])
+        this.currentUser.cover = imageURL
+      }
     }
   }
 }
@@ -133,15 +199,10 @@ export default {
     height: 200px;
     background-color: var(--water-gary-clr);
 
-    &::after {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 1;
-      background-color: rgba(255, 255, 255, 0.5);
-      content: '';
+    img {
+      width: 100%;
+      height: 100%;
+      opacity: 0.5;
     }
 
     .edit-img-wrapper {
@@ -150,16 +211,39 @@ export default {
       right: 0;
       bottom: 0;
       left: 0;
-      z-index: 5;
+      z-index: 2;
       display: flex;
       align-items: center;
       justify-content: center;
+
+      .cover-input {
+        padding: 0 15px;
+        label {
+          margin: 0;
+          text-align: center;
+          cursor: pointer;
+        }
+        input {
+          display: none;
+        }
+      }
+
+      .remove-cover {
+        padding: 0 15px;
+        .btn {
+          margin: 0;
+          padding: 0;
+          width: 24px;
+          height: 24px;
+          line-height: 1;
+        }
+      }
     }
   }
 
   .avatar-container {
     position: relative;
-    z-index: 2;
+    z-index: 5;
     overflow: hidden;
     margin-top: -70px;
     margin-left: 15px;
@@ -173,23 +257,18 @@ export default {
       height: 100%;
     }
 
-    button {
+    label {
       position: absolute;
       top: 50%;
       left: 50%;
-      z-index: 4;
+      margin: 0;
+      width: auto;
+      cursor: pointer;
       transform: translate(-50%, -50%);
     }
 
-    &::after {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 3;
-      background-color: rgba(255, 255, 255, 0.2);
-      content: '';
+    input {
+      display: none;
     }
   }
 
@@ -251,5 +330,9 @@ export default {
       }
     }
   }
+}
+
+.btn {
+  box-shadow: none;
 }
 </style>

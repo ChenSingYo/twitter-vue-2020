@@ -1,16 +1,13 @@
 <template>
   <div class="cell">
-    <div class="cell-container">
-      <img class="avatar" src="https://picsum.photos/50" />
+    <div class="cell-container" @click.stop.prevent="showArticleHandle">
+      <img class="avatar" :src="tweet.user.avatar" />
       <div class="info-container">
-        <span class="name">Name</span>
-        <span class="tag">@Tag</span>
-        <span class="time">Time</span>
+        <span class="name">{{ tweet.user.name || '使用者' }}</span>
+        <span class="tag">{{ tweet.user.account || '@account' }}</span>
+        <span class="time">{{ formatTime }}</span>
         <p class="content">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti
-          mollitia aliquid voluptas corporis voluptatibus exercitationem!
-          Consequatur dolor repellat, reprehenderit minus beatae perspiciatis
-          possimus sapiente architecto accusantium voluptate asperiores ab ex?
+          {{ tweet.description }}
         </p>
         <div class="social-container">
           <div class="message" @click="replyHandle">
@@ -20,16 +17,16 @@
               width="15px"
               height="15px"
             ></unicon>
-            <span>123</span>
+            <span>{{ tweet.repliedCount }}</span>
           </div>
-          <div class="favorite">
+          <div class="favorite" @click="likeHandle">
             <unicon
               name="heart-alt"
               fill="#657786"
               width="15px"
               height="15px"
             ></unicon>
-            <span>76</span>
+            <span> {{ tweet.likedCount }} </span>
           </div>
         </div>
       </div>
@@ -38,11 +35,45 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'TweetMessageCell',
+  props: {
+    tweet: {
+      id: -1,
+      UserId: -1,
+      description: '',
+      createdAt: '',
+      updatedAt: '',
+      likedCount: -1,
+      repliedCount: -1,
+      user: {
+        avatar: '',
+        name: '',
+        account: ''
+      }
+    }
+  },
+  computed: {
+    formatTime() {
+      moment.locale('zh-TW')
+      const today = moment.utc(this.tweet.createdAt).isSame(new Date(), 'day')
+      const date = moment.utc(this.tweet.createdAt)
+      return today
+        ? date.format('HH 小時').replace(/^0+/, '')
+        : date.format('MM月DD日').replace(/^0+/, '')
+    }
+  },
   methods: {
     replyHandle() {
       this.$emit('after-reply-message')
+    },
+    showArticleHandle() {
+      this.$emit('after-show-article', { id: this.tweet.id })
+    },
+    likeHandle() {
+      this.$emit('after-like-toggle')
     }
   }
 }
@@ -53,6 +84,7 @@ export default {
   display: flex;
   padding: 10px 0;
   border-bottom: 1px solid var(--light-gary-clr);
+  cursor: pointer;
 
   .avatar {
     margin: 10px 10px 10px 15px;

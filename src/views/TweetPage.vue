@@ -17,7 +17,7 @@ import RecommendSidebar from '../components/RecommendSidebar'
 import TweetArticle from '../components/TweetArticle'
 
 export default {
-  name: 'UserFollow',
+  name: 'TweetPage',
   components: {
     NavSidebar,
     RecommendSidebar,
@@ -30,6 +30,7 @@ export default {
 .tweet-container {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   height: 100%;
 }
 </style>

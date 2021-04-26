@@ -1,18 +1,18 @@
 <template>
   <div class="cell">
-    <div class="cell-container">
-      <img class="avatar" src="https://picsum.photos/50" />
+    <div class="cell-container" @click="replyHandle">
+      <img class="avatar" :src="reply.User.avatar" />
       <div class="info-container">
         <div class="message-wrapper">
-          <span class="name">Name</span>
-          <span class="tag">{{ '@Tag' }}・{{ '13 Hour' }}</span>
+          <span class="name">{{ reply.User.name }}</span>
+          <span class="tag">{{ reply.User.account }}・{{ hour }}</span>
         </div>
         <div class="reply-wrapper">
           <span class="reply-text">回覆</span>
-          <span class="reply-tag">@apple</span>
+          <span class="reply-tag">{{ user.account }}</span>
         </div>
         <p class="content">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae, minus.
+          {{ reply.comment }}
         </p>
       </div>
     </div>
@@ -20,8 +20,40 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
-  name: 'ReplyCell'
+  name: 'ReplyCell',
+  props: {
+    reply: {
+      id: -1,
+      tweetId: -1,
+      comment: '',
+      updatedAt: '',
+      User: {
+        id: -1,
+        avatar: '',
+        name: '',
+        account: ''
+      }
+    },
+    user: {
+      id: -1,
+      avatar: '',
+      name: '',
+      account: ''
+    }
+  },
+  computed: {
+    hour() {
+      if (!this.reply.updatedAt) return ''
+      moment.locale('zh_TW')
+      return moment.utc(this.reply.updatedAt).fromNow()
+    }
+  },
+  methods: {
+    replyHandle() {}
+  }
 }
 </script>
 

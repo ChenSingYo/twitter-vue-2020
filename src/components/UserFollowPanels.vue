@@ -1,6 +1,6 @@
 <template>
   <div class="follow">
-    <UserHeader />
+    <UserHeader :name="currentUser.name" :count="currentUser.tweetCount" />
 
     <section class="follow-tabs">
       <div class="tab-container">
@@ -8,8 +8,20 @@
           :options="{ defaultTabHash: 'first-tab', useUrlFragment: false }"
           @changed="tabChanged"
         >
-          <tab id="first-tab" name="跟蹤者"> <UserFollowCell /> </tab>
-          <tab id="second-tab" name="正在跟隨"> <UserFollowCell /> </tab>
+          <tab id="first-tab" name="跟隨者">
+            <UserFollowCell
+              v-for="follow in followersData"
+              :inital-follow="follow"
+              :key="follow.id"
+            />
+          </tab>
+          <tab id="second-tab" name="正在跟隨">
+            <UserFollowCell
+              v-for="follow in followingData"
+              :inital-follow="follow"
+              :key="follow.id"
+            />
+          </tab>
         </tabs>
       </div>
     </section>
@@ -20,6 +32,8 @@
 import { Tabs, Tab } from 'vue-tabs-component'
 import UserHeader from '../components/UserHeader'
 import UserFollowCell from '../components/UserFollowCell'
+import usersAPI from '../apis/users'
+import { Toast } from '../utils/helpers'
 
 export default {
   name: 'UserFollowPanels',
@@ -29,8 +43,53 @@ export default {
     UserHeader,
     UserFollowCell
   },
+  data() {
+    return {
+      followersData: [],
+      followingData: [],
+      currentUser: {
+        id: -1,
+        account: '',
+        name: '',
+        avatar: '',
+        cover: '',
+        tweetCount: -1,
+        followingCount: -1,
+        followerCount: -1,
+        introduction: ''
+      }
+    }
+  },
   methods: {
-    tabChanged() {}
+    // TODO: id 要使用 currentUser id
+    tabChanged(selectedTab) {
+      if (selectedTab.tab.id === 'first-tab') {
+        this.fetchCurrentFollowers({ id: 2 })
+      } else {
+        this.fetchCurrentFollowing({ id: 2 })
+      }
+    },
+    async fetchCurrentFollowing({ id }) {
+      try {
+        const { data } = await usersAPI.getCurrentUserFollowing({ id })
+        this.followingData = data
+        // console.log(' following : ', this.followingData)
+      } catch (error) {
+        console.log(error)
+        Toast.fire({ icon: 'error', title: '取得跟隨中的資料錯誤，請稍後再試' })
+      }
+    },
+    async fetchCurrentFollowers({ id }) {
+      try {
+        const { data } = await usersAPI.getCurrentUserFollowers({ id })
+
+        this.followersData = data
+        // console.log(' followersData : ', this.followersData)
+      } catch (error) {
+        console.log(error)
+        Toast.fire({ icon: 'error', title: '取得跟隨者的資料錯誤，請稍後再試' })
+      }
+    }
   }
 }
 </script>

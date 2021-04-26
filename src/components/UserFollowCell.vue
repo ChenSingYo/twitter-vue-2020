@@ -1,25 +1,147 @@
 <template>
   <div class="cell">
     <div class="cell-container">
-      <img class="avatar" src="https://picsum.photos/50" />
+      <img class="avatar" :src="follow.avatar" />
       <div class="info-container">
-        <div class="name">Name</div>
-        <div class="tag">@Tag</div>
+        <div class="name">{{ follow.name }}</div>
+        <div class="tag">{{ follow.account }}</div>
         <p class="content">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti
-          mollitia aliquid voluptas corporis voluptatibus exercitationem!
-          Consequatur dolor repellat, reprehenderit minus beatae perspiciatis
-          possimus sapiente architecto accusantium voluptate asperiores ab ex?
+          {{ follow.introduction }}
         </p>
-        <button class="btn follow-btn isActive">正在跟隨</button>
+        <button
+          class="btn follow-btn"
+          :class="{ isActive: follow.isFollowing }"
+          @click="followToggleHandle"
+        >
+          {{ follow.isFollowing ? '正在跟隨' : '跟隨' }}
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import followAPI from '../apis/follow'
+import { Toast } from '../utils/helpers'
+
 export default {
-  name: 'UserFollowCell'
+  name: 'UserFollowCell',
+  props: {
+    initalFollow: {
+      // followerId followingId 只有一個會有值
+      followerId: -1,
+      followingId: -1,
+      account: '',
+      name: '',
+      avatar: '',
+      introduction: '',
+      followshipCreatedAt: '',
+      isFollowing: false
+    }
+  },
+  computed: {
+    id() {
+      return this.initalFollow.followerId > 0
+        ? this.initalFollow.followerId
+        : this.initalFollow.followingId
+    }
+  },
+  data() {
+    return {
+      follow: {
+        followerId: -1,
+        followingId: -1,
+        account: '',
+        name: '',
+        avatar: '',
+        introduction: '',
+        followshipCreatedAt: '',
+        isFollowing: false
+      }
+    }
+  },
+  watch: {
+    initalFollow(newValue) {
+      console.log(newValue)
+      this.follow = {
+        ...this.follow,
+        ...newValue
+      }
+    }
+  },
+  created() {
+    if (this.initalFollow.followingId) {
+      this.follow = {
+        ...this.initalFollow,
+        isFollowing: true
+      }
+    } else {
+      this.follow = { ...this.initalFollow }
+    }
+    // console.log(this.follow)
+  },
+  methods: {
+    followToggleHandle() {
+      if (this.follow.isFollowing) {
+        this.removeFollow({ id: this.id })
+      } else {
+        this.addFollow({ id: this.id })
+      }
+
+      this.follow = {
+        ...this.follow,
+        isFollowing: !this.follow.isFollowing
+      }
+
+      this.$emit('after-following-changed')
+    },
+    async addFollow({ id }) {
+      try {
+        const { data } = await followAPI.addFollowing({ id })
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        Toast.fire({
+          icon: 'success',
+          title: '已跟隨該使用者'
+        })
+      } catch (error) {
+        console.log(error)
+        this.follow = {
+          ...this.follow,
+          isFollowing: false
+        }
+        Toast.fire({
+          icon: 'error',
+          title: '跟隨使用者錯誤，請稍後再試'
+        })
+      }
+    },
+    async removeFollow({ id }) {
+      try {
+        const { data } = await followAPI.removeFollowing({ id })
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        Toast.fire({
+          icon: 'success',
+          title: '已移除跟隨該使用者'
+        })
+      } catch (error) {
+        console.log(error)
+        this.follow = {
+          ...this.follow,
+          isFollowing: true
+        }
+        Toast.fire({
+          icon: 'error',
+          title: '刪除跟隨使用者錯誤，請稍後再試'
+        })
+      }
+    }
+  }
 }
 </script>
 

@@ -16,16 +16,15 @@
               </div>
               <div class="info-container">
                 <div class="message-wrapper">
-                  <span class="name">Name</span>
-                  <span class="tag">{{ '@Tag' }}・{{ '13 Hour' }}</span>
+                  <span class="name">{{ tweet.user.name || '使用者' }}</span>
+                  <span class="tag">{{ tweet.user.account }}・{{ hour }}</span>
                 </div>
                 <p class="content">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Vitae, minus.
+                  {{ tweet.description }}
                 </p>
                 <div class="reply-wrapper">
-                  <span class="reply-text">回覆</span>
-                  <span class="reply-tag">@apple</span>
+                  <span class="reply-text">回覆給</span>
+                  <span class="reply-tag">{{ tweet.user.account }}</span>
                 </div>
               </div>
             </div>
@@ -34,9 +33,11 @@
           <section class="post">
             <div class="post-panel">
               <div class="img-wrapper">
+                <!-- current user image -->
                 <img class="avatar" src="https://picsum.photos/50" />
               </div>
               <textarea
+                v-model="replyText"
                 class="tweet-input-box"
                 name="tweet-text"
                 id=""
@@ -45,7 +46,9 @@
                 placeholder="推你的回覆"
               ></textarea>
               <div class="btn-wrapper">
-                <button class="btn post-btn">回覆</button>
+                <button class="btn post-btn" @click="createReplyHandle">
+                  回覆
+                </button>
               </div>
             </div>
           </section>
@@ -56,6 +59,10 @@
 </template>
 
 <script>
+import moment from 'moment'
+import tweetsAPI from '../apis/tweets'
+import { Toast } from '../utils/helpers'
+
 export default {
   name: 'ReplyTweetPopup',
   props: {
@@ -63,11 +70,78 @@ export default {
       type: Boolean,
       require: true,
       default: false
+    },
+    tweet: {
+      id: -1,
+      UserId: -1,
+      description: '',
+      createdAt: '',
+      updatedAt: '',
+      user: {
+        avatar: '',
+        name: '',
+        account: ''
+      }
+    }
+  },
+  data() {
+    return {
+      replyText: ''
+    }
+  },
+  watch: {
+    showPopupView(value) {
+      if (value) {
+        this.replyText = ''
+      }
+    }
+  },
+  computed: {
+    hour() {
+      if (!this.tweet.createdAt) return ''
+      moment.locale('zh_TW')
+      return moment
+        .utc(this.tweet.createdAt)
+        .format('HH 小時')
+        .replace(/^0+/, '')
     }
   },
   methods: {
     handleClose() {
       this.$emit('after-close')
+    },
+    createReplyHandle() {
+      if (this.replyText.trim().length < 1) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請輸入回覆訊息'
+        })
+        return
+      }
+      const { id } = this.$route.params
+      this.createReply({ id, comment: this.replyText })
+    },
+    createReply({ id, comment }) {
+      try {
+        const { status } = tweetsAPI.createTweetReply({ id, comment })
+
+        console.log('create reply: ', status)
+
+        Toast.fire({
+          icon: 'success',
+          title: '新增成功'
+        })
+
+        setTimeout(() => {
+          this.$emit('after-close')
+        }, 1000)
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '新增回覆錯誤，請稍後再試'
+        })
+        console.log(error)
+      }
     }
   }
 }
@@ -206,7 +280,7 @@ export default {
     }
 
     .tweet-input-box {
-      padding: 20px 15px 0 0;
+      padding: 11px 15px 0 0;
       width: calc(100% - 75px);
       border: none;
       font-weight: 500;

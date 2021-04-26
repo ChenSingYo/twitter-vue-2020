@@ -5,15 +5,16 @@
       <div class="post-container">
         <img class="avatar" src="https://picsum.photos/50" />
         <textarea
+          v-model="description"
           class="tweet-input-box"
-          name="tweet"
-          id=""
           cols="20"
           rows="4"
           placeholder="有什麼新鮮事？"
         ></textarea>
         <div class="btn-wrapper">
-          <button class="btn post-btn">推文</button>
+          <button class="btn post-btn" @click.stop.prevent="createPostHandle">
+            推文
+          </button>
         </div>
       </div>
     </section>
@@ -22,9 +23,12 @@
       :style="{ 'padding-bottom': postContainerHeight + 'px' }"
     >
       <TweetMessageCell
-        v-for="index in 10"
-        :key="index"
+        v-for="tweet in tweets"
+        :key="tweet.id"
+        :tweet="tweet"
         @after-reply-message="afterReplyHandle"
+        @after-show-article="afterShowArticleHandle"
+        @after-like-toggle="afterLikeToggleHandle"
       />
     </section>
 
@@ -40,6 +44,8 @@
 <script>
 import TweetMessageCell from '../components/TweetMessageCell'
 import ReplyTweetPopup from '../components/ReplyTweetPopup'
+import tweetsAPI from '../apis/tweets'
+import { Toast } from '../utils/helpers'
 
 export default {
   name: 'TweetsList',
@@ -50,7 +56,9 @@ export default {
   data() {
     return {
       isMounted: false,
-      showReplyPopup: false
+      showReplyPopup: false,
+      tweets: [],
+      description: ''
     }
   },
   computed: {
@@ -61,6 +69,9 @@ export default {
       return headerHeight + postHeight
     }
   },
+  created() {
+    this.fetchTweets()
+  },
   mounted() {
     this.isMounted = true
   },
@@ -70,6 +81,50 @@ export default {
     },
     handleClose() {
       this.showReplyPopup = false
+    },
+    afterShowArticleHandle({ id }) {
+      this.$router.push(`/tweets/${id}`)
+    },
+    afterLikeToggleHandle() {
+      console.log('點擊喜歡')
+    },
+    createPostHandle() {
+      if (this.description.trim().length < 1) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請輸入推文'
+        })
+        return
+      }
+      this.createTweet({ description: this.description })
+    },
+    async fetchTweets() {
+      try {
+        const { data } = await tweetsAPI.getTweets()
+        this.tweets = data
+        // console.log('tweets : ', this.tweets)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async createTweet({ description }) {
+      try {
+        const { data } = await tweetsAPI.createTweet({ description })
+
+        if (data.status === 'success') {
+          Toast.fire({
+            icon: 'success',
+            title: '新增推文成功'
+          })
+          return
+        }
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '新增推文失敗'
+        })
+        console.log(error)
+      }
     }
   }
 }
@@ -78,6 +133,7 @@ export default {
 <style lang="scss" scoped>
 .tweets {
   overflow: hidden;
+  width: 600px;
 
   header {
     border-bottom: 1px solid var(--light-gary-clr);

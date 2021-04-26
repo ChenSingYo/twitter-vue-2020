@@ -12,15 +12,16 @@
             <div class="post-panel">
               <img class="avatar" src="https://picsum.photos/50" />
               <textarea
+                v-model="description"
                 class="tweet-input-box"
-                name="tweet"
-                id=""
                 cols="20"
                 rows="4"
                 placeholder="有什麼新鮮事？"
               ></textarea>
               <div class="btn-wrapper">
-                <button class="btn post-btn">推文</button>
+                <button class="btn post-btn" @click="createPostHandle">
+                  推文
+                </button>
               </div>
             </div>
           </section>
@@ -31,6 +32,9 @@
 </template>
 
 <script>
+import tweetsAPI from '../apis/tweets'
+import { Toast } from '../utils/helpers'
+
 export default {
   name: 'UserPostPopup',
   props: {
@@ -40,9 +44,44 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      description: ''
+    }
+  },
   methods: {
     handleClose() {
       this.$emit('after-close')
+    },
+    createPostHandle() {
+      if (this.description.trim().length < 1) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請輸入推文'
+        })
+        return
+      }
+      this.createTweet({ description: this.description })
+    },
+    async createTweet({ description }) {
+      try {
+        const { data } = await tweetsAPI.createTweet({ description })
+
+        if (data.status === 'success') {
+          Toast.fire({
+            icon: 'success',
+            title: '新增推文成功'
+          })
+        }
+
+        this.$emit('after-close')
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '新增推文失敗'
+        })
+        console.log(error)
+      }
     }
   }
 }

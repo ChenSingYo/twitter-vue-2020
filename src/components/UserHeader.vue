@@ -8,15 +8,25 @@
       height="36px"
     ></unicon>
     <div class="summary">
-      <span class="name">name</span>
-      <span class="post">23則貼文</span>
+      <span class="name">{{ name }}</span>
+      <span class="post"> {{ count }} 則貼文</span>
     </div>
   </header>
 </template>
 
 <script>
 export default {
-  name: 'UserHeader'
+  name: 'UserHeader',
+  props: {
+    name: {
+      type: String,
+      default: ''
+    },
+    count: {
+      type: Number,
+      default: 0
+    }
+  }
 }
 </script>
 

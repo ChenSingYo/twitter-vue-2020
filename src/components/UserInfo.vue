@@ -1,34 +1,34 @@
 <template>
   <div class="info">
-    <UserHeader />
+    <UserHeader :name="currentUser.name" :count="currentUser.tweetCount" />
 
     <section class="introduction">
       <div class="introduction-container">
         <div class="cover-img">
-          <img src="https://picsum.photos/600/200" alt="" />
+          <img :src="currentUser.cover" alt="" />
         </div>
         <div class="avatar-container">
-          <img src="https://picsum.photos/136" alt="" />
+          <img :src="currentUser.avatar" alt="" />
         </div>
         <div class="edit-container">
           <UserInfoMenu
-            :is-current-user="false"
+            :is-current-user="true"
             @after-show-edit="afterShowEditHandle"
           />
         </div>
         <div class="summary-board">
           <div class="info-container">
-            <div class="name">Name</div>
-            <div class="tag">@tag</div>
-            <p class="content">content</p>
+            <div class="name">{{ currentUser.name }}</div>
+            <div class="tag">{{ currentUser.account }}</div>
+            <p class="content">{{ currentUser.introduction }}</p>
           </div>
           <div class="follow-container">
             <router-link to="/profile/follow" class="following">
-              <span class="count">123 個</span>
+              <span class="count">{{ currentUser.followingCount }} 個</span>
               <span class="text">跟隨中</span>
             </router-link>
             <div class="follower">
-              <span class="count">456 個</span>
+              <span class="count">{{ currentUser.followerCount }} 個</span>
               <span class="text">跟隨者</span>
             </div>
           </div>
@@ -42,7 +42,11 @@
           @changed="tabChanged"
         >
           <tab id="first-tab" name="推文">
-            <TweetMessageCell />
+            <TweetMessageCell
+              v-for="tweet in tweets"
+              :key="tweet.id"
+              :tweet="tweet"
+            />
           </tab>
           <tab id="second-tab" name="推文與回覆">
             <TweetMessageCell />
@@ -55,6 +59,7 @@
     </section>
 
     <UserInfoEditing
+      :initial-current-user="currentUser"
       :show-popup-view="showPopupView"
       @after-close="afterCloseHandle"
     />
@@ -67,6 +72,8 @@ import TweetMessageCell from '../components/TweetMessageCell'
 import UserInfoEditing from '../components/UserInfoEditing'
 import UserHeader from '../components/UserHeader'
 import UserInfoMenu from '../components/UserInfoMenu'
+import usersAPI from '../apis/users'
+import { Toast } from '../utils/helpers'
 
 export default {
   name: 'UserInfo',
@@ -80,18 +87,91 @@ export default {
   },
   data() {
     return {
-      showPopupView: false
+      showPopupView: false,
+      currentUser: {
+        id: -1,
+        account: '',
+        name: '',
+        avatar: '',
+        cover: '',
+        tweetCount: -1,
+        followingCount: -1,
+        followerCount: -1,
+        introduction: ''
+      },
+      tweets: [],
+      replied: [],
+      likes: []
     }
+  },
+  created() {
+    // TODO: 要使用 currentUser id
+    this.fetchCurrentUser({ id: 2 })
   },
   methods: {
     tabChanged(selectedTab) {
-      console.log('Tab changed to:' + selectedTab.tab.name)
+      // TODO: 要使用 currentUser id
+      if (selectedTab.tab.id === 'first-tab') {
+        this.fetchCurrentUserTweets({ id: 2 })
+      } else if (selectedTab.tab.id === 'second-tab') {
+        this.fetchCurrentUserReplied({ id: 2 })
+      } else {
+        this.fetchCurrentUserLikes({ id: 2 })
+      }
     },
     afterShowEditHandle() {
       this.showPopupView = true
     },
     afterCloseHandle() {
       this.showPopupView = false
+    },
+    async fetchCurrentUser({ id }) {
+      try {
+        const { data } = await usersAPI.getCurrentUser({ id })
+        this.currentUser = data
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '取得使用者資料錯誤，請稍後再試'
+        })
+      }
+    },
+    async fetchCurrentUserTweets({ id }) {
+      try {
+        const { data } = await usersAPI.getCurrentUserTweets({ id })
+        this.tweets = data
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '取得使用者推文錯誤，請稍後再試'
+        })
+      }
+    },
+    async fetchCurrentUserReplied({ id }) {
+      try {
+        const { data } = await usersAPI.getCurrentUserReplied({ id })
+        this.replied = data
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '取得使用者推文與回覆錯誤，請稍後再試'
+        })
+      }
+    },
+    async fetchCurrentUserLikes({ id }) {
+      try {
+        const { data } = await usersAPI.getCurrentUserLikes({ id })
+        this.likes = data
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '取得使用者喜歡內容錯誤，請稍後再試'
+        })
+      }
     }
   }
 }
@@ -105,7 +185,6 @@ export default {
 }
 
 .info {
-  // flex-grow: 1;
   width: 600px;
 }
 

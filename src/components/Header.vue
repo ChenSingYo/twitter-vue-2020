@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     handleBack() {
-      console.log('back')
+      this.$router.go(-1)
     }
   }
 }

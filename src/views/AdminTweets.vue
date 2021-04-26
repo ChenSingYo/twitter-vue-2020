@@ -41,13 +41,12 @@ export default {
     };
   },
   created () {
-    this.fetchTweets ();
+    this.fetchTweets ()
   },
   methods: {
     async fetchTweets () {
       try {
         const { data } = await adminAPI.getTweets()
-        console.log(data)
         if (data.status === 'error') {
           throw new Error(data.status)
         }
@@ -87,7 +86,6 @@ export default {
   .center-column {
     grid-column: 2 / 3;
     grid-row: 1 / 1;
-    border-left: 1px solid #e6ecf0;
   }
 
   .header {

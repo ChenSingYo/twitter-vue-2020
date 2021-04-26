@@ -25,3 +25,15 @@ export const emptyImageFilter = {
     }
   }
 }
+
+export const countText = {
+  filters: {
+    countText(text) {
+      if (text.length > 50) {
+        text = text.substr(0, 50) + '...'
+        return text
+      }
+      return text
+    }
+  }
+}

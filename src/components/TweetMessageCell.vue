@@ -1,7 +1,9 @@
 <template>
   <div class="cell">
     <div class="cell-container" @click.stop.prevent="showArticleHandle">
-      <img class="avatar" :src="tweet.user.avatar" />
+      <div v-if="tweet.user && tweet.user.avatar" class="avatar-wrapper">
+        <img class="avatar" :src="tweet.user.avatar" />
+      </div>
       <div class="info-container">
         <span class="name">{{ tweet.user.name || '使用者' }}</span>
         <span class="tag">{{ tweet.user.account || '@account' }}</span>
@@ -86,12 +88,19 @@ export default {
   border-bottom: 1px solid var(--light-gary-clr);
   cursor: pointer;
 
-  .avatar {
+
+.avatar-wrapper {
     margin: 10px 10px 10px 15px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
+      background-color: var(--light-gary-clr);
+
+  .avatar {
+    width: 100%;
+    height: 100%;
   }
+}
 
   .name {
     color: var(--black-clr);

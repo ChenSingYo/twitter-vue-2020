@@ -3,12 +3,15 @@
     <header ref="header"><h4>首頁</h4></header>
     <section ref="post" class="post">
       <div class="post-container">
-        <img class="avatar" src="https://picsum.photos/50" />
+        <div class="avatar-wrapper">
+          <img v-if="currentUser.avatar" class="avatar" :src="currentUser.avatar" />
+        </div>
         <textarea
           v-model="description"
           class="tweet-input-box"
           cols="20"
           rows="4"
+          maxlength="140"
           placeholder="有什麼新鮮事？"
         ></textarea>
         <div class="btn-wrapper">
@@ -49,6 +52,16 @@ import { Toast } from '../utils/helpers'
 
 export default {
   name: 'TweetsList',
+  props: {
+    currentUser: {
+      id: -1,
+      account: '',
+      name: '',
+      avatar: '',
+      cover: '',
+      introduction: ''
+    }
+  },
   components: {
     TweetMessageCell,
     ReplyTweetPopup
@@ -149,12 +162,19 @@ export default {
     border-bottom: 10px solid var(--light-gary-clr);
   }
 
-  .avatar {
+  .avatar-wrapper {
     float: left;
     margin: 10px 10px 10px 15px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    background-color: var(--light-gary-clr);
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    
   }
 
   .tweet-input-box {

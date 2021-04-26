@@ -42,17 +42,17 @@
           @changed="tabChanged"
         >
           <tab id="first-tab" name="推文">
-            <TweetMessageCell
+             <TweetMessageCell
               v-for="tweet in tweets"
               :key="tweet.id"
               :tweet="tweet"
-            />
+            /> 
           </tab>
           <tab id="second-tab" name="推文與回覆">
-            <TweetMessageCell />
+            <!-- <TweetMessageCell /> -->
           </tab>
           <tab id="third-tab" name="喜歡的內容">
-            <TweetMessageCell />
+            <!-- <TweetMessageCell /> -->
           </tab>
         </tabs>
       </div>
@@ -77,6 +77,19 @@ import { Toast } from '../utils/helpers'
 
 export default {
   name: 'UserInfo',
+  props: {
+    currentUser: {
+      id: 20,
+      account: '',
+      name: '',
+      avatar: '',
+      cover: '',
+      introduction: '',
+      tweetCount: -1,
+      followingCount: -1,
+      followerCount: -1
+    }
+  },
   components: {
     Tabs,
     Tab,
@@ -88,35 +101,22 @@ export default {
   data() {
     return {
       showPopupView: false,
-      currentUser: {
-        id: -1,
-        account: '',
-        name: '',
-        avatar: '',
-        cover: '',
-        tweetCount: -1,
-        followingCount: -1,
-        followerCount: -1,
-        introduction: ''
-      },
       tweets: [],
       replied: [],
       likes: []
     }
   },
   created() {
-    // TODO: 要使用 currentUser id
-    this.fetchCurrentUser({ id: 2 })
+
   },
   methods: {
     tabChanged(selectedTab) {
-      // TODO: 要使用 currentUser id
       if (selectedTab.tab.id === 'first-tab') {
-        this.fetchCurrentUserTweets({ id: 2 })
+        this.fetchCurrentUserTweets({ id: this.currentUser.id })
       } else if (selectedTab.tab.id === 'second-tab') {
-        this.fetchCurrentUserReplied({ id: 2 })
+        this.fetchCurrentUserReplied({ id: this.currentUser.id })
       } else {
-        this.fetchCurrentUserLikes({ id: 2 })
+        this.fetchCurrentUserLikes({ id: this.currentUser.id })
       }
     },
     afterShowEditHandle() {
@@ -125,19 +125,7 @@ export default {
     afterCloseHandle() {
       this.showPopupView = false
     },
-    // TODO: 使用 vuex
-    async fetchCurrentUser({ id }) {
-      try {
-        // const { data } = await usersAPI.getCurrentUser({ id })
-        this.currentUser = data
-      } catch (error) {
-        console.log(error)
-        Toast.fire({
-          icon: 'error',
-          title: '取得使用者資料錯誤，請稍後再試'
-        })
-      }
-    },
+    // TODO: tweets 的 tweetmessagecell 還尚未使用
     async fetchCurrentUserTweets({ id }) {
       try {
         const { data } = await usersAPI.getCurrentUserTweets({ id })

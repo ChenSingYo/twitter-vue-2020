@@ -4,7 +4,7 @@
     <NavSidebar />
 
     <!-- 使用者跟隨者、正在跟隨 -->
-    <UserFollowPanels />
+    <UserFollowPanels :current-user="currentUser" />
 
     <!-- 右側 bar -->
     <RecommendSidebar />
@@ -15,6 +15,7 @@
 import NavSidebar from '../components/NavSidebar'
 import RecommendSidebar from '../components/RecommendSidebar'
 import UserFollowPanels from '../components/UserFollowPanels'
+import { mapState } from 'vuex'
 
 export default {
   name: 'UserFollow',
@@ -22,6 +23,9 @@ export default {
     NavSidebar,
     RecommendSidebar,
     UserFollowPanels
+  },
+  computed: {
+    ...mapState(['currentUser'])
   }
 }
 </script>

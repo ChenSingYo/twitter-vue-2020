@@ -4,7 +4,7 @@
     <NavSidebar />
 
     <!-- 使用者資訊 -->
-    <UserInfo />
+    <UserInfo :current-user="currentUser" />
 
     <!-- 右側 bar -->
     <RecommendSidebar />
@@ -15,6 +15,7 @@
 import NavSidebar from '../components/NavSidebar'
 import UserInfo from '../components/UserInfo'
 import RecommendSidebar from '../components/RecommendSidebar'
+import { mapState } from 'vuex'
 
 export default {
   name: 'UserProfile',
@@ -22,6 +23,9 @@ export default {
     NavSidebar,
     UserInfo,
     RecommendSidebar
+  },
+  computed: {
+    ...mapState(['currentUser'])
   }
 }
 </script>

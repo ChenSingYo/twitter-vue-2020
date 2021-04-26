@@ -4,7 +4,7 @@
     <NavSidebar />
 
     <!-- 使用者文章列表 -->
-    <TweetsList />
+    <TweetsList :current-user="currentUser" />
 
     <!-- 右側 bar -->
     <RecommendSidebar />
@@ -15,6 +15,7 @@
 import NavSidebar from '../components/NavSidebar'
 import TweetsList from '../components/TweetsList'
 import RecommendSidebar from '../components/RecommendSidebar'
+import { mapState } from 'vuex'
 
 export default {
   name: 'TweetsMain',
@@ -22,6 +23,12 @@ export default {
     NavSidebar,
     TweetsList,
     RecommendSidebar
+  },
+  computed: {
+    ...mapState(['currentUser'])
+  },
+  created() {
+    console.log(this.currentUser)
   }
 }
 </script>

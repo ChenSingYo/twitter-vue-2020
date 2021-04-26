@@ -37,6 +37,16 @@ import { Toast } from '../utils/helpers'
 
 export default {
   name: 'UserFollowPanels',
+  props: {
+    currentUser: {
+      id: -1,
+      account: '',
+      name: '',
+      avatar: '',
+      cover: '',
+      introduction: ''
+    }
+  },
   components: {
     Tabs,
     Tab,
@@ -46,27 +56,16 @@ export default {
   data() {
     return {
       followersData: [],
-      followingData: [],
-      currentUser: {
-        id: -1,
-        account: '',
-        name: '',
-        avatar: '',
-        cover: '',
-        tweetCount: -1,
-        followingCount: -1,
-        followerCount: -1,
-        introduction: ''
-      }
+      followingData: []
     }
   },
   methods: {
     // TODO: id 要使用 currentUser id
     tabChanged(selectedTab) {
       if (selectedTab.tab.id === 'first-tab') {
-        this.fetchCurrentFollowers({ id: 2 })
+        this.fetchCurrentFollowers({ id: this.currentUser.id })
       } else {
-        this.fetchCurrentFollowing({ id: 2 })
+        this.fetchCurrentFollowing({ id: this.currentUser.id })
       }
     },
     async fetchCurrentFollowing({ id }) {

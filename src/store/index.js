@@ -13,6 +13,7 @@ export default new Vuex.Store({
       avatar: '',
       cover: '',
       introduction: '',
+      role:''
     },
     isAuthenticated: false,
     token: '',
@@ -31,27 +32,25 @@ export default new Vuex.Store({
       state.isAuthenticated = false
       state.token = ''
       localStorage.removeItem('token')
-      localStorage.removeItem('userId')
     },
   },
   actions: {
     // 確認使用者登入狀態
     async fetchCurrentUser ({ commit }) {
       try {
-        const Id = localStorage.getItem('userId')
-        const { userId } = { userId: Id }
-        const { data } = await usersAPI.getUser({ userId })
+        const { data } = await usersAPI.getCurrentUser()
         if (data.status === 'error') {
           throw new Error(data.message)
         }
-        const { id, account, name, avatar, cover, introduction } = data
+        const { id, account, name, avatar, cover, introduction, role } = data
         commit('setCurrentUser', {
           id,
           account,
           name,
           avatar,
           cover,
-          introduction
+          introduction,
+          role
         })
         console.log('setCurrentUser')
         return true

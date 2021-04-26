@@ -86,9 +86,13 @@
         </ul>
       </nav>
       <div class="logout">
-        <router-link to="/"
-          ><img src="../assets/icon/icon_logout.png" alt="" />登出</router-link
+        <button
+          class="btn"
+          @click="logout"
         >
+          <img src="../assets/icon/icon_logout.png" alt="" />
+          <span>登出</span>
+        </button>
       </div>
     </div>
 
@@ -115,6 +119,10 @@ export default {
     },
     handleClose() {
       this.showPostView = false
+    },
+        logout () {
+      this.$store.commit('revokeCurrentUser')
+      this.$router.push('/admin')
     }
   }
 }
@@ -194,6 +202,10 @@ export default {
         margin-right: 20px;
         width: 24px;
         height: 24px;
+      }
+  
+      span {
+        font-weight: bold;
       }
     }
   }

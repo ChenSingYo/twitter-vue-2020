@@ -10,7 +10,7 @@ Vue.use(VueRouter)
 
 const authorizeIsAdmin = (to, from, next) => {
   const currentUser = store.state.currentUser
-  console.log('currentUser:', currentUser)
+  // console.log('currentUser:', currentUser)
   if (currentUser && !currentUser.role === 'admin') {
     next('/404')
     return
@@ -20,7 +20,7 @@ const authorizeIsAdmin = (to, from, next) => {
 
 const authorizeIsUser = (to, from, next) => {
   const currentUser = store.state.currentUser
-  console.log('currentUser:', currentUser)
+  console.log('authorizeIsUser:', currentUser)
   if (currentUser.role !== 'user') {
     next('/login')
     return
@@ -116,13 +116,13 @@ router.beforeEach(async (to, from, next) => {
   const tokenInLocal = localStorage.getItem('token')
   const tokenInStore = store.state.token
 
-  console.log('currentUser:', currentUserRole)
+  // console.log('currentUser:', currentUserRole)
 
   // 如果有 token in local，而兩種token不同，則再次驗證
   if (tokenInLocal && tokenInLocal !== tokenInStore) {
     isAuthenticated = store.dispatch('fetchCurrentUser')
   }
-  console.log('isAuthenticated', isAuthenticated)
+  // console.log('isAuthenticated', isAuthenticated)
 
   // 不需驗證 token 的頁面
   const pathsWithoutAuthentication = ['user-login', 'user-regist', 'admin-login']

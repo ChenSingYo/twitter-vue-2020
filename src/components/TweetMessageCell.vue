@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     replyHandle() {
-      this.$emit('after-reply-message')
+      this.$emit('after-reply-message', { tweet: this.tweet })
     },
     showArticleHandle() {
       this.$emit('after-show-article', { id: this.tweet.id })

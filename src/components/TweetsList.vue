@@ -43,6 +43,8 @@
     <section>
       <ReplyTweetPopup
         :show-popup-view="showReplyPopup"
+        :tweet="replyTweet"
+        :current-user="currentUser"
         @after-close="handleClose"
       />
     </section>
@@ -77,7 +79,22 @@ export default {
       isMounted: false,
       showReplyPopup: false,
       tweets: [],
-      description: ''
+      description: '',
+      replyTweet: {
+        id: -1,
+        UserId: -1,
+        description: '',
+        createdAt: '',
+        updatedAt: '',
+        likedCount: -1,
+        repliedCount: -1,
+        isLiked: false,
+        user: {
+          avatar: '',
+          name: '',
+          account: ''
+        }
+      }
     }
   },
   computed: {
@@ -95,7 +112,9 @@ export default {
     this.isMounted = true
   },
   methods: {
-    afterReplyHandle() {
+    afterReplyHandle({ tweet }) {
+      console.log('顯示回覆視窗')
+      this.replyTweet = tweet
       this.showReplyPopup = true
     },
     handleClose() {
@@ -226,6 +245,7 @@ export default {
 
   .avatar-wrapper {
     float: left;
+    overflow: hidden;
     margin: 10px 10px 10px 15px;
     width: 50px;
     height: 50px;

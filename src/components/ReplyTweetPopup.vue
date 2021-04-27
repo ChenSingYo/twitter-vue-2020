@@ -11,8 +11,8 @@
 
           <section class="tweet">
             <div class="tweet-container">
-              <div class="img-wrapper">
-                <img class="avatar" src="https://picsum.photos/50" />
+              <div v-if="tweet.user.avatar" class="img-wrapper">
+                <img class="avatar" :src="tweet.user.avatar" />
               </div>
               <div class="info-container">
                 <div class="message-wrapper">
@@ -34,7 +34,7 @@
             <div class="post-panel">
               <div class="img-wrapper">
                 <!-- current user image -->
-                <img class="avatar" src="https://picsum.photos/50" />
+                <img class="avatar" :src="currentUser.avatar" />
               </div>
               <textarea
                 v-model="replyText"
@@ -82,6 +82,14 @@ export default {
         name: '',
         account: ''
       }
+    },
+    currentUser: {
+      id: -1,
+      account: '',
+      name: '',
+      avatar: '',
+      cover: '',
+      introduction: ''
     }
   },
   data() {

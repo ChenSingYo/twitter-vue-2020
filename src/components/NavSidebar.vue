@@ -120,9 +120,10 @@ export default {
     handleClose() {
       this.showPostView = false
     },
-        logout () {
+    logout() {
+      console.log('logout')
       this.$store.commit('revokeCurrentUser')
-      this.$router.push('/admin')
+      this.$router.push('/login')
     }
   }
 }
@@ -203,7 +204,7 @@ export default {
         width: 24px;
         height: 24px;
       }
-  
+
       span {
         font-weight: bold;
       }

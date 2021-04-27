@@ -22,17 +22,14 @@ export default {
   getUser({ userId }) {
     return apiHelper.get(`/users/${userId}`)
   },
+  getTopUsers() {
+    return apiHelper.get('/users/top')
+  },
   signUp ({ account, name, email, password, checkPassword }) {
     return apiHelper.post('/users', { account, name, email, password, checkPassword })
   },
-  editAccount({ id, account, name, email, password, checkPassword }) {
-    return apiHelper.put(`users/${id}/account`, {
-      account,
-      name,
-      email,
-      password,
-      checkPassword,
-    })
+  editAccount( userId, { account, name, email, password, checkPassword }) {
+    return apiHelper.put(`users/${userId}`, { account, name, email, password, checkPassword })
   },
   addLike({ id }) {
     return apiHelper.post(`/tweets/${id}/like`)

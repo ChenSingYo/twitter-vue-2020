@@ -34,4 +34,10 @@ export default {
       checkPassword,
     })
   },
+  addLike({ id }) {
+    return apiHelper.post(`/tweets/${id}/like`)
+  },
+  removeLike({ id }) {
+    return apiHelper.post(`/tweets/${id}/unlike`)
+  }
 }

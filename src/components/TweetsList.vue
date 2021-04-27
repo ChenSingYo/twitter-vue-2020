@@ -4,7 +4,11 @@
     <section ref="post" class="post">
       <div class="post-container">
         <div class="avatar-wrapper">
-          <img v-if="currentUser.avatar" class="avatar" :src="currentUser.avatar" />
+          <img
+            v-if="currentUser.avatar"
+            class="avatar"
+            :src="currentUser.avatar"
+          />
         </div>
         <textarea
           v-model="description"
@@ -32,6 +36,7 @@
         @after-reply-message="afterReplyHandle"
         @after-show-article="afterShowArticleHandle"
         @after-like-toggle="afterLikeToggleHandle"
+        @after-to-profile="afterToProfileHandle"
       />
     </section>
 
@@ -48,6 +53,7 @@
 import TweetMessageCell from '../components/TweetMessageCell'
 import ReplyTweetPopup from '../components/ReplyTweetPopup'
 import tweetsAPI from '../apis/tweets'
+import usersAPI from '../apis/users'
 import { Toast } from '../utils/helpers'
 
 export default {
@@ -98,8 +104,15 @@ export default {
     afterShowArticleHandle({ id }) {
       this.$router.push(`/tweets/${id}`)
     },
-    afterLikeToggleHandle() {
-      console.log('點擊喜歡')
+    afterLikeToggleHandle({ id, isLiked }) {
+      if (isLiked) {
+        this.removeLike({ id })
+      } else {
+        this.addLike({ id })
+      }
+    },
+    afterToProfileHandle({ userId }) {
+      this.$router.push({ path: `/profile/${userId}` })
     },
     createPostHandle() {
       if (this.description.trim().length < 1) {
@@ -138,6 +151,55 @@ export default {
         })
         console.log(error)
       }
+    },
+    preHandleLike({ id }, isAdd) {
+      this.tweets = this.tweets.map(tweet => {
+        if (tweet.id === id) {
+          return {
+            ...tweet,
+            isLiked: isAdd ? true : false,
+            likedCount: isAdd
+              ? (tweet.likedCount += 1)
+              : (tweet.likedCount -= 1)
+          }
+        } else {
+          return tweet
+        }
+      })
+    },
+    async addLike({ id }) {
+      try {
+        this.preHandleLike({ id }, true)
+        const { data } = await usersAPI.addLike({ id })
+        console.log(data)
+        if (data.status !== 'success') {
+          this.preHandleLike({ id }, false)
+        }
+      } catch (error) {
+        console.log(error)
+        this.preHandleLike({ id }, false)
+        Toast.fire({
+          icon: 'error',
+          title: '加入喜歡推文失敗，請稍後再試'
+        })
+      }
+    },
+    async removeLike({ id }) {
+      try {
+        this.preHandleLike({ id }, false)
+        const { data } = await usersAPI.removeLike({ id })
+        if (data.status !== 'success') {
+          this.preHandleLike({ id }, true)
+        }
+        console.log(data)
+      } catch (error) {
+        console.log(error)
+        this.preHandleLike({ id }, true)
+        Toast.fire({
+          icon: 'error',
+          title: '移除喜歡推文失敗，請稍後再試'
+        })
+      }
     }
   }
 }
@@ -174,7 +236,6 @@ export default {
       width: 100%;
       height: 100%;
     }
-    
   }
 
   .tweet-input-box {

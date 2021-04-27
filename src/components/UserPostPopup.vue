@@ -10,7 +10,9 @@
           </header>
           <section>
             <div class="post-panel">
-              <img class="avatar" src="https://picsum.photos/50" />
+              <div class="avatar-wrapper">
+                <img class="avatar" :src="currentUser.avatar" />
+              </div>
               <textarea
                 v-model="description"
                 class="tweet-input-box"
@@ -34,6 +36,7 @@
 <script>
 import tweetsAPI from '../apis/tweets'
 import { Toast } from '../utils/helpers'
+import { mapState } from 'vuex'
 
 export default {
   name: 'UserPostPopup',
@@ -43,6 +46,9 @@ export default {
       require: true,
       default: false
     }
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   data() {
     return {
@@ -74,7 +80,9 @@ export default {
           })
         }
 
-        this.$emit('after-close')
+        setTimeout(() => {
+          this.$emit('after-close')
+        }, 1500)
       } catch (error) {
         Toast.fire({
           icon: 'error',
@@ -120,12 +128,18 @@ export default {
     }
   }
 
-  .avatar {
+  .avatar-wrapper {
     float: left;
+    overflow: hidden;
     margin: 10px 10px 10px 15px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    background-color: var(--light-gary-clr);
+    .avatar {
+      width: 100%;
+      height: 100%;
+    }
   }
 
   .tweet-input-box {

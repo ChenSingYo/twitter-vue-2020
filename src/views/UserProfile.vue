@@ -4,7 +4,7 @@
     <NavSidebar />
 
     <!-- 使用者資訊 -->
-    <UserInfo :current-user="currentUser" />
+    <UserInfo :user-id="userId || currentUser.id" />
 
     <!-- 右側 bar -->
     <RecommendSidebar />
@@ -24,9 +24,15 @@ export default {
     UserInfo,
     RecommendSidebar
   },
+  data() {
+    return {
+      userId: this.$route.params.id
+    }
+  },
   computed: {
     ...mapState(['currentUser'])
-  }
+  },
+  created() {}
 }
 </script>
 

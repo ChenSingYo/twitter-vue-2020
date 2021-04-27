@@ -192,7 +192,6 @@ export default {
 
     .img-wrapper {
       position: relative;
-      flex-grow: 1;
       margin: 0 10px 0 15px;
 
       .avatar {

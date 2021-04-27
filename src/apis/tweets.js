@@ -16,10 +16,5 @@ export default {
   createTweetReply({ id, comment }) {
     return apiHelper.post(`/tweets/${id}/replies`, { comment })
   },
-  addLike({ id }) {
-    return apiHelper.post(`/tweets/${id}/like`)
-  },
-  removeLike({ id }) {
-    return apiHelper.post(`/tweets/${id}/unlike`)
-  }
+
 }

@@ -2,7 +2,7 @@
   <div class="info">
     <UserHeader :name="currentUser.name" :count="currentUser.tweetCount" />
 
-    <section class="introduction">
+    <section ref="introduction" class="introduction">
       <div class="introduction-container">
         <div class="cover-img">
           <img :src="currentUser.cover" alt="" />
@@ -35,24 +35,42 @@
         </div>
       </div>
     </section>
-    <section class="ariticle-tab">
+
+    <section ref="ariticle" class="ariticle-tab">
       <div class="tab-container">
         <tabs
           :options="{ defaultTabHash: 'first-tab', useUrlFragment: false }"
           @changed="tabChanged"
         >
           <tab id="first-tab" name="推文">
-             <TweetMessageCell
+            <TweetMessageCell
               v-for="tweet in tweets"
               :key="tweet.id"
               :tweet="tweet"
-            /> 
+              @after-like-toggle="afterLikeToggleHandle"
+              @after-to-profile="afterToProfileHandle"
+            />
           </tab>
           <tab id="second-tab" name="推文與回覆">
-            <!-- <TweetMessageCell /> -->
+            <TweetMessageCell
+              v-for="reply in replied"
+              :key="reply.id"
+              :tweet="reply"
+              @after-like-toggle="afterLikeToggleHandle"
+              @after-to-profile="afterToProfileHandle"
+            />
           </tab>
           <tab id="third-tab" name="喜歡的內容">
-            <!-- <TweetMessageCell /> -->
+            <template v-if="likes">
+              <TweetMessageCell
+                v-for="like in likes"
+                :key="like.id"
+                :tweet="like"
+                @after-like-toggle="afterLikeToggleHandle"
+                @after-to-profile="afterToProfileHandle"
+              />
+            </template>
+            <div v-if="!likes">尚未有喜歡的推文</div>
           </tab>
         </tabs>
       </div>
@@ -78,16 +96,9 @@ import { Toast } from '../utils/helpers'
 export default {
   name: 'UserInfo',
   props: {
-    currentUser: {
-      id: 20,
-      account: '',
-      name: '',
-      avatar: '',
-      cover: '',
-      introduction: '',
-      tweetCount: -1,
-      followingCount: -1,
-      followerCount: -1
+    userId: {
+      type: [String, Number],
+      require: true
     }
   },
   components: {
@@ -103,20 +114,46 @@ export default {
       showPopupView: false,
       tweets: [],
       replied: [],
-      likes: []
+      likes: [],
+      currentUser: {
+        id: -1,
+        account: '',
+        name: '',
+        avatar: '',
+        cover: '',
+        introduction: '',
+        tweetCount: -1,
+        followingCount: -1,
+        followerCount: -1
+      }
+    }
+  },
+  watch: {
+    $route(to, from) {
+      // 路由 id 有變化時候 會 reload
+      // console.log({ to, from })
+      const { id } = to.params
+      this.fetchUser({ userId: id })
     }
   },
   created() {
-
+    this.fetchUser({ userId: this.userId })
+  },
+  beforeRouteUpdate(to, from, next) {
+    // 頁面重新整理時會抓取 id
+    // 路由改變時重新抓取資料
+    const { id } = to.params
+    this.fetchUser({ userId: id })
+    next()
   },
   methods: {
     tabChanged(selectedTab) {
       if (selectedTab.tab.id === 'first-tab') {
-        this.fetchCurrentUserTweets({ id: this.currentUser.id })
+        this.fetchCurrentUserTweets({ id: this.userId })
       } else if (selectedTab.tab.id === 'second-tab') {
-        this.fetchCurrentUserReplied({ id: this.currentUser.id })
+        this.fetchCurrentUserReplied({ id: this.userId })
       } else {
-        this.fetchCurrentUserLikes({ id: this.currentUser.id })
+        this.fetchCurrentUserLikes({ id: this.userId })
       }
     },
     afterShowEditHandle() {
@@ -125,7 +162,31 @@ export default {
     afterCloseHandle() {
       this.showPopupView = false
     },
-    // TODO: tweets 的 tweetmessagecell 還尚未使用
+    afterLikeToggleHandle() {
+      console.log('點擊喜歡')
+    },
+    afterToProfileHandle({ userId }) {
+      const { id } = this.$route.params
+      console.log({ userId, id })
+
+      if (parseInt(id) === parseInt(userId)) {
+        return
+      }
+
+      this.$router.push({ path: `/profile/${userId}` })
+    },
+    async fetchUser({ userId }) {
+      try {
+        const { data } = await usersAPI.getUser({ userId })
+        this.currentUser = data
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '取得使用者錯誤，請稍後再試'
+        })
+      }
+    },
     async fetchCurrentUserTweets({ id }) {
       try {
         const { data } = await usersAPI.getCurrentUserTweets({ id })
@@ -174,7 +235,13 @@ export default {
 }
 
 .info {
+  overflow-y: scroll;
   width: 600px;
+
+  &::-webkit-scrollbar {
+    // width: 3px;
+    display: none;
+  }
 }
 
 .introduction-container {
@@ -276,6 +343,7 @@ export default {
   .tabs-component {
     height: 100%;
     border-bottom: 1px solid var(--light-gary-clr);
+
     .tabs-component-tabs {
       display: flex;
       margin-bottom: 0;

@@ -6,6 +6,7 @@
       viewBox="0 0 64 64"
       width="36px"
       height="36px"
+      @click="$router.go(-1)"
     ></unicon>
     <div class="summary">
       <span class="name">{{ name }}</span>

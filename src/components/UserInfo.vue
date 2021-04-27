@@ -1,34 +1,36 @@
 <template>
   <div class="info">
-    <UserHeader :name="currentUser.name" :count="currentUser.tweetCount" />
+    <UserHeader :name="user.name" :count="user.tweetCount" />
 
     <section ref="introduction" class="introduction">
       <div class="introduction-container">
         <div class="cover-img">
-          <img :src="currentUser.cover" alt="" />
+          <img :src="user.cover" alt="" />
         </div>
         <div class="avatar-container">
-          <img :src="currentUser.avatar" alt="" />
+          <img :src="user.avatar" alt="" />
         </div>
         <div class="edit-container">
+          <!-- TODO: 帶入 user.isFollow -->
           <UserInfoMenu
-            :is-current-user="true"
+            :initial-is-following="false"
+            :is-current-user="isCurrentUser"
             @after-show-edit="afterShowEditHandle"
           />
         </div>
         <div class="summary-board">
           <div class="info-container">
-            <div class="name">{{ currentUser.name }}</div>
-            <div class="tag">{{ currentUser.account }}</div>
-            <p class="content">{{ currentUser.introduction }}</p>
+            <div class="name">{{ user.name }}</div>
+            <div class="tag">{{ user.account }}</div>
+            <p class="content">{{ user.introduction }}</p>
           </div>
           <div class="follow-container">
             <router-link to="/profile/follow" class="following">
-              <span class="count">{{ currentUser.followingCount }} 個</span>
+              <span class="count">{{ user.followingCount }} 個</span>
               <span class="text">跟隨中</span>
             </router-link>
             <div class="follower">
-              <span class="count">{{ currentUser.followerCount }} 個</span>
+              <span class="count">{{ user.followerCount }} 個</span>
               <span class="text">跟隨者</span>
             </div>
           </div>
@@ -53,7 +55,7 @@
           </tab>
           <tab id="second-tab" name="推文與回覆">
             <TweetMessageCell
-              v-for="reply in replied"
+              v-for="reply in tweets"
               :key="reply.id"
               :tweet="reply"
               @after-like-toggle="afterLikeToggleHandle"
@@ -61,9 +63,9 @@
             />
           </tab>
           <tab id="third-tab" name="喜歡的內容">
-            <template v-if="likes">
+            <template v-if="tweets">
               <TweetMessageCell
-                v-for="like in likes"
+                v-for="like in tweets"
                 :key="like.id"
                 :tweet="like"
                 @after-like-toggle="afterLikeToggleHandle"
@@ -92,15 +94,10 @@ import UserHeader from '../components/UserHeader'
 import UserInfoMenu from '../components/UserInfoMenu'
 import usersAPI from '../apis/users'
 import { Toast } from '../utils/helpers'
+import { mapState } from 'vuex'
 
 export default {
   name: 'UserInfo',
-  props: {
-    userId: {
-      type: [String, Number],
-      require: true
-    }
-  },
   components: {
     Tabs,
     Tab,
@@ -113,9 +110,7 @@ export default {
     return {
       showPopupView: false,
       tweets: [],
-      replied: [],
-      likes: [],
-      currentUser: {
+      user: {
         id: -1,
         account: '',
         name: '',
@@ -128,18 +123,33 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState(['currentUser']),
+    isCurrentUser() {
+      const { id } = this.$route.params
+      return id ? false : true
+    },
+    userId() {
+      const { id } = this.$route.params
+      // 如果 router 沒有 id params，就表示為個人資料頁面
+      return id || this.currentUser.id
+    }
+  },
   watch: {
     $route(to, from) {
       // 路由 id 有變化時候 會 reload
       // console.log({ to, from })
       const { id } = to.params
-      this.fetchUser({ userId: id })
+      this.fetchUser({ userId: id || this.currentUser.id })
     }
   },
   created() {
+    // console.log('create user id  :', this.userId)
+    // TODO: 重整畫面 id 會是 -1 抓不到 currentUser
     this.fetchUser({ userId: this.userId })
   },
   beforeRouteUpdate(to, from, next) {
+    console.log('beforeRouteUpdate')
     // 頁面重新整理時會抓取 id
     // 路由改變時重新抓取資料
     const { id } = to.params
@@ -162,8 +172,12 @@ export default {
     afterCloseHandle() {
       this.showPopupView = false
     },
-    afterLikeToggleHandle() {
-      console.log('點擊喜歡')
+    afterLikeToggleHandle({ id, isLiked }) {
+      if (isLiked) {
+        this.removeLike({ id })
+      } else {
+        this.addLike({ id })
+      }
     },
     afterToProfileHandle({ userId }) {
       const { id } = this.$route.params
@@ -175,10 +189,25 @@ export default {
 
       this.$router.push({ path: `/profile/${userId}` })
     },
+    preHandleLike({ id }, isAdd) {
+      this.tweets = this.tweets.map(tweet => {
+        if (tweet.id === id) {
+          return {
+            ...tweet,
+            isLiked: isAdd ? true : false,
+            likedCount: isAdd
+              ? (tweet.likedCount += 1)
+              : (tweet.likedCount -= 1)
+          }
+        } else {
+          return tweet
+        }
+      })
+    },
     async fetchUser({ userId }) {
       try {
         const { data } = await usersAPI.getUser({ userId })
-        this.currentUser = data
+        this.user = data
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -188,6 +217,7 @@ export default {
       }
     },
     async fetchCurrentUserTweets({ id }) {
+      this.tweets = []
       try {
         const { data } = await usersAPI.getCurrentUserTweets({ id })
         this.tweets = data
@@ -200,9 +230,10 @@ export default {
       }
     },
     async fetchCurrentUserReplied({ id }) {
+      this.tweets = []
       try {
         const { data } = await usersAPI.getCurrentUserReplied({ id })
-        this.replied = data
+        this.tweets = data
       } catch (error) {
         console.log(error)
         Toast.fire({
@@ -212,14 +243,49 @@ export default {
       }
     },
     async fetchCurrentUserLikes({ id }) {
+      this.tweets = []
       try {
         const { data } = await usersAPI.getCurrentUserLikes({ id })
-        this.likes = data
+        this.tweets = data
       } catch (error) {
         console.log(error)
         Toast.fire({
           icon: 'error',
           title: '取得使用者喜歡內容錯誤，請稍後再試'
+        })
+      }
+    },
+    async addLike({ id }) {
+      try {
+        this.preHandleLike({ id }, true)
+        const { data } = await usersAPI.addLike({ id })
+        console.log(data)
+        if (data.status !== 'success') {
+          this.preHandleLike({ id }, false)
+        }
+      } catch (error) {
+        console.log(error)
+        this.preHandleLike({ id }, false)
+        Toast.fire({
+          icon: 'error',
+          title: '加入喜歡推文失敗，請稍後再試'
+        })
+      }
+    },
+    async removeLike({ id }) {
+      try {
+        this.preHandleLike({ id }, false)
+        const { data } = await usersAPI.removeLike({ id })
+        if (data.status !== 'success') {
+          this.preHandleLike({ id }, true)
+        }
+        console.log(data)
+      } catch (error) {
+        console.log(error)
+        this.preHandleLike({ id }, true)
+        Toast.fire({
+          icon: 'error',
+          title: '移除喜歡推文失敗，請稍後再試'
         })
       }
     }

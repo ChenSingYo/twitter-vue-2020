@@ -20,7 +20,11 @@
             <unicon name="bell" fill="#ff6600" viewBox="0 0 48 45"></unicon>
           </template>
         </button>
-        <button class="btn" :class="{ following: isFollowing }">
+        <button
+          class="btn"
+          :class="{ following: isFollowing }"
+          @click="followToggleHandle"
+        >
           {{ isFollowing ? '正在跟隨' : '跟隨' }}
         </button>
       </template>
@@ -29,6 +33,9 @@
 </template>
 
 <script>
+import followAPI from '../apis/follow'
+import { Toast } from '../utils/helpers'
+
 export default {
   name: 'UserInfoMenu',
   props: {
@@ -36,20 +43,69 @@ export default {
       type: Boolean,
       default: false
     },
-    isSubscript: {
-      // get user data, inculde this value
+    initialIsFollowing: {
       type: Boolean,
       default: false
-    },
-    isFollowing: {
-      // get user data, inculde this value
-      type: Boolean,
-      default: false
+    }
+  },
+  data() {
+    return {
+      isFollowing: this.initialIsFollowing
     }
   },
   methods: {
     showEdit() {
       this.$emit('after-show-edit', true)
+    },
+    followToggleHandle() {
+      const { id } = this.$route.params
+      if (!id) return
+      if (isFollowing) {
+        this.removeFollow({ id })
+      } else {
+        this.addFollow({ id })
+      }
+    },
+    async addFollow({ id }) {
+      try {
+        const { data } = await followAPI.addFollowing({ id })
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        Toast.fire({
+          icon: 'success',
+          title: '已跟隨該使用者'
+        })
+      } catch (error) {
+        console.log(error)
+
+        Toast.fire({
+          icon: 'error',
+          title: '跟隨使用者錯誤，請稍後再試'
+        })
+      }
+    },
+    async removeFollow({ id }) {
+      try {
+        const { data } = await followAPI.removeFollowing({ id })
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        Toast.fire({
+          icon: 'success',
+          title: '已移除跟隨該使用者'
+        })
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '刪除跟隨使用者錯誤，請稍後再試'
+        })
+      }
     }
   }
 }

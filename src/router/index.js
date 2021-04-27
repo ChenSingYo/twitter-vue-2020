@@ -89,6 +89,11 @@ const routes = [
     component: () => import('../views/UserFollow.vue')
   },
   {
+    path: '/profile/:id',
+    name: 'user-profile',
+    component: () => import('../views/UserProfile.vue')
+  },
+  {
     path: '/setting',
     name: 'setting',
     component: () => import('../views/UserAccountSetting.vue'),

@@ -54,7 +54,6 @@ export default new Vuex.Store({
           introduction,
           role
         })
-        // console.log('setCurrentUser')
         return true
       } catch (err) {
         console.log(err)

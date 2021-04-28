@@ -6,19 +6,40 @@
           跟隨誰
         </header>
         <ul>
-          <li class="card-container">
-            <img class="avatar" src="https://picsum.photos/50" />
+          <li 
+            v-for="topUser in showUsers"
+            :key="topUser.id"
+            class="card-container"
+          >
+            <router-link
+              :to="{ name:'user-profile', params: {id: topUser.id} }"
+            >
+              <img class="avatar" :src="topUser.avatar | emptyImage" alt="avatar" />
+            </router-link>
             <div class="user-info-container">
-              <div class="user-name">Name</div>
-              <div class="user-tag">@Tag</div>
+              <div class="user-name">{{topUser.name}}</div>
+              <div class="user-tag">@{{topUser.account}}</div>
             </div>
             <div class="follow-btn-container">
-              <button class="btn follow-btn">跟隨</button>
+              <button
+                class="follow-btn"
+                :class="{ following: topUser.isFollowing }"
+                @click="followToggleHandle(topUser)"
+              >
+                {{ topUser.isFollowing ? '正在跟隨' : '跟隨'}}
+              </button>
             </div>
           </li>
         </ul>
         <footer class="more-footer">
-          <button class="btn more-btn">顯示更多</button>
+          <template>
+            <button 
+              class="btn more-btn"
+              @click.prevent.stop="toggleShowUsers"
+            >
+            {{ this.isShowMore ? '顯示較多' : '顯示較少' }}
+            </button>
+          </template>
         </footer>
       </div>
     </div>
@@ -26,8 +47,124 @@
 </template>
 
 <script>
+import usersAPI from './../apis/users'
+import followAPI from './../apis/follow'
+import { Toast } from './../utils/helpers'
+import { emptyImageFilter } from './../utils/mixins'
+import { mapState } from 'vuex'
+
 export default {
-  name: 'RecommendSideBar'
+  mixins: [emptyImageFilter],
+  name: 'RecommendSideBar',
+  data () {
+    return {
+      topUsers: [],
+      showUsers: [],
+      isShowMore: false
+    }
+  },
+  computed: {
+    ...mapState(['currentUser'])
+  },
+  created () {
+    this.fetchUsers()
+  },
+  watch: {
+    showUsers(data) {
+      this.showUsers = data
+    }
+  },
+  methods: {
+    async fetchUsers() {
+      try {
+        const { data } = await usersAPI.getTopUsers()
+        this.topUsers = data
+        this.topUsers = this.topUsers.filter(user => user.id !== this.currentUser.id)
+        this.toggleShowUsers()
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: `無法取得推薦名單:${err.message}`
+        })
+      }
+    },
+    followToggleHandle(topUser) {
+      const { id }  = topUser
+      if (topUser.isFollowing) {
+        this.removeFollow({ id })
+      } else {
+        this.addFollow({ id })
+      }
+    },
+    async addFollow({ id }) {
+      try {
+        const { data } = await followAPI.addFollowing({ id })
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.showUsers = this.showUsers.map(user => {
+          if (user.id === id) {
+            return {
+              ...user,
+              isFollowing: true
+            }
+          }
+          return user
+        })
+        this.$store.commit('setIsReloadFollow', true)
+        Toast.fire({
+          icon: 'success',
+          title: '已跟隨該使用者'
+        })
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: `無法跟隨使用者：${err.message}`
+        })
+      }
+    },
+    async removeFollow({ id }) {
+      try {
+        const { data } = await followAPI.removeFollowing({ id })
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        this.showUsers = this.showUsers.map(user => {
+          if (user.id === id) {
+            return {
+              ...user,
+              isFollowing: false
+            }
+          }
+          return user
+        })
+        this.$store.commit('setIsReloadFollow', true)
+        Toast.fire({
+          icon: 'success',
+          title: '已移除跟隨該使用者'
+        })
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: `無法取消跟隨：${err.message}`
+        })
+      }
+    },
+    toggleShowUsers () {
+      this.showUsers = []
+      if (this.isShowMore) {
+        this.showUsers = this.topUsers
+      } else {
+        const showUsersLength = Math.ceil(this.topUsers.length/2)
+        for (let i = 0; i < showUsersLength; i++) {
+          this.showUsers.push(this.topUsers[i])
+        }
+      }
+      this.isShowMore = !this.isShowMore
+    }
+  }
 }
 </script>
 
@@ -83,7 +220,6 @@ $border-style: 1px solid var(--light-gary-clr);
 
         .user-tag {
           color: var(--cement-gary-clr);
-
           @include font-style;
         }
       }
@@ -104,6 +240,10 @@ $border-style: 1px solid var(--light-gary-clr);
 
           &:focus {
             box-shadow: none;
+          }
+          &.following {
+            background-color: var(--primary-clr);
+            color: #fff;
           }
         }
       }

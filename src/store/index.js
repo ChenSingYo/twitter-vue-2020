@@ -18,7 +18,8 @@ export default new Vuex.Store({
     },
     isAuthenticated: false,
     token: '',
-    isReloadPost: false
+    isReloadPost: false,
+    isReloadFollow: false
   },
   mutations: {
     setCurrentUser(state, currentUser) {
@@ -37,6 +38,9 @@ export default new Vuex.Store({
     },
     setReloadPost(state, reloadState) {
       state.isReloadPost = reloadState
+    },
+    setIsReloadFollow (state, reloadState) {
+      state.isReloadFollow = reloadState
     }
   },
   actions: {
@@ -58,7 +62,6 @@ export default new Vuex.Store({
           introduction,
           role
         })
-        // console.log('setCurrentUser')
         return true
       } catch (err) {
         console.log(err)

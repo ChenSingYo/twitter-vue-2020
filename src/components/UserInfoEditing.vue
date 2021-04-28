@@ -61,7 +61,7 @@
               rows="4"
               maxlength="160"
             ></textarea>
-            <span>{{ currentUser.name.length }}/160</span>
+            <span>{{ currentUser.introduction.length }}/160</span>
           </section>
         </div>
       </div>
@@ -72,9 +72,11 @@
 <script>
 import usersAPI from '../apis/users'
 import { Toast } from '../utils/helpers'
+import { emptyImageFilter } from '../utils/mixins'
 
 export default {
-  name: 'EditUserProfile',
+  mixins: [emptyImageFilter],
+  name: 'UserInfoEditing',
   props: {
     showPopupView: {
       type: Boolean,

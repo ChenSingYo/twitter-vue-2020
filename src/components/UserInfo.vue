@@ -125,7 +125,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentUser']),
+    ...mapState(['currentUser', 'isReloadFollow']),
     isCurrentUser() {
       const { id } = this.$route.params
       return id ? false : true
@@ -142,6 +142,12 @@ export default {
       // console.log({ to, from })
       const { id } = to.params
       this.fetchUser({ userId: id || this.currentUser.id })
+    },
+    isReloadFollow (newValue) {
+      if (newValue) {
+        const { id } = this.$route.params
+        this.fetchUser({ userId: id || this.currentUser.id })
+      }
     }
   },
   created() {

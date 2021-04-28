@@ -8,7 +8,7 @@
               <unicon name="multiply" fill="black"></unicon>
             </div>
             <div class="text">編輯個人資料</div>
-            <button class="btn save-btn">儲存</button>
+            <button type="submit" class="btn save-btn">儲存</button>
           </header>
           <section>
             <div class="cover-img">
@@ -61,7 +61,7 @@
               rows="4"
               maxlength="160"
             ></textarea>
-            <span>{{ currentUser.name.length }}/160</span>
+            <span>{{ currentUser.introduction.length }}/160</span>
           </section>
         </div>
       </div>
@@ -70,8 +70,11 @@
 </template>
 
 <script>
+import { emptyImageFilter } from '../utils/mixins'
+
 export default {
-  name: 'EditUserProfile',
+  mixins: [emptyImageFilter],
+  name: 'UserInfoEditing',
   props: {
     showPopupView: {
       type: Boolean,

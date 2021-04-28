@@ -15,7 +15,7 @@
               :to="{ name:'user-profile', params: {id: topUser.id} }"
             >
               <img class="avatar" :src="topUser.avatar | emptyImage" alt="avatar" />
-             </router-link>
+            </router-link>
             <div class="user-info-container">
               <div class="user-name">{{topUser.name}}</div>
               <div class="user-tag">@{{topUser.account}}</div>
@@ -79,6 +79,7 @@ export default {
       try {
         const { data } = await usersAPI.getTopUsers()
         this.topUsers = data
+        this.topUsers = this.topUsers.filter(user => user.id !== this.currentUser.id)
         this.toggleShowUsers()
       } catch (err) {
         Toast.fire({
@@ -111,6 +112,7 @@ export default {
           }
           return user
         })
+        this.$store.commit('setIsReloadFollow', true)
         Toast.fire({
           icon: 'success',
           title: '已跟隨該使用者'
@@ -138,6 +140,7 @@ export default {
           }
           return user
         })
+        this.$store.commit('setIsReloadFollow', true)
         Toast.fire({
           icon: 'success',
           title: '已移除跟隨該使用者'
@@ -150,12 +153,12 @@ export default {
       }
     },
     toggleShowUsers () {
+      this.showUsers = []
       if (this.isShowMore) {
-        this.showUsers = []
         this.showUsers = this.topUsers
       } else {
-        this.showUsers = []
-        for (let i = 0; i < (this.topUsers.length - 4); i++) {
+        const showUsersLength = Math.ceil(this.topUsers.length/2)
+        for (let i = 0; i < showUsersLength; i++) {
           this.showUsers.push(this.topUsers[i])
         }
       }

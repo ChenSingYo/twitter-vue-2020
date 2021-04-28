@@ -1,9 +1,15 @@
 <template>
   <div class="cell">
     <div class="cell-container">
-      <img class="avatar" :src="follow.avatar" />
+      <img
+        class="avatar"
+        :src="follow.avatar"
+        @click.stop.prevent="toProfileHandle"
+      />
       <div class="info-container">
-        <div class="name">{{ follow.name }}</div>
+        <div class="name" @click.stop.prevent="toProfileHandle">
+          {{ follow.name }}
+        </div>
         <div class="tag">{{ follow.account }}</div>
         <p class="content">
           {{ follow.introduction }}
@@ -95,6 +101,11 @@ export default {
 
       this.$emit('after-following-changed')
     },
+    toProfileHandle() {
+      this.$emit('after-to-profile', {
+        userId: this.follow.followerId || this.follow.followingId
+      })
+    },
     async addFollow({ id }) {
       try {
         const { data } = await followAPI.addFollowing({ id })
@@ -157,12 +168,14 @@ export default {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    cursor: pointer;
   }
 
   .name {
     color: var(--black-clr);
     font-weight: 700;
     font-size: 0.937rem;
+    cursor: pointer;
   }
 
   .tag {

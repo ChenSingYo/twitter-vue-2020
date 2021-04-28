@@ -48,7 +48,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(['currentUser', 'isReloadPost'])
   },
   data() {
     return {
@@ -79,6 +79,8 @@ export default {
             title: '新增推文成功'
           })
         }
+
+        this.$store.commit('setReloadPost', true)
 
         setTimeout(() => {
           this.$emit('after-close')

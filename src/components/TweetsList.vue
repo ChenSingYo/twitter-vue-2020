@@ -62,6 +62,7 @@ import ReplyTweetPopup from '../components/ReplyTweetPopup'
 import tweetsAPI from '../apis/tweets'
 import usersAPI from '../apis/users'
 import { Toast } from '../utils/helpers'
+import { mapState } from 'vuex'
 
 export default {
   name: 'TweetsList',
@@ -104,11 +105,19 @@ export default {
     }
   },
   computed: {
+    ...mapState(['isReloadPost']),
     postContainerHeight() {
       if (!this.isMounted) return '0px'
       const headerHeight = this.$refs.header.offsetHeight
       const postHeight = this.$refs.post.offsetHeight
       return headerHeight + postHeight
+    }
+  },
+  watch: {
+    isReloadPost(newValue) {
+      if (newValue) {
+        this.fetchTweets()
+      }
     }
   },
   created() {
@@ -153,7 +162,11 @@ export default {
         })
         return
       }
-      this.createTweet({ description: this.description })
+      const success = this.createTweet({ description: this.description })
+
+      if (success) {
+        this.fetchTweets()
+      }
     },
     async fetchTweets() {
       try {
@@ -173,7 +186,7 @@ export default {
             icon: 'success',
             title: '新增推文成功'
           })
-          return
+          return true
         }
       } catch (error) {
         Toast.fire({
@@ -181,6 +194,7 @@ export default {
           title: '新增推文失敗'
         })
         console.log(error)
+        return false
       }
     },
     preHandleLike({ id }, isAdd) {

@@ -8,7 +8,7 @@
               <unicon name="multiply" fill="black"></unicon>
             </div>
             <div class="text">編輯個人資料</div>
-            <button class="btn save-btn">儲存</button>
+            <button class="btn save-btn" @click="updateHandle">儲存</button>
           </header>
           <section>
             <div class="cover-img">
@@ -70,6 +70,9 @@
 </template>
 
 <script>
+import usersAPI from '../apis/users'
+import { Toast } from '../utils/helpers'
+
 export default {
   name: 'EditUserProfile',
   props: {
@@ -128,6 +131,40 @@ export default {
       } else {
         const imageURL = window.URL.createObjectURL(files[0])
         this.currentUser.cover = imageURL
+      }
+    },
+    updateHandle() {
+      this.updateUserInfo()
+    },
+    async updateUserInfo() {
+      let updateData = {
+        name: this.currentUser.name,
+        introduction: this.currentUser.introduction,
+        cover: this.currentUser.cover,
+        avatar: this.currentUser.avatar
+      }
+
+      try {
+        const { data } = usersAPI.editAccount(this.currentUser.id, {
+          payload: { ...updateData }
+        })
+
+        if (data.status === 'success') {
+          Toast.fire({
+            icon: 'success',
+            title: '更新成功'
+          })
+
+          setTimeout(() => {
+            this.handleClose()
+          }, 1500)
+        }
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '更新失敗，請稍後再試'
+        })
       }
     }
   }
@@ -203,6 +240,8 @@ export default {
       width: 100%;
       height: 100%;
       opacity: 0.5;
+
+      object-fit: cover;
     }
 
     .edit-img-wrapper {
@@ -255,6 +294,8 @@ export default {
     img {
       width: 100%;
       height: 100%;
+
+      object-fit: cover;
     }
 
     label {

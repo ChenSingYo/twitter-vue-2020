@@ -64,6 +64,7 @@
           :tweet="tweet"
           :show-popup-view="showReplyPopup"
           @after-close="handleClose"
+          @after-update-replies="afterUpdateRepliesHandle"
         />
       </section>
     </div>
@@ -105,7 +106,8 @@ export default {
           account: ''
         },
         tweetReplies: []
-      }
+      },
+      id: this.$route.params.id
     }
   },
   computed: {
@@ -126,8 +128,8 @@ export default {
     this.isMounted = true
   },
   created() {
-    const { id } = this.$route.params
-    this.fetchTweet({ id })
+    // const { id } = this.$route.params
+    this.fetchTweet({ id: this.id })
   },
   methods: {
     replyPopupHandle() {
@@ -138,7 +140,7 @@ export default {
     },
     fetchTweet({ id }) {
       try {
-        this.isLoading = true
+        // this.isLoading = true
         const tweetResponse = tweetsAPI.getTweet({ id })
         const tweetRepliesResponse = tweetsAPI.getTweetReplies({ id })
 
@@ -154,16 +156,33 @@ export default {
             console.log(error)
           })
           .finally(() => {
-            this.isLoading = false
+            // this.isLoading = false
           })
       } catch (error) {
+        console.log(error)
         Toast.fire({
           icon: 'error',
           title: '取得推文錯誤'
         })
 
-        this.isLoading = false
+        // this.isLoading = false
+      }
+    },
+    afterUpdateRepliesHandle() {
+      this.afterFetchReplies({ id: this.id })
+      this.showReplyPopup = false
+    },
+    async afterFetchReplies({ id }) {
+      try {
+        const { data } = await tweetsAPI.getTweetReplies({ id })
+
+        this.tweet.tweetReplies = data
+      } catch (error) {
         console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '取得回覆列表錯誤，請稍後再試'
+        })
       }
     }
   }

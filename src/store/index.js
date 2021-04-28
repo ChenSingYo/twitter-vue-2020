@@ -18,6 +18,7 @@ export default new Vuex.Store({
     },
     isAuthenticated: false,
     token: '',
+    isReloadPost: false
   },
   mutations: {
     setCurrentUser(state, currentUser) {
@@ -34,6 +35,9 @@ export default new Vuex.Store({
       state.token = ''
       localStorage.removeItem('token')
     },
+    setReloadPost(state, reloadState) {
+      state.isReloadPost = reloadState
+    }
   },
   actions: {
     // 確認使用者登入狀態

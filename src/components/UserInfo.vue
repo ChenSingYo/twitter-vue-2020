@@ -11,7 +11,6 @@
           <img :src="user.avatar" alt="" />
         </div>
         <div class="edit-container">
-          <!-- TODO: 帶入 user.isFollow -->
           <UserInfoMenu
             :initial-is-following="user.isFollowing"
             :is-current-user="isCurrentUser"

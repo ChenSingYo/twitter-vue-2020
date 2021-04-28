@@ -13,6 +13,7 @@
               v-for="follow in followersData"
               :inital-follow="follow"
               :key="follow.id"
+              @after-to-profile="afterToProfileHandle"
             />
           </tab>
           <tab id="second-tab" name="正在跟隨">
@@ -20,6 +21,7 @@
               v-for="follow in followingData"
               :inital-follow="follow"
               :key="follow.id"
+              @after-to-profile="afterToProfileHandle"
             />
           </tab>
         </tabs>
@@ -67,6 +69,16 @@ export default {
       } else {
         this.fetchCurrentFollowing({ id: this.currentUser.id })
       }
+    },
+    afterToProfileHandle({ userId }) {
+      const { id } = this.$route.params
+      console.log({ userId, id })
+
+      if (parseInt(id) === parseInt(userId)) {
+        return
+      }
+
+      this.$router.push({ path: `/profile/${userId}` })
     },
     async fetchCurrentFollowing({ id }) {
       try {

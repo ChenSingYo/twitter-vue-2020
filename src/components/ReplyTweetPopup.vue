@@ -11,7 +11,7 @@
 
           <section class="tweet">
             <div class="tweet-container">
-              <div v-if="tweet.user.avatar" class="img-wrapper">
+              <div class="img-wrapper">
                 <img class="avatar" :src="tweet.user.avatar" />
               </div>
               <div class="info-container">
@@ -62,6 +62,7 @@
 import moment from 'moment'
 import tweetsAPI from '../apis/tweets'
 import { Toast } from '../utils/helpers'
+import { mapState } from 'vuex'
 
 export default {
   name: 'ReplyTweetPopup',
@@ -82,14 +83,6 @@ export default {
         name: '',
         account: ''
       }
-    },
-    currentUser: {
-      id: -1,
-      account: '',
-      name: '',
-      avatar: '',
-      cover: '',
-      introduction: ''
     }
   },
   data() {
@@ -105,6 +98,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['currentUser']),
     hour() {
       if (!this.tweet.createdAt) return ''
       moment.locale('zh_TW')
@@ -114,6 +108,7 @@ export default {
         .replace(/^0+/, '')
     }
   },
+  created() {},
   methods: {
     handleClose() {
       this.$emit('after-close')
@@ -141,7 +136,7 @@ export default {
         })
 
         setTimeout(() => {
-          this.$emit('after-close')
+          this.$emit('after-update-replies')
         }, 1000)
       } catch (error) {
         Toast.fire({

@@ -2,29 +2,50 @@
   <div class="setting">
     <Header title="帳戶設定" />
     <div class="setting-container">
-      <form>
+      <form @submit.prevent.stop="handleSubmit">
         <div class="input-wrapper">
           <label class="text">帳號</label>
-          <input type="text" />
+          <input
+            type="text"
+            v-model="userData.account"
+            autofocus
+          />
         </div>
         <div class="input-wrapper">
           <label class="text">名稱</label>
-          <input type="text" />
+          <input
+            type="text"
+            v-model="userData.name"
+          />
         </div>
         <div class="input-wrapper">
           <label class="text">Email</label>
-          <input type="text" />
+          <input
+            type="text"
+            v-model="userData.email"
+          />
         </div>
         <div class="input-wrapper">
           <label class="text">密碼</label>
-          <input type="text" />
+          <input
+            type="password"
+            v-model="userData.password"
+          />
         </div>
         <div class="input-wrapper">
           <label class="text">密碼確認</label>
-          <input type="text" />
+          <input
+            type="password"
+            v-model="userData.checkPassword"
+          />
         </div>
         <div class="btn-wrapper">
-          <button class="btn">儲存</button>
+          <button
+            class="btn"
+            type="submit"
+            :disabled="isProcessing"
+          >儲存
+          </button>
         </div>
       </form>
     </div>
@@ -33,10 +54,65 @@
 
 <script>
 import Header from '../components/Header'
+import { Toast } from '../utils/helpers'
+
 export default {
   name: 'UserSettingForm',
   components: {
     Header
+  },
+  props: {
+    initialUserData: {
+      type: Object,
+      default: () => ({
+        id: -1,
+        account: '',
+        name: '',
+        email: '',
+        password: '',
+        checkPassword: ''
+      })
+    },
+    isProcessing: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      userData: {
+        ...this.initialUserData,
+      }
+    }
+  },
+  watch: {
+    initialUserData(newValue) {
+      this.userData = {
+        ...this.userData,
+        ...newValue
+      }
+    }
+  },
+  methods: {
+    handleSubmit () {
+      if (this.userData.checkPassword !== this.userData.password) {
+        Toast.fire({
+          icon: 'warning',
+          title: '請確認密碼欄位相同'
+        })
+        this.userData.checkPassword = ''
+        this.userData.password = ''
+        return
+      }
+
+      this.$emit('after-submit', {
+        account: this.userData.account,
+        name: this.userData.name,
+        email: this.userData.email,
+        password: this.userData.password,
+        checkPassword: this.userData.checkPassword
+      })
+     }
   }
 }
 </script>
@@ -56,8 +132,6 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 30px 0;
-  border-bottom: 2px solid var(--cement-gary-clr);
-  border-radius: 0px 0px 4px 4px;
   border-radius: 4px;
   background-color: var(--water-gary-clr);
 
@@ -73,12 +147,18 @@ export default {
     padding: 0 15px;
     height: 24px;
     border: 0;
+    border-bottom: 3px solid var(--cement-gary-clr);
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+    border-radius: 0px 0px 4px 4px;
     background-color: transparent;
     color: var(--black-clr);
     font-weight: 500;
     font-size: 19;
-    &:focus {
+    &:focus,
+    &:hover {
       outline: 0;
+      border-color: var(--primary-clr);
     }
   }
 }

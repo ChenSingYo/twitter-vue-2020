@@ -43,9 +43,18 @@ export default {
       type: Boolean,
       default: false
     },
+    isSubscript: {
+      type: Boolean,
+      default: false
+    },
     initialIsFollowing: {
       type: Boolean,
       default: false
+    }
+  },
+  watch: {
+    initialIsFollowing(newValue) {
+      this.isFollowing = newValue
     }
   },
   data() {
@@ -60,11 +69,12 @@ export default {
     followToggleHandle() {
       const { id } = this.$route.params
       if (!id) return
-      if (isFollowing) {
+      if (this.isFollowing) {
         this.removeFollow({ id })
       } else {
         this.addFollow({ id })
       }
+      this.isFollowing = !this.isFollowing
     },
     async addFollow({ id }) {
       try {

@@ -13,7 +13,7 @@
         <div class="edit-container">
           <!-- TODO: 帶入 user.isFollow -->
           <UserInfoMenu
-            :initial-is-following="false"
+            :initial-is-following="user.isFollowing"
             :is-current-user="isCurrentUser"
             @after-show-edit="afterShowEditHandle"
           />
@@ -29,10 +29,10 @@
               <span class="count">{{ user.followingCount }} 個</span>
               <span class="text">跟隨中</span>
             </router-link>
-            <div class="follower">
+            <router-link to="/profile/follow" class="follower">
               <span class="count">{{ user.followerCount }} 個</span>
               <span class="text">跟隨者</span>
-            </div>
+            </router-link>
           </div>
         </div>
       </div>
@@ -72,7 +72,7 @@
                 @after-to-profile="afterToProfileHandle"
               />
             </template>
-            <div v-if="!likes">尚未有喜歡的推文</div>
+            <div v-if="!tweets">尚未有喜歡的推文</div>
           </tab>
         </tabs>
       </div>
@@ -119,7 +119,8 @@ export default {
         introduction: '',
         tweetCount: -1,
         followingCount: -1,
-        followerCount: -1
+        followerCount: -1,
+        isFollowing: false
       }
     }
   },

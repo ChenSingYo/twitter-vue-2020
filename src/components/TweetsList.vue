@@ -10,14 +10,19 @@
             :src="currentUser.avatar"
           />
         </div>
-        <textarea
-          v-model="description"
-          class="tweet-input-box"
-          cols="20"
-          rows="4"
-          maxlength="140"
-          placeholder="有什麼新鮮事？"
-        ></textarea>
+        <div class="input-wrapper">
+          <textarea
+            v-model="description"
+            class="tweet-input-box"
+            cols="20"
+            rows="4"
+            maxlength="140"
+            placeholder="有什麼新鮮事？"
+            @keyup="descMaxLengthHandle"
+            id="tweet-input"
+          ></textarea>
+          <span v-if="isOverMaxLength" class="alert-text">字數超出140範圍</span>
+        </div>
         <div class="btn-wrapper">
           <button class="btn post-btn" @click.stop.prevent="createPostHandle">
             推文
@@ -80,6 +85,7 @@ export default {
       showReplyPopup: false,
       tweets: [],
       description: '',
+      isOverMaxLength: false,
       replyTweet: {
         id: -1,
         UserId: -1,
@@ -113,7 +119,6 @@ export default {
   },
   methods: {
     afterReplyHandle({ tweet }) {
-      console.log('顯示回覆視窗')
       this.replyTweet = tweet
       this.showReplyPopup = true
     },
@@ -132,6 +137,13 @@ export default {
     },
     afterToProfileHandle({ userId }) {
       this.$router.push({ path: `/profile/${userId}` })
+    },
+    descMaxLengthHandle() {
+      if (this.description.length > 139) {
+        this.isOverMaxLength = true
+      } else {
+        this.isOverMaxLength = false
+      }
     },
     createPostHandle() {
       if (this.description.trim().length < 1) {
@@ -258,15 +270,45 @@ export default {
     }
   }
 
-  .tweet-input-box {
-    margin-top: 10px;
-    width: calc(100% - 75px);
-    border: none;
-    resize: none;
+  .input-wrapper {
+    position: relative;
+    .tweet-input-box {
+      margin-top: 10px;
+      width: calc(100% - 75px);
+      border: none;
+      resize: none;
 
-    &:focus {
-      outline: none;
-      border: 0;
+      &:focus {
+        outline: none;
+        border: 0;
+      }
+    }
+
+    .alert-text {
+      position: absolute;
+      top: 100%;
+      left: 75px;
+      z-index: 20;
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background-color: var(--light-gary-clr);
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+      color: var(--cement-gary-clr);
+      font-size: 14px;
+      &::before {
+        position: absolute;
+        top: -16px;
+        left: 5;
+        display: block;
+        width: 0;
+        height: 0;
+        border-width: 8px;
+        border-style: solid solid solid solid;
+        border-color: transparent transparent var(--light-gary-clr) transparent;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        content: '';
+      }
     }
   }
 

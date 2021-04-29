@@ -38,7 +38,9 @@
             <router-link to="/profile/follow" class="follower">
               <span class="count"
                 >{{
-                  isCurrentUser ? userFollowCount.follower : user.followerCount
+                  isCurrentUser
+                    ? user.followerCount
+                    : otherUserFollowerCount.follower
                 }}
                 個</span
               >
@@ -139,7 +141,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentUser', 'userFollowCount']),
+    ...mapState(['currentUser', 'userFollowCount', 'otherUserFollowerCount']),
     isCurrentUser() {
       const { id } = this.$route.params
       return id ? false : true
@@ -230,7 +232,11 @@ export default {
         if (userId === this.currentUser.id) {
           this.$store.commit('setUserFollowCount', {
             id: this.user.id,
-            following: this.user.followingCount,
+            following: this.user.followingCount
+          })
+        } else {
+          this.$store.commit('setOtherUserFollowCount', {
+            id: this.user.id,
             follower: this.user.followerCount
           })
         }

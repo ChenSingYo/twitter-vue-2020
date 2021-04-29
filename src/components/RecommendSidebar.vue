@@ -65,7 +65,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(['currentUser', 'otherUserFollowerCount'])
   },
   created() {
     this.fetchUsers()
@@ -115,7 +115,14 @@ export default {
           }
           return user
         })
+        // current user following count add one
         this.$store.commit('setUserFollowingCount', +1)
+
+        // other user follower count add one
+        if (this.otherUserFollowerCount.id === id) {
+          this.$store.commit('setOtherUserFollowerCount', +1)
+        }
+
         Toast.fire({
           icon: 'success',
           title: '已跟隨該使用者'
@@ -143,7 +150,14 @@ export default {
           }
           return user
         })
+        // current user following count subtract one
         this.$store.commit('setUserFollowingCount', -1)
+
+        // other user follower count subtract one
+        if (this.otherUserFollowerCount.id === id) {
+          this.$store.commit('setOtherUserFollowerCount', -1)
+        }
+
         Toast.fire({
           icon: 'success',
           title: '已移除跟隨該使用者'

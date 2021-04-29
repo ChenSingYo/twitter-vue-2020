@@ -19,6 +19,9 @@ export default new Vuex.Store({
     userFollowCount: {
       id: -1,
       following: -1,
+    },
+    otherUserFollowerCount: {
+      id: -1,
       follower: -1
     },
     isAuthenticated: false,
@@ -43,14 +46,27 @@ export default new Vuex.Store({
     setReloadPost(state, reloadState) {
       state.isReloadPost = reloadState
     },
+    // save current user following count
     setUserFollowCount (state, userFollowCount) {
       state.userFollowCount = {
         ...state.userFollowCount,
         ...userFollowCount
       }
     },
+    // save other user follower count
+    setOtherUserFollowCount(state, userFollowerCount) {
+      state.otherUserFollowerCount = {
+        ...state.otherUserFollowerCount,
+        ...userFollowerCount
+      }
+    },
+    // calculate currnet user following count
     setUserFollowingCount(state, count) {
       state.userFollowCount.following += count
+    },
+    // calculate other user follower count
+    setOtherUserFollowerCount(state, count) {
+      state.otherUserFollowerCount.follower += count
     }
   },
   actions: {

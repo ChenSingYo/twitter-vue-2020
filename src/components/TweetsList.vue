@@ -51,6 +51,7 @@
         :tweet="replyTweet"
         :current-user="currentUser"
         @after-close="handleClose"
+        @after-update-replies=""
       />
     </section>
   </div>
@@ -154,6 +155,7 @@ export default {
         this.isOverMaxLength = false
       }
     },
+    afterUpdateReplies() {},
     createPostHandle() {
       if (this.description.trim().length < 1) {
         Toast.fire({

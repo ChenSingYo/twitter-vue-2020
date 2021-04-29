@@ -6,19 +6,23 @@
           跟隨誰
         </header>
         <ul>
-          <li 
+          <li
             v-for="topUser in showUsers"
             :key="topUser.id"
             class="card-container"
           >
             <router-link
-              :to="{ name:'user-profile', params: {id: topUser.id} }"
+              :to="{ name: 'user-profile', params: { id: topUser.id } }"
             >
-              <img class="avatar" :src="topUser.avatar | emptyImage" alt="avatar" />
+              <img
+                class="avatar"
+                :src="topUser.avatar | emptyImage"
+                alt="avatar"
+              />
             </router-link>
             <div class="user-info-container">
-              <div class="user-name">{{topUser.name}}</div>
-              <div class="user-tag">@{{topUser.account}}</div>
+              <div class="user-name">{{ topUser.name }}</div>
+              <div class="user-tag">@{{ topUser.account }}</div>
             </div>
             <div class="follow-btn-container">
               <button
@@ -26,18 +30,15 @@
                 :class="{ following: topUser.isFollowing }"
                 @click="followToggleHandle(topUser)"
               >
-                {{ topUser.isFollowing ? '正在跟隨' : '跟隨'}}
+                {{ topUser.isFollowing ? '正在跟隨' : '跟隨' }}
               </button>
             </div>
           </li>
         </ul>
         <footer class="more-footer">
           <template>
-            <button 
-              class="btn more-btn"
-              @click.prevent.stop="toggleShowUsers"
-            >
-            {{ this.isShowMore ? '顯示較多' : '顯示較少' }}
+            <button class="btn more-btn" @click.prevent.stop="toggleShowUsers">
+              {{ this.isShowMore ? '顯示較多' : '顯示較少' }}
             </button>
           </template>
         </footer>
@@ -56,7 +57,7 @@ import { mapState } from 'vuex'
 export default {
   mixins: [emptyImageFilter],
   name: 'RecommendSideBar',
-  data () {
+  data() {
     return {
       topUsers: [],
       showUsers: [],
@@ -66,7 +67,7 @@ export default {
   computed: {
     ...mapState(['currentUser'])
   },
-  created () {
+  created() {
     this.fetchUsers()
   },
   watch: {
@@ -79,7 +80,9 @@ export default {
       try {
         const { data } = await usersAPI.getTopUsers()
         this.topUsers = data
-        this.topUsers = this.topUsers.filter(user => user.id !== this.currentUser.id)
+        this.topUsers = this.topUsers.filter(
+          user => user.id !== this.currentUser.id
+        )
         this.toggleShowUsers()
       } catch (err) {
         Toast.fire({
@@ -89,7 +92,7 @@ export default {
       }
     },
     followToggleHandle(topUser) {
-      const { id }  = topUser
+      const { id } = topUser
       if (topUser.isFollowing) {
         this.removeFollow({ id })
       } else {
@@ -112,7 +115,7 @@ export default {
           }
           return user
         })
-        this.$store.commit('setIsReloadFollow', true)
+        this.$store.commit('setUserFollowingCount', +1)
         Toast.fire({
           icon: 'success',
           title: '已跟隨該使用者'
@@ -140,7 +143,7 @@ export default {
           }
           return user
         })
-        this.$store.commit('setIsReloadFollow', true)
+        this.$store.commit('setUserFollowingCount', -1)
         Toast.fire({
           icon: 'success',
           title: '已移除跟隨該使用者'
@@ -152,12 +155,12 @@ export default {
         })
       }
     },
-    toggleShowUsers () {
+    toggleShowUsers() {
       this.showUsers = []
       if (this.isShowMore) {
         this.showUsers = this.topUsers
       } else {
-        const showUsersLength = Math.ceil(this.topUsers.length/2)
+        const showUsersLength = Math.ceil(this.topUsers.length / 2)
         for (let i = 0; i < showUsersLength; i++) {
           this.showUsers.push(this.topUsers[i])
         }
@@ -220,6 +223,7 @@ $border-style: 1px solid var(--light-gary-clr);
 
         .user-tag {
           color: var(--cement-gary-clr);
+
           @include font-style;
         }
       }

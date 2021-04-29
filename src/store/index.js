@@ -16,10 +16,14 @@ export default new Vuex.Store({
       introduction: '',
       role:''
     },
+    userFollowCount: {
+      id: -1,
+      following: -1,
+      follower: -1
+    },
     isAuthenticated: false,
     token: '',
     isReloadPost: false,
-    isReloadFollow: false
   },
   mutations: {
     setCurrentUser(state, currentUser) {
@@ -39,8 +43,14 @@ export default new Vuex.Store({
     setReloadPost(state, reloadState) {
       state.isReloadPost = reloadState
     },
-    setIsReloadFollow (state, reloadState) {
-      state.isReloadFollow = reloadState
+    setUserFollowCount (state, userFollowCount) {
+      state.userFollowCount = {
+        ...state.userFollowCount,
+        ...userFollowCount
+      }
+    },
+    setUserFollowingCount(state, count) {
+      state.userFollowCount.following += count
     }
   },
   actions: {

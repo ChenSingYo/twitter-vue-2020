@@ -25,11 +25,23 @@
           </div>
           <div class="follow-container">
             <router-link to="/profile/follow" class="following">
-              <span class="count">{{ user.followingCount }} 個</span>
+              <span class="count"
+                >{{
+                  isCurrentUser
+                    ? userFollowCount.following
+                    : user.followingCount
+                }}
+                個</span
+              >
               <span class="text">跟隨中</span>
             </router-link>
             <router-link to="/profile/follow" class="follower">
-              <span class="count">{{ user.followerCount }} 個</span>
+              <span class="count"
+                >{{
+                  isCurrentUser ? userFollowCount.follower : user.followerCount
+                }}
+                個</span
+              >
               <span class="text">跟隨者</span>
             </router-link>
           </div>
@@ -48,6 +60,7 @@
               v-for="tweet in tweets"
               :key="tweet.id"
               :tweet="tweet"
+              @after-show-article="afterShowArticleHandle"
               @after-like-toggle="afterLikeToggleHandle"
               @after-to-profile="afterToProfileHandle"
             />
@@ -57,6 +70,7 @@
               v-for="reply in tweets"
               :key="reply.id"
               :tweet="reply"
+              @after-show-article="afterShowArticleHandle"
               @after-like-toggle="afterLikeToggleHandle"
               @after-to-profile="afterToProfileHandle"
             />
@@ -67,6 +81,7 @@
                 v-for="like in tweets"
                 :key="like.id"
                 :tweet="like"
+                @after-show-article="afterShowArticleHandle"
                 @after-like-toggle="afterLikeToggleHandle"
                 @after-to-profile="afterToProfileHandle"
               />
@@ -124,7 +139,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentUser', 'isReloadFollow']),
+    ...mapState(['currentUser', 'userFollowCount']),
     isCurrentUser() {
       const { id } = this.$route.params
       return id ? false : true
@@ -141,12 +156,6 @@ export default {
       // console.log({ to, from })
       const { id } = to.params
       this.fetchUser({ userId: id || this.currentUser.id })
-    },
-    isReloadFollow (newValue) {
-      if (newValue) {
-        const { id } = this.$route.params
-        this.fetchUser({ userId: id || this.currentUser.id })
-      }
     }
   },
   created() {
@@ -195,6 +204,9 @@ export default {
 
       this.$router.push({ path: `/profile/${userId}` })
     },
+    afterShowArticleHandle({ id }) {
+      this.$router.push(`/tweets/${id}`)
+    },
     preHandleLike({ id }, isAdd) {
       this.tweets = this.tweets.map(tweet => {
         if (tweet.id === id) {
@@ -214,6 +226,14 @@ export default {
       try {
         const { data } = await usersAPI.getUser({ userId })
         this.user = data
+        // 如果 current user 才會儲存跟隨狀態數值
+        if (userId === this.currentUser.id) {
+          this.$store.commit('setUserFollowCount', {
+            id: this.user.id,
+            following: this.user.followingCount,
+            follower: this.user.followerCount
+          })
+        }
       } catch (error) {
         console.log(error)
         Toast.fire({

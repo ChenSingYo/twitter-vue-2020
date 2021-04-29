@@ -121,19 +121,22 @@ export default {
         })
         return
       }
-      const { id } = this.$route.params
+      const id = this.tweet.id
       this.createReply({ id, comment: this.replyText })
     },
-    createReply({ id, comment }) {
+    async createReply({ id, comment }) {
+      console.log(id, comment)
       try {
-        const { status } = tweetsAPI.createTweetReply({ id, comment })
+        const { data } = await tweetsAPI.createTweetReply({ id, comment })
 
-        console.log('create reply: ', status)
+        console.log('create reply: ', data)
 
-        Toast.fire({
-          icon: 'success',
-          title: '新增成功'
-        })
+        if (data.status === 'success') {
+          Toast.fire({
+            icon: 'success',
+            title: '新增成功'
+          })
+        }
 
         setTimeout(() => {
           this.$emit('after-update-replies')

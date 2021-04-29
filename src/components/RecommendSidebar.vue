@@ -12,7 +12,7 @@
             class="card-container"
           >
             <router-link
-              :to="{ name: 'user-profile', params: { id: topUser.id } }"
+              :to="{ name: 'other-profile', params: { id: topUser.id } }"
             >
               <img
                 class="avatar"

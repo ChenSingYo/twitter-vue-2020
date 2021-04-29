@@ -12,7 +12,7 @@
       </div>
       <button
         type="button"
-        class="btn"
+        class="btn shadow-none"
         @click.prevent.stop="deleteTweet(tweet.id)"
       >
         <img src="../assets/icon/icon_close.svg" alt="">

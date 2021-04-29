@@ -28,9 +28,8 @@ export default {
   signUp ({ account, name, email, password, checkPassword }) {
     return apiHelper.post('/users', { account, name, email, password, checkPassword })
   },
-  editAccount( userId, { payload }) {
-    console.log('edit account : ', payload);
-    return apiHelper.put(`/users/${userId}`, payload)
+  editAccount( userId, { account, name, email, password, checkPassword }) {
+    return apiHelper.put(`/users/${userId}`, { account, name, email, password, checkPassword })
   },
   addLike({ id }) {
     return apiHelper.post(`/tweets/${id}/like`)

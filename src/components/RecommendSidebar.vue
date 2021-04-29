@@ -6,13 +6,13 @@
           跟隨誰
         </header>
         <ul>
-          <li 
+          <li
             v-for="topUser in showUsers"
             :key="topUser.id"
             class="card-container"
           >
             <router-link
-              :to="{ name:'user-profile', params: {id: topUser.id} }"
+              :to="{ name:'other-profile', params: {id: topUser.id} }"
             >
               <img class="avatar" :src="topUser.avatar | emptyImage" alt="avatar" />
             </router-link>
@@ -33,7 +33,7 @@
         </ul>
         <footer class="more-footer">
           <template>
-            <button 
+            <button
               class="btn more-btn"
               @click.prevent.stop="toggleShowUsers"
             >

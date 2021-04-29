@@ -51,7 +51,7 @@
         :tweet="replyTweet"
         :current-user="currentUser"
         @after-close="handleClose"
-        @after-update-replies=""
+        @after-update-replies="afterUpdateReplies"
       />
     </section>
   </div>
@@ -155,7 +155,11 @@ export default {
         this.isOverMaxLength = false
       }
     },
-    afterUpdateReplies() {},
+    // 回覆單一推文 更新資料畫面
+    afterUpdateReplies() {
+      this.fetchTweets()
+      this.showReplyPopup = false
+    },
     createPostHandle() {
       if (this.description.trim().length < 1) {
         Toast.fire({

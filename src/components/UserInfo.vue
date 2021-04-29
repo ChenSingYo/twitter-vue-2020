@@ -20,7 +20,7 @@
         <div class="summary-board">
           <div class="info-container">
             <div class="name">{{ user.name }}</div>
-            <div class="tag">{{ user.account }}</div>
+            <div class="tag">@{{ user.account }}</div>
             <p class="content">{{ user.introduction }}</p>
           </div>
           <div class="follow-container">

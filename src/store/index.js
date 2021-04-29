@@ -60,7 +60,7 @@ export default new Vuex.Store({
         ...userFollowerCount
       }
     },
-    // calculate currnet user following count
+    // calculate current user following count
     setUserFollowingCount(state, count) {
       state.userFollowCount.following += count
     },

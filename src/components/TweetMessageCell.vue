@@ -12,7 +12,7 @@
         <span class="name" @click.stop.prevent="toProfileHandle">{{
           tweet.user.name || '使用者'
         }}</span>
-        <span class="tag">{{ tweet.user.account || '@account' }}</span>
+        <span class="tag">@{{ tweet.user.account || 'account' }}</span>
         <span class="time">{{ formatTime }}</span>
         <p class="content">
           {{ tweet.description }}

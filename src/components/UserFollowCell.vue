@@ -10,7 +10,7 @@
         <div class="name" @click.stop.prevent="toProfileHandle">
           {{ follow.name }}
         </div>
-        <div class="tag">{{ follow.account }}</div>
+        <div class="tag">@{{ follow.account }}</div>
         <p class="content">
           {{ follow.introduction }}
         </p>

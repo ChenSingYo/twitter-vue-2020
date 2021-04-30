@@ -152,7 +152,7 @@ export default {
         formData.append(key, value)
       })
 
-      for (let [key, value] of formData.entries()) {
+      for (const [key, value] of formData.entries()) {
         console.log('key : ', key, 'value: ', value)
       }
 

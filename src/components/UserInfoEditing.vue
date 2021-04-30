@@ -146,10 +146,21 @@ export default {
         avatar: this.currentUser.avatar
       }
 
+      const formData = new FormData()
+
+      Object.entries(updateData).forEach(([key, value]) => {
+        formData.append(key, value)
+      })
+
+      for (let [key, value] of formData.entries()) {
+        console.log('key : ', key, 'value: ', value)
+      }
+
       try {
-        const { data } = usersAPI.editAccount(this.currentUser.id, {
-          payload: { ...updateData }
-        })
+        const { data } = await usersAPI.editAccount(
+          this.currentUser.id,
+          formData
+        )
 
         if (data.status === 'success') {
           Toast.fire({

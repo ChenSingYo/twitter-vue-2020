@@ -95,7 +95,7 @@
     </section>
 
     <UserInfoEditing
-      :initial-current-user="currentUser"
+      :initial-current-user="user"
       :show-popup-view="showPopupView"
       @after-close="afterCloseHandle"
     />
@@ -188,6 +188,7 @@ export default {
     },
     afterCloseHandle() {
       this.showPopupView = false
+      this.fetchUser({ userId: this.currentUser.id })
     },
     afterLikeToggleHandle({ id, isLiked }) {
       if (isLiked) {
@@ -227,6 +228,7 @@ export default {
     async fetchUser({ userId }) {
       try {
         const { data } = await usersAPI.getUser({ userId })
+        console.log('fetch user : ', data)
         this.user = data
         // 如果 current user 才會儲存跟隨狀態數值
         if (userId === this.currentUser.id) {

@@ -30,6 +30,78 @@
               ></router-link
             >
           </li>
+                    <li>
+            <router-link
+              to="/notification"
+              custom
+              v-slot="{ href, navigate, isActive, isExactActive }"
+            >
+              <a
+                :class="[
+                  isActive && 'router-link-active',
+                  isExactActive && 'router-link-exact-active'
+                ]"
+                :href="href"
+                @click="navigate"
+                ><img
+                  :src="[
+                    isActive
+                      ? require('../assets/icon/icon_bell_active.svg')
+                      : require('../assets/icon/icon_bell.svg')
+                  ]"
+                  alt=""
+                />通知</a
+              ></router-link
+            >
+          </li>
+          <li>
+            <router-link
+              to="/chatroom"
+              custom
+              v-slot="{ href, navigate, isActive, isExactActive }"
+            >
+              <a
+                :class="[
+                  isActive && 'router-link-active',
+                  isExactActive && 'router-link-exact-active'
+                ]"
+                :href="href"
+                @click="navigate"
+                ><img
+                  :src="[
+                    isActive
+                      ? require('../assets/icon/icon_envelope_active.svg')
+                      : require('../assets/icon/icon_envelope.svg')
+                  ]"
+                  alt=""
+                />公開聊天室</a
+              ></router-link
+            >
+          </li>
+                    <li>
+            <router-link
+              to="/private-chatroom"
+              custom
+              v-slot="{ href, navigate, isActive, isExactActive }"
+            >
+              <a
+                :class="[
+                  isActive && 'router-link-active',
+                  isExactActive && 'router-link-exact-active'
+                ]"
+                :href="href"
+                @click="navigate"
+                ><img
+                  :src="[
+                    isActive
+                     ? require('../assets/icon/icon_envelope_active.svg')
+                      : require('../assets/icon/icon_envelope.svg')
+                  ]"
+                  alt=""
+                />私人訊息</a
+              ></router-link
+            >
+          </li>
           <li>
             <router-link
               :to="{ name: 'user-profile' }"

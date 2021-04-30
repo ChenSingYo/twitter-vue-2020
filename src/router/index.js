@@ -79,6 +79,21 @@ const routes = [
     component: () => import('../views/TweetPage.vue')
   },
   {
+    path: '/notification',
+    name: 'notification',
+    component: () => import('../views/Notification.vue')
+  },
+  {
+    path: '/chatroom',
+    name: 'chatroom',
+    component: () => import('../views/Chatroom.vue')
+  },
+  {
+    path: '/chatroom/private',
+    name: 'private-chatroom',
+    component: () => import('../views/PrivateChatroom.vue')
+  },
+  {
     path: '/profile',
     name: 'user-profile',
     component: () => import('../views/UserProfile.vue')
@@ -116,7 +131,7 @@ router.beforeEach(async (to, from, next) => {
 
   // 取得 驗證狀態、role、token in local、token in Vuex
   let isAuthenticated = store.state.isAuthenticated
-  const currentUserRole = store.state.currentUser.role
+  // const currentUserRole = store.state.currentUser.role
   const tokenInLocal = localStorage.getItem('token')
   const tokenInStore = store.state.token
 

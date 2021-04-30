@@ -22,7 +22,7 @@ export default {
     NavSidebar,
     UserSettingForm
   },
-  data () {
+  data() {
     return {
       userData: {
         id: -1,
@@ -30,9 +30,9 @@ export default {
         name: '',
         email: '',
         password: '',
-        checkPassword:''
+        checkPassword: ''
       },
-      isProcessing: false,
+      isProcessing: false
     }
   },
   created() {
@@ -42,7 +42,7 @@ export default {
     ...mapState(['currentUser'])
   },
   methods: {
-    async fetchUserData () {
+    async fetchUserData() {
       try {
         this.userData = {
           ...this.userData,
@@ -55,7 +55,7 @@ export default {
       } catch (err) {
         Toast.fire({
           icon: 'error',
-          title: `無法取得使用者資訊：${err.message}`,
+          title: `無法取得使用者資訊：${err.message}`
         })
       }
     },
@@ -66,17 +66,17 @@ export default {
           account: account === this.userData.account ? '' : account,
           name,
           email: email === this.userData.email ? '' : email,
-          password, 
+          password,
           checkPassword
         }
         const userId = this.userData.id
-        
+
         console.log(userId, payLoad)
         this.isProcessing = true
-        const { data } = await usersAPI.editAccount( userId , { ...payLoad } )
+        const { data } = await usersAPI.editAccount(userId, { ...payLoad })
 
         if (data.status !== 'success') {
-        throw new Error(data.message)
+          throw new Error(data.message)
         }
 
         this.$store.commit('setCurrentUser', {
@@ -88,17 +88,17 @@ export default {
 
         Toast.fire({
           icon: 'success',
-          title: `更新完成：${data.message}`,
+          title: `更新完成：${data.message}`
         })
         this.isProcessing = false
       } catch (err) {
         Toast.fire({
           icon: 'error',
-          title: `無法更新用戶資訊: ${err.message}`,
+          title: `無法更新用戶資訊: ${err.message}`
         })
       }
       this.isProcessing = false
-    },
+    }
   }
 }
 </script>

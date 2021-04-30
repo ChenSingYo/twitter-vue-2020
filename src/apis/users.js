@@ -13,10 +13,10 @@ export default {
   getCurrentUserLikes({ id }) {
     return apiHelper.get(`/users/${id}/likes`)
   },
-  getCurrentUserFollowers({id}) {
+  getCurrentUserFollowers({ id }) {
     return apiHelper.get(`/users/${id}/followers`)
   },
-  getCurrentUserFollowing({id}) {
+  getCurrentUserFollowing({ id }) {
     return apiHelper.get(`/users/${id}/followings`)
   },
   getUser({ userId }) {
@@ -25,11 +25,23 @@ export default {
   getTopUsers() {
     return apiHelper.get('/users/top')
   },
-  signUp ({ account, name, email, password, checkPassword }) {
-    return apiHelper.post('/users', { account, name, email, password, checkPassword })
+  signUp({ account, name, email, password, checkPassword }) {
+    return apiHelper.post('/users', {
+      account,
+      name,
+      email,
+      password,
+      checkPassword
+    })
   },
-  editAccount( userId, { account, name, email, password, checkPassword }) {
-    return apiHelper.put(`/users/${userId}`, { account, name, email, password, checkPassword })
+  editAccount(userId, { account, name, email, password, checkPassword }) {
+    return apiHelper.put(`/users/${userId}`, {
+      account,
+      name,
+      email,
+      password,
+      checkPassword
+    })
   },
   addLike({ id }) {
     return apiHelper.post(`/tweets/${id}/like`)

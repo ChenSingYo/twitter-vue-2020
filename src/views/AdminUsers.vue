@@ -19,11 +19,11 @@
 </template>
 
 <script>
-import AdminSidebar from "./../components/AdminSidebar";
-import AdminUserCard from "./../components/AdminUserCard";
-import Spinner from "./../components/Spinner";
-import adminAPI from "./../apis/admin";
-import { Toast } from "./../utils/helpers";
+import AdminSidebar from './../components/AdminSidebar'
+import AdminUserCard from './../components/AdminUserCard'
+import Spinner from './../components/Spinner'
+import adminAPI from './../apis/admin'
+import { Toast } from './../utils/helpers'
 
 export default {
   name: 'AdminUsers',
@@ -31,14 +31,14 @@ export default {
     return {
       isLoading: false,
       users: []
-    };
+    }
   },
   components: {
     AdminSidebar,
     AdminUserCard,
     Spinner
   },
-  created () {
+  created() {
     this.fetchUserCards()
   },
   methods: {

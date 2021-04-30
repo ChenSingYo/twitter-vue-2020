@@ -139,7 +139,7 @@ export default {
       this.updateUserInfo()
     },
     async updateUserInfo() {
-      let updateData = {
+      const updateData = {
         name: this.currentUser.name,
         introduction: this.currentUser.introduction,
         cover: this.currentUser.cover,

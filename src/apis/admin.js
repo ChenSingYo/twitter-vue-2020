@@ -1,13 +1,13 @@
 import { apiHelper } from '../utils/helpers'
 
 export default {
-  getTweets () {
+  getTweets() {
     return apiHelper.get('/tweets')
   },
-  deleteTweet ({ tweetId }) {
+  deleteTweet({ tweetId }) {
     return apiHelper.delete(`/admin/tweets/${tweetId}`)
   },
-  getUsers () {
+  getUsers() {
     return apiHelper.get('/admin/users')
   }
 }

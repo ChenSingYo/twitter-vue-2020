@@ -208,7 +208,7 @@ export default {
         if (tweet.id === id) {
           return {
             ...tweet,
-            isLiked: isAdd ? true : false,
+            isLiked: !!isAdd,
             likedCount: isAdd
               ? (tweet.likedCount += 1)
               : (tweet.likedCount -= 1)

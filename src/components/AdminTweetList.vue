@@ -1,22 +1,22 @@
 <template>
   <div class="cell cell-container">
     <img class="avatar" :src="tweet.user.avatar" />
-      <p class="loading" v-if="false">Loading...</p>
-      <div class="info-container">
-        <span class="name">{{tweet.user.name}}</span>
-        <span class="tag">@{{tweet.user.account}}</span>
-        <span class="time">{{tweet.createdAt | fromNow}}</span>
-        <p class="content">
-          {{tweet.description | countText}}
-        </p>
-      </div>
-      <button
-        type="button"
-        class="btn shadow-none"
-        @click.prevent.stop="deleteTweet(tweet.id)"
-      >
-        <img src="../assets/icon/icon_close.svg" alt="">
-      </button>
+    <p class="loading" v-if="false">Loading...</p>
+    <div class="info-container">
+      <span class="name">{{ tweet.user.name }}</span>
+      <span class="tag">@{{ tweet.user.account }}</span>
+      <span class="time">{{ tweet.createdAt | fromNow }}</span>
+      <p class="content">
+        {{ tweet.description | countText }}
+      </p>
+    </div>
+    <button
+      type="button"
+      class="btn shadow-none"
+      @click.prevent.stop="deleteTweet(tweet.id)"
+    >
+      <img src="../assets/icon/icon_close.svg" alt="" />
+    </button>
   </div>
 </template>
 
@@ -34,14 +34,14 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       isProcessing: false,
       tweet: this.initialTweet
     }
   },
   watch: {
-    initialTweet (newValue) {
+    initialTweet(newValue) {
       this.tweet = {
         ...this.tweet,
         ...newValue
@@ -49,7 +49,7 @@ export default {
     }
   },
   methods: {
-    async deleteTweet (tweetId) {
+    async deleteTweet(tweetId) {
       try {
         this.isProcessing = true
         const { data } = await adminAPI.deleteTweet({ tweetId })
@@ -60,7 +60,7 @@ export default {
 
         Toast.fire({
           icon: 'success',
-          title: `推文已刪除！`
+          title: '推文已刪除！'
         })
 
         this.isProcessing = false
@@ -79,7 +79,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .cell-container {
   position: relative;
   display: flex;
@@ -116,7 +115,7 @@ export default {
   }
 
   .content {
-    text-align:justify;
+    text-align: justify;
     margin-bottom: 10px;
     padding-right: 1rem;
     font-style: normal;

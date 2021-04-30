@@ -21,11 +21,11 @@
 </template>
 
 <script>
-import AdminSidebar from "./../components/AdminSidebar";
-import AminTweetList from "./../components/AdminTweetList";
-import adminAPI from "./../apis/admin";
-import { Toast } from "./../utils/helpers";
-import Spinner from "./../components/Spinner";
+import AdminSidebar from './../components/AdminSidebar'
+import AminTweetList from './../components/AdminTweetList'
+import adminAPI from './../apis/admin'
+import { Toast } from './../utils/helpers'
+import Spinner from './../components/Spinner'
 
 export default {
   name: 'AdminTweets',
@@ -38,13 +38,13 @@ export default {
     return {
       tweets: [],
       isLoading: true
-    };
+    }
   },
-  created () {
-    this.fetchTweets ()
+  created() {
+    this.fetchTweets()
   },
   methods: {
-    async fetchTweets () {
+    async fetchTweets() {
       try {
         const { data } = await adminAPI.getTweets()
         if (data.status === 'error') {
@@ -60,7 +60,7 @@ export default {
         this.isLoading = false
       }
     },
-    handleDeleteTweet (tweetId) {
+    handleDeleteTweet(tweetId) {
       this.tweets = this.tweets.filter(tweet => tweet.id !== tweetId)
     }
   }

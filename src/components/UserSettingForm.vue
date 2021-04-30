@@ -81,7 +81,7 @@ export default {
   data() {
     return {
       userData: {
-        ...this.initialUserData,
+        ...this.initialUserData
       }
     }
   },
@@ -112,7 +112,7 @@ export default {
         password: this.userData.password,
         checkPassword: this.userData.checkPassword
       })
-     }
+    }
   }
 }
 </script>

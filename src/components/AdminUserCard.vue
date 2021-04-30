@@ -5,25 +5,25 @@
       <img :src="user.avatar" />
     </div>
     <div class="user-profile">
-      <div class="user-name">{{user.name}}</div>
-      <div class="user-account">@{{user.account}}</div>
+      <div class="user-name">{{ user.name }}</div>
+      <div class="user-account">@{{ user.account }}</div>
       <div class="activity">
         <div class="activity-reply">
           <img src="../assets/icon/icon_reply.svg" alt="relpy" />
-          <span class="reply-count">{{user.tweetCount}}</span>
+          <span class="reply-count">{{ user.tweetCount }}</span>
         </div>
         <div class="activity-like">
           <img src="../assets/icon/icon_like.svg" alt="like" />
-          <span class="like-count">{{user.tweetsLikedCount}}</span>
+          <span class="like-count">{{ user.tweetsLikedCount }}</span>
         </div>
       </div>
       <div class="followship">
         <div class="followings-info">
-          <span class="followship-count">{{user.followingsCount}} 個</span>
+          <span class="followship-count">{{ user.followingsCount }} 個</span>
           <span class="followship-unit">跟隨中 </span>
         </div>
         <div class="followers-info">
-          <span class="followship-count">{{user.followersCount}} 位</span>
+          <span class="followship-count">{{ user.followersCount }} 位</span>
           <span class="followship-unit">跟隨者</span>
         </div>
       </div>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { emptyImageFilter } from "./../utils/mixins";
+import { emptyImageFilter } from './../utils/mixins'
 
 export default {
   mixins: [emptyImageFilter],

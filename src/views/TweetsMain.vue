@@ -27,7 +27,7 @@ export default {
   computed: {
     ...mapState([
       'currentUser',
-      'isAuthenticated',
+      'isAuthenticated'
     ])
   },
   created() {

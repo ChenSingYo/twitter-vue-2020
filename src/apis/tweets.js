@@ -15,6 +15,5 @@ export default {
   },
   createTweetReply({ id, comment }) {
     return apiHelper.post(`/tweets/${id}/replies`, { comment })
-  },
-
+  }
 }

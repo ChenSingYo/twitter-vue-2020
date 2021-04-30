@@ -144,7 +144,7 @@ export default {
     ...mapState(['currentUser', 'userFollowCount', 'otherUserFollowerCount']),
     isCurrentUser() {
       const { id } = this.$route.params
-      return id ? false : true
+      return !id
     },
     userId() {
       const { id } = this.$route.params
@@ -214,7 +214,7 @@ export default {
         if (tweet.id === id) {
           return {
             ...tweet,
-            isLiked: isAdd ? true : false,
+            isLiked: !!isAdd,
             likedCount: isAdd
               ? (tweet.likedCount += 1)
               : (tweet.likedCount -= 1)

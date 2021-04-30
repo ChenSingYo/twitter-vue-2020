@@ -6,6 +6,5 @@
   },
   "rules": {
     "space-before-function-paren": 0
-  },
-  "extends": ["plugin:vue/base"]
+  }
 }

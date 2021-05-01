@@ -19,7 +19,7 @@ import {
 } from 'vue-unicons/dist/icons'
 
 // custom icon
-import { cstBackIcon, cstBell, cstBellCheck, cstIsLike } from './assets/icon/custom-icon'
+import { cstBackIcon, cstBell, cstBellCheck, cstIsLike, cstAddMessage } from './assets/icon/custom-icon'
 
 import store from './store'
 
@@ -32,7 +32,8 @@ Unicon.add([
   cstBackIcon,
   cstBell,
   cstBellCheck,
-  cstIsLike
+  cstIsLike,
+  cstAddMessage
 ])
 Vue.use(Unicon)
 //

@@ -198,7 +198,7 @@ $border-style: 1px solid var(--light-gary-clr);
   min-width: 462px;
   min-width: 462px;
   width: 462px;
-  border-left: none;
+  border-left: $border-style;
 }
 .recommend-container {
   .recommend-card {

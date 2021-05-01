@@ -30,7 +30,7 @@
               ></router-link
             >
           </li>
-                    <li>
+          <li>
             <router-link
               to="/notification"
               custom
@@ -78,9 +78,9 @@
               ></router-link
             >
           </li>
-                    <li>
+          <li>
             <router-link
-              to="/private-chatroom"
+              :to="{ name: 'private-chatroom' }"
               custom
               v-slot="{ href, navigate, isActive, isExactActive }"
             >
@@ -94,7 +94,7 @@
                 ><img
                   :src="[
                     isActive
-                     ? require('../assets/icon/icon_envelope_active.svg')
+                      ? require('../assets/icon/icon_envelope_active.svg')
                       : require('../assets/icon/icon_envelope.svg')
                   ]"
                   alt=""
@@ -158,10 +158,7 @@
         </ul>
       </nav>
       <div class="logout">
-        <button
-          class="btn"
-          @click="logout"
-        >
+        <button class="btn" @click="logout">
           <img src="../assets/icon/icon_logout.png" alt="" />
           <span>登出</span>
         </button>

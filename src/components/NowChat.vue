@@ -1,38 +1,38 @@
 <template>
   <div>
     <!-- 遠端使用者上線提示 -->
-    <div class="user-active">
-      <span class="user-active-txt"> 使用者上線 </span>
+    <div class="user-active" v-if="userIsOnline">
+      <span class="user-active-txt"> {{chatRecord.text}}</span>
     </div>
     <!-- 遠端使用者下線提示 -->
-    <div class="user-active">
-      <span class="user-active-txt"> 使用者離線 </span>
+    <div class="user-active" v-if="userIsOffline">
+      <span class="user-active-txt"> {{chatRecord.text}} </span>
     </div>
     <div class="message-box">
-      <!-- 本地使用者 -->
-      <div class="local-msg">
-        <div class="send-text">
-          test messsage 123445678989
-        </div>
-        <div class="send-time">
-          1小時前
-        </div>
-      </div>
-      <!-- 遠端使用者 -->
-      <div class="remote-msg">
+    <!-- 遠端使用者 -->
+      <div class="remote-msg" v-if="isRemoteMsg">
         <div class="avatar">
           <img
-            src="https://assets-lighthouse.s3.amazonaws.com/uploads/image/file/9442/FEwebinar_IronMan.jpeg"
+            :src="chatRecord.avatar"
             alt="avatar"
           />
         </div>
         <div class="msg-box">
           <div class="receive-text">
-            hello 123 準備要去征服那美克星
+            {{chatRecord.text}}
           </div>
           <div class="receive-time">
-            1小時前
+            {{chatRecord.time}}
           </div>
+        </div>
+      </div>
+      <!-- 本地使用者 -->
+      <div class="local-msg" v-if="isLocalMsg">
+        <div class="send-text">
+          {{chatRecord.text}}
+        </div>
+        <div class="send-time">
+          {{chatRecord.time}}
         </div>
       </div>
     </div>
@@ -43,16 +43,16 @@
 export default {
   name: 'NowChatRecords',
   props: {
-    chatData: {
+    chatRecord: {
       type: Object,
       required: true
     }
   },
   data() {
     return {
-      messageType: this.chatData.messageType,
-      isBroadcastOnline: false,
-      isBroadcastOffline: false,
+      msgType: this.chatRecord.msgType,
+      userIsOnline: false,
+      userIsOffline: false,
       isRemoteMsg: false,
       isLocalMsg: false
     }
@@ -62,28 +62,28 @@ export default {
   },
   methods: {
     handleData() {
-      switch (this.messageType) {
-        case 'broadcast-online':
-          this.isBroadcastOnline = true
-          this.isBroadcastOffline = false
+      switch (this.msgType) {
+        case 'userOnline':
+          this.userIsOnline = true
+          this.userIsOffline = false
           this.isRemoteMsg = false
           this.isLocalMsg = false
           break
-        case 'broadcast-offline':
-          this.isBroadcastOnline = false
-          this.isBroadcastOffline = true
+        case 'userOffline':
+          this.userIsOnline = false
+          this.userIsOffline = true
           this.isRemoteMsg = false
           this.isLocalMsg = false
           break
-        case 'remote-msg':
-          this.isBroadcastOnline = false
-          this.isBroadcastOffline = false
+        case 'isRemoteMsg':
+          this.userIsOnline = false
+          this.userIsOffline = false
           this.isRemoteMsg = true
           this.isLocalMsg = false
           break
-        case 'local-msg':
-          this.isBroadcastOnline = false
-          this.isBroadcastOffline = false
+        case 'isLocalMsg':
+          this.userIsOnline = false
+          this.userIsOffline = false
           this.isRemoteMsg = false
           this.isLocalMsg = true
           break

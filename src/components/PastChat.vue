@@ -1,38 +1,30 @@
 <template>
   <div>
-    <!-- 遠端使用者上線提示 -->
-    <div class="user-active">
-      <span class="user-active-txt"> 使用者上線 </span>
-    </div>
-    <!-- 遠端使用者下線提示 -->
-    <div class="user-active">
-      <span class="user-active-txt"> 使用者離線 </span>
-    </div>
     <div class="message-box">
-      <!-- 本地使用者 -->
-      <div class="local-msg">
-        <div class="send-text">
-          test messsage 123445678989
-        </div>
-        <div class="send-time">
-          1小時前
-        </div>
-      </div>
-      <!-- 遠端使用者 -->
-      <div class="remote-msg">
+    <!-- 遠端使用者 -->
+      <div class="remote-msg" v-if="isRemoteMsg">
         <div class="avatar">
           <img
-            src="https://assets-lighthouse.s3.amazonaws.com/uploads/image/file/9442/FEwebinar_IronMan.jpeg"
+            :src="pastChatRecord.avatar"
             alt="avatar"
           />
         </div>
         <div class="msg-box">
           <div class="receive-text">
-            hello 123 準備要去征服那美克星
+            {{pastChatRecord.text}}
           </div>
           <div class="receive-time">
-            1小時前
+            {{pastChatRecord.time}}
           </div>
+        </div>
+      </div>
+      <!-- 本地使用者 -->
+      <div class="local-msg" v-if="isLocalMsg">
+        <div class="send-text">
+          {{pastChatRecord.text}}
+        </div>
+        <div class="send-time">
+          {{pastChatRecord.time}}
         </div>
       </div>
     </div>
@@ -43,18 +35,16 @@
 export default {
   name: 'PastChatRecords',
   props: {
-    chatData: {
+    pastChatRecord: {
       type: Object,
       required: true
     }
   },
   data() {
     return {
-      messageType: this.chatData.messageType,
-      isBroadcastOnline: false,
-      isBroadcastOffline: false,
-      isMessageOther: false,
-      isMessageSelf: false
+      msgType: this.pastChatRecord.msgType,
+      isRemoteMsg: false,
+      isLocalMsg: false
     }
   },
   created() {
@@ -62,30 +52,14 @@ export default {
   },
   methods: {
     handleData() {
-      switch (this.messageType) {
-        case 'broadcast-online':
-          this.isBroadcastOnline = true
-          this.isBroadcastOffline = false
-          this.isMessageOther = false
-          this.isMessageSelf = false
+      switch (this.msgType) {
+        case 'isRemoteMsg':
+          this.isRemoteMsg = true
+          this.isLocalMsg = false
           break
-        case 'broadcast-offline':
-          this.isBroadcastOnline = false
-          this.isBroadcastOffline = true
-          this.isMessageOther = false
-          this.isMessageSelf = false
-          break
-        case 'message-other':
-          this.isBroadcastOnline = false
-          this.isBroadcastOffline = false
-          this.isMessageOther = true
-          this.isMessageSelf = false
-          break
-        case 'message-self':
-          this.isBroadcastOnline = false
-          this.isBroadcastOffline = false
-          this.isMessageOther = false
-          this.isMessageSelf = true
+        case 'isLocalMsg':
+          this.isRemoteMsg = false
+          this.isLocalMsg = true
           break
       }
     }

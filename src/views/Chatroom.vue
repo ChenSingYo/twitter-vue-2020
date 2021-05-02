@@ -1,12 +1,10 @@
 <template>
   <div class="chatroom-container">
-    <Spinner v-if="false" />
-    <template v-else>
+    <template>
       <!-- 導覽列 -->
       <div class="left-navbar">
         <NavSidebar />
       </div>
-
       <!-- 上線使用者 -->
       <div class="user-list">
         <div class="title">上線使用者 ({{ onlineCount }})</div>
@@ -17,13 +15,15 @@
           :onlineUser="onlineUser"
         />
       </div>
-
       <!-- 公開聊天室 -->
       <div class="chatroom">
         <div class="title">
           公開聊天室
         </div>
-        <div class="message-container">
+        <div
+          class="message-container"
+          ref="messageContainer"
+        >
           <!-- 歷史訊息 -->
           <PastChatData
             v-for="pastChatRecord in pastChatRecords"
@@ -34,16 +34,17 @@
           <NowChatData
             v-for="nowChatRecord in nowChatRecords"
             :key="nowChatRecord.id"
-            :nowChatRecord="nowChatRecord"
+            :chatRecord="nowChatRecord"
           />
           <!-- 輸入欄 -->
           <div class="send-box">
-            <form @submit.prevent.stop="sendMessage" class="form-container">
+            <form @click.stop.prevent="handleSendMsg" class="form-container">
               <input
                 type="text"
                 name=""
                 placeholder="輸入訊息..."
                 class="text-input"
+                v-model="chatMessage"
               />
               <button type="submit" class="send-btn">
                 <img src="../assets/icon/icon_message.svg" alt="send" />
@@ -60,25 +61,20 @@
 import OnlineUsers from './../components/OnlineUsers'
 import NowChatData from './../components/NowChat'
 import PastChatData from './../components/PastChat'
-import Spinner from '../components/Spinner'
 import NavSidebar from '../components/NavSidebar'
 import { mapState } from 'vuex'
-import { Toast } from './../utils/helpers'
-// import uuidv4 from 'uuid'
+import moment from 'moment'
+// import { Toast } from './../utils/helpers'
 
 // for sockio
 import Vue from 'vue'
 import store from './../store'
 import VueSocketIO from 'vue-socket.io'
 import SocketIO from 'socket.io-client'
-const token = localStorage.getItem('token')
-
 const url = 'https://simple-twitter-mysql.herokuapp.com'
 const options = {
   reconnectionDelayMax: 10000,
-  auth: {
-    token: token
-  }
+  auth: { token: localStorage.getItem('token') }
 }
 const connection = new SocketIO(url, options)
 
@@ -98,7 +94,6 @@ export default {
   name: 'ChatRoom',
   components: {
     NavSidebar,
-    Spinner,
     OnlineUsers,
     NowChatData,
     PastChatData
@@ -116,19 +111,29 @@ export default {
     ...mapState(['currentUser'])
   },
   created() {
-    this.disconnectSever()
     this.connectSever()
+  },
+  watch: {
+    pastChatRecords() {
+      this.$nextTick(() => {
+        const container = this.$refs.messageContainer
+        container.scrollTop = container.lastElementChild.offsetTop
+      })
+    },
+    nowChatRecords() {
+      this.$nextTick(() => {
+        const container = this.$refs.messageContainer
+        container.scrollTop = container.lastElementChild.offsetTop
+      })
+    }
   },
   methods: {
     handleSendMsg() {
-      if (this.chatMessage.trim() === '') {
-        Toast.fire({
-          icon: 'warning',
-          title: '尚未輸入訊息或只有空白'
-        })
-        return
+      if (this.chatMessage.trim() !== '') {
+        const msg = this.chatMessage
+        this.$socket.emit('userMsg', msg)
       }
-      this.send()
+      this.chatMessage = ''
     },
     disconnectSever() {
       this.$socket.disconnect()
@@ -141,6 +146,9 @@ export default {
     connect() {
       console.log('socket connected')
     },
+    disconnect() {
+      console.log('socket disconnected...')
+    },
     // 取得所有上線使用者
     userList(onlineUsers) {
       this.onlineUsers = onlineUsers
@@ -148,31 +156,53 @@ export default {
     // 統計上線使用者
     onlineCount(onlineCount) {
       this.onlineCount = onlineCount
-    }
-    // 向聊天室推播其他使用者上線訊息 msg-type:userOnline
-    // userOnline(onlineUser) {
-    //   this.nowChatData.push({
-    //     id: uuidv4(),
-    //     msgType: 'broadcast-online',
-    //     name: onlineUser.name
-    //   })
-    // },
+    },
+    // 向聊天室推播其他使用者上線訊息 msgtype:userOnline
+    userOnline(userMsg) {
+      this.nowChatRecords.push({ ...userMsg })
+    },
     // 向聊天室推播其他使用者離線訊息  msg-type:userOffline
-    // userOffline(offlineUser) {
-    //   this.nowChatData.push({
-    //     id: uuidv4(),
-    //     msgType: 'broadcast-offline',
-    //     name: offlineUser.name
-    //   })
-    // },
+    userOffline(userMsg) {
+      this.nowChatRecords.push({ ...userMsg })
+    },
     // 向聊天室推播訊息 msg-type: localMessage || remoteMessage
-    // message(data) {
-    // this.nowChatRecords.push({ ...data })
-    // },
+    chatMsg(data) {
+      if (!data.text) {
+        return
+      }
+      this.nowChatRecords.push({
+        id: data.ChatId,
+        userId: data.UserId,
+        text: data.text,
+        msgType:
+          data.UserId === this.currentUser.id ? 'isLocalMsg' : 'isRemoteMsg',
+        name: data.username,
+        avatar: data.avatar,
+        time: moment
+          .utc()
+          .locale('zh_TW')
+          .utcOffset('+08:00')
+          .format('h:mm a')
+      })
+    },
     // 留存歷史訊息
-    // message(data) {
-    // this.nowChatRecords.push({ ...data })
-    // }
+    historyMsg(datas) {
+      for (const data of datas) {
+        this.pastChatRecords.push({
+          id: data.id,
+          userId: data.UserId,
+          text: data.text,
+          msgType: data.UserId === this.currentUser.id ? 'isLocalMsg' : 'isRemoteMsg',
+          name: data.username,
+          avatar: data.avatar,
+          time: data.time
+        })
+      }
+    }
+  },
+  destroyed() {
+    console.log('disconnectSever')
+    this.disconnectSever()
   }
 }
 </script>

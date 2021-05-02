@@ -69,7 +69,7 @@
                 @click="navigate"
                 ><img
                   :src="[
-                    isActive
+                    isExactActive
                       ? require('../assets/icon/icon_envelope_active.svg')
                       : require('../assets/icon/icon_envelope.svg')
                   ]"
@@ -93,7 +93,7 @@
                 @click="navigate"
                 ><img
                   :src="[
-                    isActive
+                    isExactActive
                       ? require('../assets/icon/icon_envelope_active.svg')
                       : require('../assets/icon/icon_envelope.svg')
                   ]"

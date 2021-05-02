@@ -18,14 +18,14 @@
 </template>
 
 <script>
-import NavSidebar from '../components/NavSidebar'
-import UserMessageListChatRoom from '../components/UserMessageListChatRoom'
-import ChatRoom from '../components/ChatRoom'
 import { mapState } from 'vuex'
 import Vue from 'vue'
 import store from './../store'
 import VueSocketIO from 'vue-socket.io'
 import SocketIO from 'socket.io-client'
+import NavSidebar from '../components/NavSidebar'
+import UserMessageListChatRoom from '../components/UserMessageListChatRoom'
+import ChatRoom from '../components/ChatRoom'
 
 const token = localStorage.getItem('token')
 
@@ -77,7 +77,7 @@ export default {
     ) {
       this.$socket.emit('privateUser', this.storeConnectingUser.UserId)
       this.connectingUser = this.storeConnectingUser
-      // console.log('create : ', this.storeConnectingUser)
+      console.log('create : ', this.storeConnectingUser)
     }
   },
   destroyed() {

@@ -3,6 +3,7 @@ import Swal from 'sweetalert2'
 
 const baseURL = 'https://simple-twitter-mysql.herokuapp.com/api'
 
+
 const axiosInstance = axios.create({
   baseURL
 })

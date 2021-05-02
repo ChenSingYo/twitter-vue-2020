@@ -15,6 +15,7 @@
             :initial-is-following="user.isFollowing"
             :is-current-user="isCurrentUser"
             @after-show-edit="afterShowEditHandle"
+            @after-send-message="afterSendMessageHandle"
           />
         </div>
         <div class="summary-board">
@@ -209,6 +210,15 @@ export default {
     },
     afterShowArticleHandle({ id }) {
       this.$router.push(`/tweets/${id}`)
+    },
+    afterSendMessageHandle() {
+      this.$store.commit('setConnectingUser', {
+        UserId: this.user.id,
+        username: this.user.name,
+        account: this.user.account,
+        avatar: this.user.avatar
+      })
+      this.$router.push({ name: 'private-chatroom' })
     },
     preHandleLike({ id }, isAdd) {
       this.tweets = this.tweets.map(tweet => {

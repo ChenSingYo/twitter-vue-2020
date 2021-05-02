@@ -27,6 +27,12 @@ export default new Vuex.Store({
     isAuthenticated: false,
     token: '',
     isReloadPost: false,
+    storeConnectingUser: {
+      UserId: -1,
+      username: '',
+      account: '',
+      avatar: ''
+    }
   },
   mutations: {
     setCurrentUser(state, currentUser) {
@@ -67,6 +73,12 @@ export default new Vuex.Store({
     // calculate other user follower count
     setOtherUserFollowerCount(state, count) {
       state.otherUserFollowerCount.follower += count
+    },
+    setConnectingUser(state, user) {
+      state.storeConnectingUser = {
+        ...state.storeConnectingUser,
+        ...user
+      }
     }
   },
   actions: {

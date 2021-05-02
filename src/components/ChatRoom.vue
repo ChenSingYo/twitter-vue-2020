@@ -1,45 +1,110 @@
 <template>
   <div class="chat-room">
-    <header class="header">
-      <div class="name">Name</div>
-      <div class="account">@Tag</div>
-    </header>
-
-    <section class="message-body">
-      <template>
-        <div class="self-message-container">
-          <div class="message">Hello world</div>
-          <div class="send-time">2020-05-01</div>
+    <template v-if="!connectingUser || connectingUser.UserId === -1">
+      <div class="empty-room">點選使用者聊天</div>
+    </template>
+    <template v-else>
+      <header class="header">
+        <div class="name">{{ connectingUser.username }}</div>
+        <div class="account">{{ connectingUser.account }}</div>
+        <div class="close" @click="leaveRoomHandle">
+          <unicon name="multiply" fill="#ff6600"></unicon>
         </div>
-      </template>
-      <template>
-        <div class="other-message-container">
-          <div class="img-wrapper">
-            <img src="https://picsum.photos/40" alt="" />
-          </div>
-          <div class="info-container">
-            <div class="message">Hello world</div>
-            <div class="send-time">2020-05-01</div>
-          </div>
-        </div>
-      </template>
-    </section>
+      </header>
 
-    <section class="send-message">
-      <input type="text" name="" placeholder="輸入訊息..." class="text-input" />
-      <button type="submit" class="send-btn">
-        <img src="../assets/icon/icon_message.svg" alt="send" />
-      </button>
-    </section>
+      <section ref="messageBody" class="message-body">
+        <div
+          ref="messageContainer"
+          v-for="message in messages"
+          :key="message.ChatId"
+          class="message-container"
+        >
+          <template v-if="message.UserId === currentUser.id">
+            <div class="self-message-container">
+              <div class="message">{{ message.text }}</div>
+              <div class="send-time">{{ message.time }}</div>
+            </div>
+          </template>
+          <template v-else>
+            <div class="other-message-container">
+              <div class="img-wrapper">
+                <img src="https://picsum.photos/40" alt="" />
+              </div>
+              <div class="info-container">
+                <div class="message">{{ message.text }}</div>
+                <div class="send-time">{{ message.time }}</div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </section>
+
+      <section class="send-message">
+        <input
+          v-model="sendMessage"
+          type="text"
+          name=""
+          placeholder="輸入訊息..."
+          class="text-input"
+        />
+        <button type="submit" class="send-btn">
+          <img
+            src="../assets/icon/icon_message.svg"
+            alt="send"
+            @click="sendMessageHandle"
+          />
+        </button>
+      </section>
+    </template>
   </div>
 </template>
 
 <script>
 export default {
   name: 'ChatRoom',
+  props: {
+    initalMessages: {
+      type: Array
+    },
+    currentUser: {
+      id: -1
+    },
+    initalConnectingUser: {
+      id: -1,
+      name: '',
+      account: ''
+    }
+  },
   data() {
     return {
-      isSelf: false
+      isSelf: false,
+      messages: [],
+      sendMessage: '',
+      connectingUser: this.initalConnectingUser
+    }
+  },
+  watch: {
+    initalMessages(newValue) {
+      this.messages = newValue
+
+      this.$nextTick(() => {
+        let container = this.$refs.messageBody
+
+        container.scrollTop = container.lastElementChild.offsetTop
+      })
+    },
+    initalConnectingUser(newValue) {
+      this.connectingUser = newValue
+    }
+  },
+  methods: {
+    sendMessageHandle() {
+      this.$emit('after-send-message', this.sendMessage)
+      this.sendMessage = ''
+    },
+    leaveRoomHandle() {
+      this.connectingUser = undefined
+      this.$emit('after-leave-room', this.connectingUser)
     }
   }
 }
@@ -48,12 +113,14 @@ export default {
 <style lang="scss" scoped>
 .chat-room {
   position: relative;
+  overflow: hidden;
   flex-grow: 1;
   padding-bottom: 55px;
   height: 100%;
   border-left: 1px solid var(--light-gary-clr);
 
   .header {
+    position: relative;
     display: flex;
     flex-direction: column;
     padding-left: 24px;
@@ -70,16 +137,23 @@ export default {
       font-weight: 500;
       font-size: 0.937rem;
     }
+
+    .close {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translate(-50%, -50%);
+    }
   }
 
   .message-body {
     display: flex;
     overflow-y: scroll;
     flex-direction: column;
-    justify-content: flex-end;
-    height: calc(100% - 55px);
+    padding-bottom: 55px;
+    // justify-content: flex-end;
+    height: 100%;
     background-color: lightblue;
-
     &::-webkit-scrollbar {
       width: 0;
     }
@@ -172,6 +246,15 @@ export default {
       border: none;
       background: none;
     }
+  }
+
+  .empty-room {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--black-clr);
+    font-weight: 700;
   }
 }
 </style>

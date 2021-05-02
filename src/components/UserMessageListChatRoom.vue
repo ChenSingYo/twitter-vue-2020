@@ -13,20 +13,24 @@
     </header>
 
     <section class="user-list">
-      <div class="user-list-container">
+      <div
+        v-for="user in users"
+        :key="user.id"
+        class="user-list-container"
+        @click="selectedUserHandle(user)"
+      >
         <div class="img-wrapper">
-          <img src="https://picsum.photos/50" alt="" />
+          <img :src="user.avatar" alt="" />
         </div>
         <div class="info-container">
-          <span class="name">Name</span>
-          <span class="account">@Tag</span>
+          <span class="name">{{ user.name }}</span>
+          <span class="account">{{ user.account }}</span>
           <p class="message">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Totam,
-            itaque.
+            {{ user.text }}
           </p>
         </div>
         <div class="last-time">
-          5 秒
+          {{ user.time }}
         </div>
       </div>
     </section>
@@ -35,7 +39,18 @@
 
 <script>
 export default {
-  name: 'UserChartRoom'
+  name: 'UserMessageListChatRoom',
+  props: {
+    users: {
+      type: Array
+    }
+  },
+  methods: {
+    selectedUserHandle(user) {
+      console.log(user)
+      this.$emit('after-selected-user', user)
+    }
+  }
 }
 </script>
 
@@ -67,11 +82,13 @@ export default {
 
   .user-list-container {
     position: relative;
+    display: flex;
     border-bottom: 1px solid var(--light-gary-clr);
+    cursor: pointer;
 
     .img-wrapper {
-      float: left;
       overflow: hidden;
+      flex-shrink: 0;
       margin: 10px 10px 10px 15px;
       width: 50px;
       height: 50px;
@@ -85,7 +102,10 @@ export default {
     }
 
     .info-container {
+      overflow: hidden;
       padding: 10px 0;
+      width: 100%;
+
       .name {
         color: var(--black-clr);
         font-weight: 700;
@@ -101,8 +121,6 @@ export default {
       .message {
         overflow: hidden;
         margin: 0;
-        width: calc(80% - 75px);
-        color: var(--black-clr);
         color: var(--cement-gary-clr);
         text-overflow: ellipsis;
         white-space: nowrap;

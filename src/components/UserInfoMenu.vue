@@ -5,7 +5,7 @@
         <button class="btn" @click="showEdit">編輯使用者資料</button>
       </template>
       <template v-else>
-        <button class="btn btn-circle">
+        <button class="btn btn-circle" @click="sendMessageHandle">
           <unicon name="envelope" fill="#ff6600"></unicon>
         </button>
         <button class="btn btn-circle" :class="{ subscript: isSubscript }">
@@ -65,6 +65,9 @@ export default {
   methods: {
     showEdit() {
       this.$emit('after-show-edit', true)
+    },
+    sendMessageHandle() {
+      this.$emit('after-send-message')
     },
     followToggleHandle() {
       const { id } = this.$route.params

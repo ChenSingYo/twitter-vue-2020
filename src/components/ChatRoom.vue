@@ -88,7 +88,7 @@ export default {
       this.messages = newValue
 
       this.$nextTick(() => {
-        let container = this.$refs.messageBody
+        const container = this.$refs.messageBody
 
         container.scrollTop = container.lastElementChild.offsetTop
       })

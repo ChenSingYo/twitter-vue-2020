@@ -1,30 +1,38 @@
 <template>
   <div>
+    <!-- 遠端使用者上線提示 -->
+    <div class="user-active" v-if="userIsOnline">
+      <span class="user-active-txt"> {{chatRecord.text}}</span>
+    </div>
+    <!-- 遠端使用者下線提示 -->
+    <div class="user-active" v-if="userIsOffline">
+      <span class="user-active-txt"> {{chatRecord.text}} </span>
+    </div>
     <div class="message-box">
     <!-- 遠端使用者 -->
       <div class="remote-msg" v-if="isRemoteMsg">
         <div class="avatar">
           <img
-            :src="pastChatRecord.avatar"
+            :src="chatRecord.avatar"
             alt="avatar"
           />
         </div>
         <div class="msg-box">
           <div class="receive-text">
-            {{pastChatRecord.text}}
+            {{chatRecord.text}}
           </div>
           <div class="receive-time">
-            {{pastChatRecord.time}}
+            {{chatRecord.time}}
           </div>
         </div>
       </div>
       <!-- 本地使用者 -->
       <div class="local-msg" v-if="isLocalMsg">
         <div class="send-text">
-          {{pastChatRecord.text}}
+          {{chatRecord.text}}
         </div>
         <div class="send-time">
-          {{pastChatRecord.time}}
+          {{chatRecord.time}}
         </div>
       </div>
     </div>
@@ -33,16 +41,18 @@
 
 <script>
 export default {
-  name: 'PastChatRecords',
+  name: 'ChatRecords',
   props: {
-    pastChatRecord: {
+    chatRecord: {
       type: Object,
       required: true
     }
   },
   data() {
     return {
-      msgType: this.pastChatRecord.msgType,
+      msgType: this.chatRecord.msgType,
+      userIsOnline: false,
+      userIsOffline: false,
       isRemoteMsg: false,
       isLocalMsg: false
     }
@@ -53,11 +63,27 @@ export default {
   methods: {
     handleData() {
       switch (this.msgType) {
+        case 'userOnline':
+          this.userIsOnline = true
+          this.userIsOffline = false
+          this.isRemoteMsg = false
+          this.isLocalMsg = false
+          break
+        case 'userOffline':
+          this.userIsOnline = false
+          this.userIsOffline = true
+          this.isRemoteMsg = false
+          this.isLocalMsg = false
+          break
         case 'isRemoteMsg':
+          this.userIsOnline = false
+          this.userIsOffline = false
           this.isRemoteMsg = true
           this.isLocalMsg = false
           break
         case 'isLocalMsg':
+          this.userIsOnline = false
+          this.userIsOffline = false
           this.isRemoteMsg = false
           this.isLocalMsg = true
           break
@@ -69,7 +95,9 @@ export default {
 
 <style lang="scss" scoped>
 .user-active {
-  text-align: center;
+  display: flex;
+  height: 30px;
+  justify-content: center;
   margin: 10px 0;
 
   .user-active-txt {

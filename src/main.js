@@ -42,9 +42,8 @@ Unicon.add([
   cstAddMessage
 ])
 Vue.use(Unicon)
-//
 
-// Vue.use(vueSocketIO)
+Vue.use(vueSocketIO)
 
 Vue.config.productionTip = false
 

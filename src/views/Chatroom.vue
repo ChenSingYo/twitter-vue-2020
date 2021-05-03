@@ -66,30 +66,6 @@ import { mapState } from 'vuex'
 import moment from 'moment'
 // import { Toast } from './../utils/helpers'
 
-// for sockio
-import Vue from 'vue'
-import store from './../store'
-import VueSocketIO from 'vue-socket.io'
-import SocketIO from 'socket.io-client'
-const url = 'https://simple-twitter-mysql.herokuapp.com'
-const options = {
-  reconnectionDelayMax: 10000,
-  auth: { token: localStorage.getItem('token') }
-}
-const connection = new SocketIO(url, options)
-
-Vue.use(
-  new VueSocketIO({
-    debug: true,
-    connection,
-    vuex: {
-      store,
-      actionPrefix: 'SOCKET_',
-      mutationPrefix: 'SOCKET_'
-    }
-  })
-)
-
 export default {
   name: 'ChatRoom',
   components: {
@@ -263,6 +239,7 @@ export default {
           padding: 20px;
         }
         .text-input {
+          outline: none;
           width: 90%;
           border-radius: 50px;
           border: none;

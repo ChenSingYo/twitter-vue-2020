@@ -95,7 +95,9 @@ export default {
 
 <style lang="scss" scoped>
 .user-active {
-  text-align: center;
+  display: flex;
+  height: 30px;
+  justify-content: center;
   margin: 10px 0;
 
   .user-active-txt {

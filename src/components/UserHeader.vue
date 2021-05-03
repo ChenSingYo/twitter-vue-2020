@@ -42,6 +42,7 @@ header {
   display: flex;
   align-items: center;
   height: 55px;
+  background-color: #fff;
 
   .unicon {
     display: flex;

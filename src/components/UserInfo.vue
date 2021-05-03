@@ -1,8 +1,13 @@
 <template>
   <div class="info">
-    <UserHeader :name="user.name" :count="user.tweetCount" />
+    <UserHeader
+      class="user-header"
+      :name="user.name"
+      :count="user.tweetCount"
+    />
 
-    <section ref="introduction" class="introduction">
+    <Spinner v-if="isLoadingProfile" />
+    <section v-else class="introduction">
       <div class="introduction-container">
         <div class="cover-img">
           <img :src="user.cover" alt="" />
@@ -52,36 +57,55 @@
       </div>
     </section>
 
-    <section ref="ariticle" class="ariticle-tab">
+    <section class="ariticle-tab">
       <div class="tab-container">
         <tabs
           :options="{ defaultTabHash: 'first-tab', useUrlFragment: false }"
           @changed="tabChanged"
         >
           <tab id="first-tab" name="推文">
-            <TweetMessageCell
-              v-for="tweet in tweets"
-              :key="tweet.id"
-              :tweet="tweet"
-              @after-reply-message="afterReplyHandle"
-              @after-show-article="afterShowArticleHandle"
-              @after-like-toggle="afterLikeToggleHandle"
-              @after-to-profile="afterToProfileHandle"
-            />
+            <template v-if="isLoadingTweets">
+              <Spinner />
+            </template>
+            <template v-else-if="tweets.length">
+              <TweetMessageCell
+                v-for="tweet in tweets"
+                :key="tweet.id"
+                :tweet="tweet"
+                @after-reply-message="afterReplyHandle"
+                @after-show-article="afterShowArticleHandle"
+                @after-like-toggle="afterLikeToggleHandle"
+                @after-to-profile="afterToProfileHandle"
+              />
+            </template>
+            <template v-else>
+              <div class="empty-text">尚未發布任何推文</div>
+            </template>
           </tab>
           <tab id="second-tab" name="推文與回覆">
-            <TweetMessageCell
-              v-for="reply in tweets"
-              :key="reply.id"
-              :tweet="reply"
-              @after-reply-message="afterReplyHandle"
-              @after-show-article="afterShowArticleHandle"
-              @after-like-toggle="afterLikeToggleHandle"
-              @after-to-profile="afterToProfileHandle"
-            />
+            <template v-if="isLoadingTweets">
+              <Spinner />
+            </template>
+            <template v-else-if="tweets.length">
+              <TweetMessageCell
+                v-for="reply in tweets"
+                :key="reply.id"
+                :tweet="reply"
+                @after-reply-message="afterReplyHandle"
+                @after-show-article="afterShowArticleHandle"
+                @after-like-toggle="afterLikeToggleHandle"
+                @after-to-profile="afterToProfileHandle"
+              />
+            </template>
+            <template v-else>
+              <div class="empty-text">尚未推文與回覆</div>
+            </template>
           </tab>
           <tab id="third-tab" name="喜歡的內容">
-            <template v-if="tweets">
+            <template v-if="isLoadingTweets">
+              <Spinner />
+            </template>
+            <template v-else-if="tweets.length">
               <TweetMessageCell
                 v-for="like in tweets"
                 :key="like.id"
@@ -92,7 +116,9 @@
                 @after-to-profile="afterToProfileHandle"
               />
             </template>
-            <div v-if="!tweets">尚未有喜歡的推文</div>
+            <template v-else>
+              <div class="empty-text">尚未有喜歡的推文</div>
+            </template>
           </tab>
         </tabs>
       </div>
@@ -124,6 +150,7 @@ import UserInfoMenu from '../components/UserInfoMenu'
 import usersAPI from '../apis/users'
 import { Toast } from '../utils/helpers'
 import { mapState } from 'vuex'
+import Spinner from '../components/Spinner'
 
 export default {
   name: 'UserInfo',
@@ -134,7 +161,8 @@ export default {
     UserInfoEditing,
     UserHeader,
     UserInfoMenu,
-    ReplyTweetPopup
+    ReplyTweetPopup,
+    Spinner
   },
   data() {
     return {
@@ -142,6 +170,8 @@ export default {
       showReplyPopup: false,
       tweets: [],
       tabSelectedIndex: '',
+      isLoadingProfile: false,
+      isLoadingTweets: false,
       user: {
         id: -1,
         account: '',
@@ -285,9 +315,10 @@ export default {
       })
     },
     async fetchUser({ userId }) {
+      this.isLoadingProfile = true
       try {
         const { data } = await usersAPI.getUser({ userId })
-        console.log('fetch user : ', data)
+        // console.log('fetch user : ', data)
         this.user = data
         // 如果 current user 才會儲存跟隨狀態數值
         if (userId === this.currentUser.id) {
@@ -301,7 +332,9 @@ export default {
             follower: this.user.followerCount
           })
         }
+        this.isLoadingProfile = false
       } catch (error) {
+        this.isLoadingProfile = false
         console.log(error)
         Toast.fire({
           icon: 'error',
@@ -310,12 +343,15 @@ export default {
       }
     },
     async fetchCurrentUserTweets({ id }) {
+      this.isLoadingTweets = true
       this.tweets = []
       try {
         const { data } = await usersAPI.getCurrentUserTweets({ id })
         this.tweets = data
+        this.isLoadingTweets = false
       } catch (error) {
         console.log(error)
+        this.isLoadingTweets = false
         Toast.fire({
           icon: 'error',
           title: '取得使用者推文錯誤，請稍後再試'
@@ -323,12 +359,15 @@ export default {
       }
     },
     async fetchCurrentUserReplied({ id }) {
+      this.isLoadingTweets = true
       this.tweets = []
       try {
         const { data } = await usersAPI.getCurrentUserReplied({ id })
         this.tweets = data
+        this.isLoadingTweets = false
       } catch (error) {
         console.log(error)
+        this.isLoadingTweets = false
         Toast.fire({
           icon: 'error',
           title: '取得使用者推文與回覆錯誤，請稍後再試'
@@ -336,12 +375,15 @@ export default {
       }
     },
     async fetchCurrentUserLikes({ id }) {
+      this.isLoadingTweets = true
       this.tweets = []
       try {
         const { data } = await usersAPI.getCurrentUserLikes({ id })
         this.tweets = data
+        this.isLoadingTweets = false
       } catch (error) {
         console.log(error)
+        this.isLoadingTweets = false
         Toast.fire({
           icon: 'error',
           title: '取得使用者喜歡內容錯誤，請稍後再試'
@@ -391,6 +433,12 @@ export default {
   color: var(--black-clr);
   font-weight: 900;
   font-size: 1.187rem;
+}
+
+.user-header {
+  position: sticky;
+  top: 0;
+  z-index: 888;
 }
 
 .info {
@@ -490,6 +538,14 @@ export default {
       }
     }
   }
+}
+
+.empty-text {
+  margin-top: 20px;
+  color: var(--cement-gary-clr);
+  text-align: center;
+  font-weight: 500;
+  font-size: 16px;
 }
 
 ::v-deep .ariticle-tab {

@@ -50,7 +50,7 @@
           <section class="input">
             <label for="">名稱</label>
             <input v-model="currentUser.name" type="text" maxlength="50" />
-            <span> {{ currentUser.name.length }}/50</span>
+            <span> {{ nameLength }}/50</span>
           </section>
           <section class="input">
             <label for="summary">自我介紹</label>
@@ -61,7 +61,7 @@
               rows="4"
               maxlength="160"
             ></textarea>
-            <span>{{ currentUser.introduction.length }}/160</span>
+            <span>{{ introductionLength }}/160</span>
           </section>
         </div>
       </div>
@@ -102,6 +102,18 @@ export default {
         cover: '',
         introduction: ''
       }
+    }
+  },
+  computed: {
+    introductionLength() {
+      return (
+        (this.currentUser.introduction &&
+          this.currentUser.introduction.length) ||
+        '0'
+      )
+    },
+    nameLength() {
+      return (this.currentUser.name && this.currentUser.name.length) || '0'
     }
   },
   watch: {

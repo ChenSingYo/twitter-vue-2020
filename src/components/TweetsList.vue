@@ -30,7 +30,10 @@
         </div>
       </div>
     </section>
+
+    <Spinner v-if="isLoading" />
     <section
+      v-else
       class="tweet-cell"
       :style="{ 'padding-bottom': postContainerHeight + 'px' }"
     >
@@ -60,6 +63,7 @@
 <script>
 import TweetMessageCell from '../components/TweetMessageCell'
 import ReplyTweetPopup from '../components/ReplyTweetPopup'
+import Spinner from '../components/Spinner'
 import tweetsAPI from '../apis/tweets'
 import usersAPI from '../apis/users'
 import { Toast } from '../utils/helpers'
@@ -79,7 +83,8 @@ export default {
   },
   components: {
     TweetMessageCell,
-    ReplyTweetPopup
+    ReplyTweetPopup,
+    Spinner
   },
   data() {
     return {
@@ -88,6 +93,7 @@ export default {
       tweets: [],
       description: '',
       isOverMaxLength: false,
+      isLoading: false,
       replyTweet: {
         id: -1,
         UserId: -1,
@@ -175,12 +181,19 @@ export default {
       }
     },
     async fetchTweets() {
+      this.isLoading = true
       try {
         const { data } = await tweetsAPI.getTweets()
         this.tweets = data
         // console.log('tweets : ', this.tweets)
+        this.isLoading = false
       } catch (error) {
         console.log(error)
+        Toast.fire({
+          icon: 'error',
+          title: '取得推文失敗，請稍後再試'
+        })
+        this.isLoading = false
       }
     },
     async createTweet({ description }) {

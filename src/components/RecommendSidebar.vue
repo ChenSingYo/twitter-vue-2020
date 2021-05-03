@@ -251,6 +251,7 @@ $border-style: 1px solid var(--light-gary-clr);
           height: 30px;
           border: 1px solid var(--primary-clr);
           border-radius: 15px;
+          background-color: var(--water-gary-clr);
           color: var(--primary-clr);
           font-weight: bold;
           font-size: 15px;

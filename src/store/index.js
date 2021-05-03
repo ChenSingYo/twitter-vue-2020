@@ -10,15 +10,15 @@ export default new Vuex.Store({
       id: -1,
       account: '',
       name: '',
-      email:'',
+      email: '',
       avatar: '',
       cover: '',
       introduction: '',
-      role:''
+      role: ''
     },
     userFollowCount: {
       id: -1,
-      following: -1,
+      following: -1
     },
     otherUserFollowerCount: {
       id: -1,
@@ -38,7 +38,7 @@ export default new Vuex.Store({
     setCurrentUser(state, currentUser) {
       state.currentUser = {
         ...state.currentUser,
-        ...currentUser,
+        ...currentUser
       }
       state.isAuthenticated = true
       state.token = localStorage.getItem('token')

@@ -63,6 +63,7 @@
               v-for="tweet in tweets"
               :key="tweet.id"
               :tweet="tweet"
+              @after-reply-message="afterReplyHandle"
               @after-show-article="afterShowArticleHandle"
               @after-like-toggle="afterLikeToggleHandle"
               @after-to-profile="afterToProfileHandle"
@@ -73,6 +74,7 @@
               v-for="reply in tweets"
               :key="reply.id"
               :tweet="reply"
+              @after-reply-message="afterReplyHandle"
               @after-show-article="afterShowArticleHandle"
               @after-like-toggle="afterLikeToggleHandle"
               @after-to-profile="afterToProfileHandle"
@@ -84,6 +86,7 @@
                 v-for="like in tweets"
                 :key="like.id"
                 :tweet="like"
+                @after-reply-message="afterReplyHandle"
                 @after-show-article="afterShowArticleHandle"
                 @after-like-toggle="afterLikeToggleHandle"
                 @after-to-profile="afterToProfileHandle"
@@ -94,6 +97,14 @@
         </tabs>
       </div>
     </section>
+
+    <ReplyTweetPopup
+      :show-popup-view="showReplyPopup"
+      :tweet="replyTweet"
+      :current-user="currentUser"
+      @after-close="handleClose"
+      @after-update-replies="afterUpdateReplies"
+    />
 
     <UserInfoEditing
       :initial-current-user="user"
@@ -107,6 +118,7 @@
 import { Tabs, Tab } from 'vue-tabs-component'
 import TweetMessageCell from '../components/TweetMessageCell'
 import UserInfoEditing from '../components/UserInfoEditing'
+import ReplyTweetPopup from '../components/ReplyTweetPopup'
 import UserHeader from '../components/UserHeader'
 import UserInfoMenu from '../components/UserInfoMenu'
 import usersAPI from '../apis/users'
@@ -121,12 +133,15 @@ export default {
     TweetMessageCell,
     UserInfoEditing,
     UserHeader,
-    UserInfoMenu
+    UserInfoMenu,
+    ReplyTweetPopup
   },
   data() {
     return {
       showPopupView: false,
+      showReplyPopup: false,
       tweets: [],
+      tabSelectedIndex: '',
       user: {
         id: -1,
         account: '',
@@ -138,6 +153,21 @@ export default {
         followingCount: -1,
         followerCount: -1,
         isFollowing: false
+      },
+      replyTweet: {
+        id: -1,
+        UserId: -1,
+        description: '',
+        createdAt: '',
+        updatedAt: '',
+        likedCount: -1,
+        repliedCount: -1,
+        isLiked: false,
+        user: {
+          avatar: '',
+          name: '',
+          account: ''
+        }
       }
     }
   },
@@ -176,6 +206,7 @@ export default {
   },
   methods: {
     tabChanged(selectedTab) {
+      this.tabSelectedIndex = selectedTab.tab.id
       if (selectedTab.tab.id === 'first-tab') {
         this.fetchCurrentUserTweets({ id: this.userId })
       } else if (selectedTab.tab.id === 'second-tab') {
@@ -219,6 +250,24 @@ export default {
         avatar: this.user.avatar
       })
       this.$router.push({ name: 'private-chatroom' })
+    },
+    afterReplyHandle({ tweet }) {
+      this.replyTweet = tweet
+      this.showReplyPopup = true
+    },
+    handleClose() {
+      this.showReplyPopup = false
+    },
+    // 回覆單一推文 更新資料畫面
+    afterUpdateReplies() {
+      if (this.tabSelectedIndex === 'first-tab') {
+        this.fetchCurrentUserTweets({ id: this.userId })
+      } else if (this.tabSelectedIndex === 'second-tab') {
+        this.fetchCurrentUserReplied({ id: this.userId })
+      } else {
+        this.fetchCurrentUserLikes({ id: this.userId })
+      }
+      this.showReplyPopup = false
     },
     preHandleLike({ id }, isAdd) {
       this.tweets = this.tweets.map(tweet => {

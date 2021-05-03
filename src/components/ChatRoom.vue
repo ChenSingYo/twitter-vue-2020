@@ -13,6 +13,7 @@
       </header>
 
       <section ref="messageBody" class="message-body">
+        <div class="fix"></div>
         <div
           ref="messageContainer"
           v-for="message in messages"
@@ -151,11 +152,14 @@ export default {
     overflow-y: scroll;
     flex-direction: column;
     padding-bottom: 55px;
-    // justify-content: flex-end;
     height: 100%;
-    background-color: lightblue;
+
     &::-webkit-scrollbar {
       width: 0;
+    }
+
+    .fix {
+      flex: 1 1 auto;
     }
 
     .self-message-container {

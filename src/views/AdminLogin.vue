@@ -86,9 +86,8 @@ export default {
         if (data.status !== 'success') {
           throw new Error(data.message)
         }
-        // keep token and userId in localStorage
+        // keep token in localStorage
         localStorage.setItem('token', data.token)
-        localStorage.setItem('userId', data.user.id)
 
         this.$store.commit('setCurrentUser', data.user)
         this.$router.push('/admin/tweets')

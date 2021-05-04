@@ -36,46 +36,7 @@
 <script>
 import NavSideBar from './../components/NavSidebar'
 import RecommendSidebar from '../components/RecommendSidebar'
-const dummyNotifications = [
-  {
-    id: 1,
-    avatar: 'https://loremflickr.com/320/240/dog/?lock=2.0202522757629793',
-    name: 'John',
-    title: 'newTweet',
-    content:
-      'Vero ut dolor rerum ad. Consectetur assumenda voluptatem cumque hic rerum repellat quae fugit. Et eos ut vel perferendis. Nobis rerum eos.'
-  },
-  {
-    id: 2,
-    avatar: 'https://loremflickr.com/320/240/dog/?lock=42.87898512441826',
-    name: 'Mary',
-    title: 'newReply',
-    content:
-      'Vero ut dolor rerum ad. Consectetur assumenda voluptatem cumque hic rerum repellat quae fugit. Et eos ut vel perferendis. Nobis rerum eos.'
-  },
-  {
-    id: 3,
-    avatar: 'https://loremflickr.com/320/240/dog/?lock=7.643201110272924',
-    name: 'Michael',
-    title: 'newFollow',
-    content: ''
-  },
-  {
-    id: 4,
-    avatar: 'https://loremflickr.com/320/240/dog/?lock=4.951409888063251',
-    name: '',
-    title: 'newReplySelf',
-    content:
-      'Vero ut dolor rerum ad. Consectetur assumenda voluptatem cumque hic rerum repellat quae fugit. Et eos ut vel perferendis. Nobis rerum eos.'
-  },
-  {
-    id: 5,
-    avatar: 'https://loremflickr.com/320/240/dog/?lock=46.034589452628985',
-    name: 'Peter',
-    title: 'newLike',
-    content: ''
-  }
-]
+
 export default {
   name: 'Notifications',
   components: {
@@ -95,7 +56,6 @@ export default {
   },
   methods: {
     fetchNotifications() {
-      this.notifications = dummyNotifications
     },
     afterPostTweet() {
       this.fetchTweets()

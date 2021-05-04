@@ -139,12 +139,10 @@ router.beforeEach(async (to, from, next) => {
   let isAuthenticated = store.state.isAuthenticated
   const tokenInLocal = localStorage.getItem('token')
   const tokenInStore = store.state.token
-  console.log('tokenInStore', tokenInStore)
   // 如果有 token in local，而兩種token不同，則再次驗證
   if (tokenInLocal && tokenInLocal !== tokenInStore) {
     isAuthenticated = await store.dispatch('fetchCurrentUser')
   }
-  console.log('isAuthenticated', isAuthenticated)
 
   // 不需驗證 token 的頁面
   const pathsWithoutAuthentication = ['user-login', 'user-regist', 'admin-login']
@@ -155,7 +153,6 @@ router.beforeEach(async (to, from, next) => {
     return
   }
   const currentUserRole = store.state.currentUser.role
-  console.log('currentUser:', currentUserRole)
 
   // token有效則轉址到首頁，按照使用／管理者身份轉址
   if (isAuthenticated && pathsWithoutAuthentication.includes(to.name)) {

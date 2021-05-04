@@ -153,7 +153,7 @@ export default {
     },
     afterToProfileHandle({ userId }) {
       if (userId === this.currentUser.id) {
-        this.$router.push({ path: `/profile` })
+        this.$router.push({ path: '/profile' })
         return
       }
 

@@ -63,14 +63,12 @@ const routes = [
   {
     path: '/admin/users',
     name: 'admin-users',
-    component: () => import('../views/AdminUsers.vue'),
-    beforeEnter: authorizeIsAdmin
+    component: () => import('../views/AdminUsers.vue')
   },
   {
     path: '/tweets',
     name: 'tweets-main',
-    component: TweetsMain,
-    beforeEnter: authorizeIsUser
+    component: TweetsMain
   },
   {
     path: '/tweets/:id',

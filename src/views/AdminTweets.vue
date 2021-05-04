@@ -119,6 +119,7 @@ export default {
     grid-template-rows: 50px 1fr;
 
     .admin-sidebar {
+      background: white;
       grid-column: 1 / 1;
       grid-row: 1 / 2;
       width: 100%;

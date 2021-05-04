@@ -42,7 +42,6 @@ Unicon.add([
   cstAddMessage
 ])
 Vue.use(Unicon)
-//
 
 Vue.use(vueSocketIO)
 

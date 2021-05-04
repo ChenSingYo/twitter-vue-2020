@@ -5,7 +5,6 @@ import VueSocketIO from 'vue-socket.io'
 import SocketIO from 'socket.io-client'
 import store from '../store'
 
-
 const baseURL = 'https://simple-twitter-mysql.herokuapp.com'
 
 const axiosInstance = axios.create({
@@ -43,7 +42,7 @@ export const vueSocketIO = new VueSocketIO({
     mutationPrefix: 'SOCKET_'
   }
 })
-// 
+//
 
 export const Toast = Swal.mixin({
   toast: true,
@@ -51,6 +50,3 @@ export const Toast = Swal.mixin({
   showConfirmButton: false,
   timer: 3000
 })
-
-
-

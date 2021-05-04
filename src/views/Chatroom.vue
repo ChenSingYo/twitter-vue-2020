@@ -24,17 +24,10 @@
           class="message-container"
           ref="messageContainer"
         >
-          <!-- 歷史訊息 -->
-          <PastChatData
-            v-for="pastChatRecord in pastChatRecords"
-            :key="pastChatRecord.id"
-            :pastChatRecord="pastChatRecord"
-          />
-          <!-- 當前訊息 -->
-          <NowChatData
-            v-for="nowChatRecord in nowChatRecords"
-            :key="nowChatRecord.id"
-            :chatRecord="nowChatRecord"
+          <ChatData
+            v-for="chatRecord in chatRecords"
+            :key="chatRecord.id"
+            :chatRecord="chatRecord"
           />
           <!-- 輸入欄 -->
           <div class="send-box">
@@ -59,51 +52,24 @@
 
 <script>
 import OnlineUsers from './../components/OnlineUsers'
-import NowChatData from './../components/NowChat'
-import PastChatData from './../components/PastChat'
+import ChatData from './../components/ChatData'
 import NavSidebar from '../components/NavSidebar'
 import { mapState } from 'vuex'
 import moment from 'moment'
 // import { Toast } from './../utils/helpers'
-
-// for sockio
-import Vue from 'vue'
-import store from './../store'
-import VueSocketIO from 'vue-socket.io'
-import SocketIO from 'socket.io-client'
-const url = 'https://simple-twitter-mysql.herokuapp.com'
-const options = {
-  reconnectionDelayMax: 10000,
-  auth: { token: localStorage.getItem('token') }
-}
-const connection = new SocketIO(url, options)
-
-Vue.use(
-  new VueSocketIO({
-    debug: true,
-    connection,
-    vuex: {
-      store,
-      actionPrefix: 'SOCKET_',
-      mutationPrefix: 'SOCKET_'
-    }
-  })
-)
 
 export default {
   name: 'ChatRoom',
   components: {
     NavSidebar,
     OnlineUsers,
-    NowChatData,
-    PastChatData
+    ChatData
   },
   data() {
     return {
       onlineCount: 0,
       onlineUsers: [],
-      nowChatRecords: [],
-      pastChatRecords: [],
+      chatRecords: [],
       chatMessage: ''
     }
   },
@@ -114,13 +80,7 @@ export default {
     this.connectSever()
   },
   watch: {
-    pastChatRecords() {
-      this.$nextTick(() => {
-        const container = this.$refs.messageContainer
-        container.scrollTop = container.lastElementChild.offsetTop
-      })
-    },
-    nowChatRecords() {
+    chatRecords() {
       this.$nextTick(() => {
         const container = this.$refs.messageContainer
         container.scrollTop = container.lastElementChild.offsetTop
@@ -159,18 +119,18 @@ export default {
     },
     // 向聊天室推播其他使用者上線訊息 msgtype:userOnline
     userOnline(userMsg) {
-      this.nowChatRecords.push({ ...userMsg })
+      this.chatRecords.push({ ...userMsg })
     },
     // 向聊天室推播其他使用者離線訊息  msg-type:userOffline
     userOffline(userMsg) {
-      this.nowChatRecords.push({ ...userMsg })
+      this.chatRecords.push({ ...userMsg })
     },
     // 向聊天室推播訊息 msg-type: localMessage || remoteMessage
     chatMsg(data) {
       if (!data.text) {
         return
       }
-      this.nowChatRecords.push({
+      this.chatRecords.push({
         id: data.ChatId,
         userId: data.UserId,
         text: data.text,
@@ -188,7 +148,7 @@ export default {
     // 留存歷史訊息
     historyMsg(datas) {
       for (const data of datas) {
-        this.pastChatRecords.push({
+        this.chatRecords.push({
           id: data.id,
           userId: data.UserId,
           text: data.text,
@@ -263,6 +223,7 @@ export default {
           padding: 20px;
         }
         .text-input {
+          outline: none;
           width: 90%;
           border-radius: 50px;
           border: none;

@@ -159,14 +159,14 @@ a.router-link-active {
     .nav-wrapper {
       display: flex;
       justify-content: space-between;
-      margin-left: 10px;
+      margin-left: 20px;
       nav {
         li {
           display: inline;
-          margin-right: 20px;
+          margin-right: 10px;
         }
         img {
-          margin-right: 6px;
+          margin-right: 5px;
         }
       }
       .logout {

@@ -152,6 +152,11 @@ export default {
       }
     },
     afterToProfileHandle({ userId }) {
+      if (userId === this.currentUser.id) {
+        this.$router.push({ path: `/profile` })
+        return
+      }
+
       this.$router.push({ path: `/profile/${userId}` })
     },
     descMaxLengthHandle() {

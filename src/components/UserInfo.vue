@@ -261,7 +261,6 @@ export default {
     },
     afterToProfileHandle({ userId }) {
       const { id } = this.$route.params
-      console.log({ userId, id })
 
       if (parseInt(id) === parseInt(userId)) {
         return

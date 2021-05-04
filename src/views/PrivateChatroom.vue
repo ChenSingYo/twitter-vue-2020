@@ -11,6 +11,7 @@
       :inital-connecting-user="connectingUser"
       :inital-messages="messages"
       :current-user="currentUser"
+      :is-show-chatroom="isShowChatroom"
       @after-send-message="afterSendMessageHandle"
       @after-leave-room="afterLeaveRoomHandle"
     />
@@ -19,36 +20,9 @@
 
 <script>
 import { mapState } from 'vuex'
-// import Vue from 'vue'
-// import store from './../store'
-// import VueSocketIO from 'vue-socket.io'
-// import SocketIO from 'socket.io-client'
 import NavSidebar from '../components/NavSidebar'
 import UserMessageListChatRoom from '../components/UserMessageListChatRoom'
 import ChatRoom from '../components/ChatRoom'
-
-// const token = localStorage.getItem('token')
-
-// const url = 'https://simple-twitter-mysql.herokuapp.com'
-// const options = {
-//   reconnectionDelayMax: 10000,
-//   auth: {
-//     token: token
-//   }
-// }
-// const connection = new SocketIO(url, options)
-
-// Vue.use(
-//   new VueSocketIO({
-//     debug: true,
-//     connection,
-//     vuex: {
-//       store,
-//       actionPrefix: 'SOCKET_',
-//       mutationPrefix: 'SOCKET_'
-//     }
-//   })
-// )
 
 export default {
   name: 'PrivateChatroom',
@@ -61,7 +35,8 @@ export default {
     return {
       userList: [],
       messages: [],
-      connectingUser: {}
+      connectingUser: {},
+      isShowChatroom: false
     }
   },
   computed: {
@@ -77,6 +52,7 @@ export default {
     ) {
       this.$socket.emit('privateUser', this.storeConnectingUser.UserId)
       this.connectingUser = this.storeConnectingUser
+      this.isShowChatroom = true
       console.log('create : ', this.storeConnectingUser)
     }
   },
@@ -95,12 +71,12 @@ export default {
     userInfo(event) {
       // console.log('user info: ', event)
     },
-    historyMsg(event) {
-      console.log('history msg ', event)
+    privateHistoryMsg(event) {
+      console.log('privateHistoryMsg', event)
       this.messages.push(...event)
     },
-    chatMsg(event) {
-      console.log('chat msg: ', event)
+    privateChatMsg(event) {
+      console.log('privateChatMsg: ', event)
       this.messages.push(event)
     },
     findUser(event) {
@@ -109,6 +85,9 @@ export default {
     historyMsgForOneUser(users) {
       console.log('historyMsgForOneUser: ', users)
       this.userList = users
+    },
+    unreadMsg(data) {
+      console.log('unreadMsg: ', data)
     }
   },
   methods: {
@@ -124,14 +103,17 @@ export default {
     },
     afterSelectedUserHandle(user) {
       // 跟選擇到的使用者建立 Channel
-      this.messages = []
+      // this.messages = []
 
       this.$socket.emit('privateUser', user.UserId)
       this.connectingUser = user
       // console.log(user.name)
       // this.$socket.emit('privateUser', 'user2')
+      this.isShowChatroom = true
     },
-    afterLeaveRoomHandle(user) {}
+    afterLeaveRoomHandle() {
+      this.isShowChatroom = false
+    }
   }
 }
 </script>

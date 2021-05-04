@@ -1,6 +1,6 @@
 <template>
   <div class="chat-room">
-    <template v-if="!connectingUser || connectingUser.UserId === -1">
+    <template v-if="!isShowChatroom">
       <div class="empty-room">點選使用者聊天</div>
     </template>
     <template v-else>
@@ -74,6 +74,10 @@ export default {
       id: -1,
       name: '',
       account: ''
+    },
+    isShowChatroom: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -104,8 +108,7 @@ export default {
       this.sendMessage = ''
     },
     leaveRoomHandle() {
-      this.connectingUser = undefined
-      this.$emit('after-leave-room', this.connectingUser)
+      this.$emit('after-leave-room')
     }
   }
 }

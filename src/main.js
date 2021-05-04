@@ -44,7 +44,7 @@ Unicon.add([
 Vue.use(Unicon)
 //
 
-// Vue.use(vueSocketIO)
+Vue.use(vueSocketIO)
 
 Vue.config.productionTip = false
 

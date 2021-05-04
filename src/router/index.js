@@ -10,8 +10,7 @@ Vue.use(VueRouter)
 
 const authorizeIsAdmin = (to, from, next) => {
   const currentUser = store.state.currentUser
-  // console.log('currentUser:', currentUser)
-  if (currentUser && !currentUser.role === 'admin') {
+  if (currentUser && currentUser.role !== 'admin') {
     next('/404')
     return
   }
@@ -76,37 +75,44 @@ const routes = [
   {
     path: '/tweets/:id',
     name: 'tweet-page',
-    component: () => import('../views/TweetPage.vue')
+    component: () => import('../views/TweetPage.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/notification',
     name: 'notification',
-    component: () => import('../views/Notification.vue')
+    component: () => import('../views/Notification.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/chatroom',
     name: 'chatroom',
-    component: () => import('../views/Chatroom.vue')
+    component: () => import('../views/Chatroom.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/chatroom/private',
     name: 'private-chatroom',
-    component: () => import('../views/PrivateChatroom.vue')
+    component: () => import('../views/PrivateChatroom.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/profile',
     name: 'user-profile',
-    component: () => import('../views/UserProfile.vue')
+    component: () => import('../views/UserProfile.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/profile/follow',
     name: 'user-follow',
-    component: () => import('../views/UserFollow.vue')
+    component: () => import('../views/UserFollow.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/profile/:id',
     name: 'other-profile',
-    component: () => import('../views/UserProfile.vue')
+    component: () => import('../views/UserProfile.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/setting',
@@ -131,17 +137,14 @@ router.beforeEach(async (to, from, next) => {
 
   // 取得 驗證狀態、role、token in local、token in Vuex
   let isAuthenticated = store.state.isAuthenticated
-  // const currentUserRole = store.state.currentUser.role
   const tokenInLocal = localStorage.getItem('token')
   const tokenInStore = store.state.token
-
-  // console.log('currentUser:', currentUserRole)
-
+  console.log('tokenInStore', tokenInStore)
   // 如果有 token in local，而兩種token不同，則再次驗證
   if (tokenInLocal && tokenInLocal !== tokenInStore) {
-    isAuthenticated = store.dispatch('fetchCurrentUser')
+    isAuthenticated = await store.dispatch('fetchCurrentUser')
   }
-  // console.log('isAuthenticated', isAuthenticated)
+  console.log('isAuthenticated', isAuthenticated)
 
   // 不需驗證 token 的頁面
   const pathsWithoutAuthentication = ['user-login', 'user-regist', 'admin-login']
@@ -151,15 +154,18 @@ router.beforeEach(async (to, from, next) => {
     next('/login')
     return
   }
+  const currentUserRole = store.state.currentUser.role
+  console.log('currentUser:', currentUserRole)
+
   // token有效則轉址到首頁，按照使用／管理者身份轉址
-  // if (isAuthenticated) {
-  //   if (currentUserRole === 'user' && pathsWithoutAuthentication.includes(to.name)) {
-  //     next('/tweets')
-  //   } else if (currentUserRole === 'admin') {
-  //     next('/admin/tweets')
-  //   }
-  //   return
-  // }
+  if (isAuthenticated && pathsWithoutAuthentication.includes(to.name)) {
+    if (currentUserRole === 'user') {
+      next('/tweets')
+    } else if (currentUserRole === 'admin') {
+      next('/admin/tweets')
+    }
+    return
+  }
   console.log('success to next page')
   next()
 })

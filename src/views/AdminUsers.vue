@@ -46,11 +46,11 @@ export default {
       try {
         this.isLoading = true
         const { data } = await adminAPI.getUsers()
+        console.log(data)
         if (data.status === 'error') {
-          throw new Error(data.status)
+          throw new Error(data.message)
         }
         this.users = data
-        console.log(data)
         this.isLoading = false
       } catch (err) {
         Toast.fire({

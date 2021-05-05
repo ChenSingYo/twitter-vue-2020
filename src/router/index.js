@@ -91,7 +91,7 @@ const routes = [
     beforeEnter: authorizeIsUser
   },
   {
-    path: '/chatroom/private',
+    path: '/private-chatroom',
     name: 'private-chatroom',
     component: () => import('../views/PrivateChatroom.vue'),
     beforeEnter: authorizeIsUser

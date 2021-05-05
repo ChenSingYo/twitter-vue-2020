@@ -287,7 +287,8 @@ a {
   cursor: pointer;
 }
 
-a.router-link-exact-active {
+a.router-link-exact-active,
+a.router-link-active {
   color: var(--primary-clr);
 }
 </style>

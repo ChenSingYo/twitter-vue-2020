@@ -103,7 +103,7 @@ export default {
     },
     afterSelectedUserHandle(user) {
       // 跟選擇到的使用者建立 Channel
-      // this.messages = []
+      this.messages = []
 
       this.$socket.emit('privateUser', user.UserId)
       this.connectingUser = user

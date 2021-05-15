@@ -195,9 +195,6 @@ $border-style: 1px solid var(--light-gary-clr);
 
 .recommend {
   flex-grow: 0;
-  min-width: 462px;
-  min-width: 462px;
-  width: 462px;
   border-left: $border-style;
 }
 .recommend-container {

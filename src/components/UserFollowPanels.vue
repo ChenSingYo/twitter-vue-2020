@@ -108,6 +108,8 @@ export default {
 <style lang="scss" scoped>
 .follow {
   flex-grow: 1;
+  min-width: 600px;
+  width: 600px;
 }
 
 ::v-deep .follow-tabs {

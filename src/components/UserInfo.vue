@@ -442,6 +442,7 @@ export default {
 
 .info {
   overflow-y: scroll;
+  min-width: 600px;
   width: 600px;
 
   &::-webkit-scrollbar {

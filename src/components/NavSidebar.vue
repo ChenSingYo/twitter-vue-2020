@@ -26,7 +26,7 @@
                       : require('../assets/icon/icon_home.png')
                   ]"
                   alt=""
-                />首頁</a
+                /><span class="nav-text">首頁</span></a
               ></router-link
             >
           </li>
@@ -50,7 +50,7 @@
                       : require('../assets/icon/icon_bell.svg')
                   ]"
                   alt=""
-                />通知</a
+                /><span class="nav-text">通知</span></a
               ></router-link
             >
           </li>
@@ -70,11 +70,11 @@
                 ><img
                   :src="[
                     isExactActive
-                      ? require('../assets/icon/icon_envelope_active.svg')
-                      : require('../assets/icon/icon_envelope.svg')
+                      ? require('../assets/icon/icon_earth_active.svg')
+                      : require('../assets/icon/icon_earth.svg')
                   ]"
                   alt=""
-                />公開聊天室</a
+                /><span class="nav-text">公開聊天室</span></a
               ></router-link
             >
           </li>
@@ -98,7 +98,7 @@
                       : require('../assets/icon/icon_envelope.svg')
                   ]"
                   alt=""
-                />私人訊息</a
+                /><span class="nav-text">私人訊息</span></a
               ></router-link
             >
           </li>
@@ -122,7 +122,7 @@
                       : require('../assets/icon/icon_user.png')
                   ]"
                   alt=""
-                />個人資料</a
+                /><span class="nav-text">個人資料</span></a
               >
             </router-link>
           </li>
@@ -146,12 +146,20 @@
                       : require('../assets/icon/icon_setting.png')
                   ]"
                   alt=""
-                />設定</a
+                /><span class="nav-text">設定</span></a
               >
             </router-link>
           </li>
           <li>
             <div class="post-wrapper">
+              <unicon
+                class="feather-icon"
+                name="feather"
+                fill="#fff"
+                viewBox="0 0 487.38 487.38"
+                width="32px"
+                height="32px"
+              ></unicon>
               <button class="btn post-btn" @click="showPostHandle">推文</button>
             </div>
           </li>
@@ -160,7 +168,7 @@
       <div class="logout">
         <button class="btn" @click="logout">
           <img src="../assets/icon/icon_logout.png" alt="" />
-          <span>登出</span>
+          <span class="nav-text">登出</span>
         </button>
       </div>
     </div>
@@ -200,15 +208,13 @@ export default {
 
 <style lang="scss" scoped>
 .nav-container {
+  position: relative;
   flex-grow: 0;
-  min-width: 378px;
-  max-width: 378px;
-  width: 378px;
   height: 100%;
   border-right: 1px solid var(--light-gary-clr);
 
   .nav-wrapper {
-    margin-left: 103px;
+    margin-right: 40px;
 
     .logo {
       display: flex;
@@ -246,6 +252,10 @@ export default {
         .btn {
           box-shadow: none;
         }
+
+        .feather-icon {
+          display: none;
+        }
       }
 
       li {
@@ -266,7 +276,11 @@ export default {
       bottom: 0;
       display: flex;
       align-items: center;
+      margin-left: 10px;
       height: 60px;
+      .btn {
+        padding: 0;
+      }
 
       img {
         margin-right: 20px;
@@ -290,5 +304,65 @@ a {
 a.router-link-exact-active,
 a.router-link-active {
   color: var(--primary-clr);
+}
+
+@media only screen and (max-width: 1240px) {
+  .nav-container {
+    min-width: 80px;
+    width: 80px;
+
+    .nav-wrapper {
+      margin: 0;
+
+      .logo {
+        margin: 0 auto;
+      }
+
+      nav {
+        margin: 0;
+
+        li {
+          justify-content: center;
+
+          .nav-text {
+            display: none;
+          }
+
+          img {
+            margin: 0;
+          }
+        }
+
+        .post-wrapper {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+
+          .post-btn {
+            display: none;
+          }
+
+          .feather-icon {
+            display: block;
+            text-align: center;
+            line-height: 50px;
+          }
+        }
+      }
+
+      .logout {
+        left: 50%;
+        transform: translateX(-50%);
+
+        .nav-text {
+          display: none;
+        }
+
+        img {
+          margin: 0;
+        }
+      }
+    }
+  }
 }
 </style>

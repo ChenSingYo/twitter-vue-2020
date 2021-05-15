@@ -192,6 +192,7 @@ export default {
 <style lang="scss" scoped>
 .tweet {
   overflow: hidden;
+  min-width: 600px;
   width: 600px;
 }
 

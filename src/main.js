@@ -26,7 +26,8 @@ import {
   cstBell,
   cstBellCheck,
   cstIsLike,
-  cstAddMessage
+  cstAddMessage,
+  cstFeather,
 } from './assets/icon/custom-icon'
 
 Unicon.add([
@@ -39,7 +40,8 @@ Unicon.add([
   cstBell,
   cstBellCheck,
   cstIsLike,
-  cstAddMessage
+  cstAddMessage,
+  cstFeather,
 ])
 Vue.use(Unicon)
 

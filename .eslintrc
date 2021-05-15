@@ -6,5 +6,6 @@
   },
   "rules": {
     "space-before-function-paren": 0
-  }
+  },
+  "parser": "vue-eslint-parser"
 }

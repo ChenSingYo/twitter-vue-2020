@@ -2,7 +2,7 @@ import moment from 'moment'
 export const fromNowFilter = {
   filters: {
     fromNow (dateTime) {
-      return dateTime? moment(dateTime).locale('zh-tw').fromNow() : '-'
+      return dateTime ? moment(dateTime).locale('zh-tw').fromNow() : '-'
     }
   }
 }
@@ -10,10 +10,10 @@ export const fromNowFilter = {
 export const momentFilter = {
   filters: {
     date(dateTime) {
-      return dateTime? moment(dateTime).locale('zh-tw').format('ll') : '-'
+      return dateTime ? moment(dateTime).locale('zh-tw').format('ll') : '-'
     },
     time(dateTime) {
-      return dateTime? moment(dateTime).locale('zh-tw').format('LT') : '-'
+      return dateTime ? moment(dateTime).locale('zh-tw').format('LT') : '-'
     }
   }
 }

@@ -100,6 +100,7 @@ export default {
     },
     connectSever() {
       this.$socket.connect()
+      this.$socket.emit('openPublicRoom')
     }
   },
   sockets: {
@@ -117,7 +118,7 @@ export default {
     onlineCount(onlineCount) {
       this.onlineCount = onlineCount
     },
-    // 向聊天室推播其他使用者上線訊息 msgtype:userOnline
+    // 向聊天室推播其他使用者上線訊息 msg-type:userOnline
     userOnline(userMsg) {
       this.chatRecords.push({ ...userMsg })
     },

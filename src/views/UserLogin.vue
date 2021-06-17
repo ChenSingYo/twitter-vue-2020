@@ -109,7 +109,7 @@ export default {
 .container {
   justify-content: center;
   margin-top: 50px;
-  width: 50%;
+  width: 30%;
 
   .header {
     margin-bottom: 30px;
@@ -194,9 +194,9 @@ export default {
 }
 
 /* mobile 尺寸 */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 876px) {
   .container {
-    width: 80%;
+    width: 50%;
   }
 }
 </style>

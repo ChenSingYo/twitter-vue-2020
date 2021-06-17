@@ -31,6 +31,14 @@ export default {
     ])
   },
   created() {
+    this.connectSever()
+  },
+  methods: {
+    connectSever() {
+      this.$socket.connect()
+      this.$socket.emit('outOfRoom')
+      console.log('socket status: outOfRoom')
+    }
   }
 }
 </script>

@@ -63,9 +63,9 @@ export default {
       try {
         this.isProcessing = true
         const payLoad = {
-          account: account === this.userData.account ? '' : account,
+          account,
           name,
-          email: email === this.userData.email ? '' : email,
+          email,
           password,
           checkPassword
         }

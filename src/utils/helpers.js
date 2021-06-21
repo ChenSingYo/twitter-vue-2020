@@ -10,11 +10,10 @@ const baseURL = 'https://simple-twitter-mysql.herokuapp.com'
 const axiosInstance = axios.create({
   baseURL: baseURL + '/api'
 })
-
-const token = localStorage.getItem('token')
-
+let token = localStorage.getItem('token')
 axiosInstance.interceptors.request.use(
   (config) => {
+    token = localStorage.getItem('token')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }

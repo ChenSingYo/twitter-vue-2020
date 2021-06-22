@@ -1,11 +1,10 @@
 import { apiHelper } from '../utils/helpers'
 
 export default {
-  addFollowing({id}) {
-    return apiHelper.post('/followships/', {id} )
+  addFollowing({ id }) {
+    return apiHelper.post('/followships/', { id })
   },
-  removeFollowing({id}) {
+  removeFollowing({ id }) {
     return apiHelper.delete(`/followships/${id}`)
   }
-
 }

@@ -68,7 +68,8 @@ const routes = [
   {
     path: '/tweets',
     name: 'tweets-main',
-    component: TweetsMain
+    component: TweetsMain,
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/tweets/:id',
@@ -131,8 +132,6 @@ const router = new VueRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  console.log('to', to.name)
-
   // 取得 驗證狀態、role、token in local、token in Vuex
   let isAuthenticated = store.state.isAuthenticated
   const tokenInLocal = localStorage.getItem('token')
@@ -147,6 +146,7 @@ router.beforeEach(async (to, from, next) => {
 
   // token無效則轉到不需認證token的頁面
   if (!isAuthenticated && !pathsWithoutAuthentication.includes(to.name)) {
+    console.log('to', to.name)
     next('/login')
     return
   }
@@ -154,7 +154,9 @@ router.beforeEach(async (to, from, next) => {
 
   // token有效則轉址到首頁，按照使用／管理者身份轉址
   if (isAuthenticated && pathsWithoutAuthentication.includes(to.name)) {
+    console.log('to', to.name)
     if (currentUserRole === 'user') {
+      console.log(currentUserRole)
       next('/tweets')
     } else if (currentUserRole === 'admin') {
       next('/admin/tweets')

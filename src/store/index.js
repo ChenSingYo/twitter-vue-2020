@@ -25,7 +25,6 @@ export default new Vuex.Store({
       follower: -1
     },
     isAuthenticated: false,
-    token: '',
     isReloadPost: false,
     storeConnectingUser: {
       UserId: -1,
@@ -41,13 +40,12 @@ export default new Vuex.Store({
         ...currentUser
       }
       state.isAuthenticated = true
-      state.token = localStorage.getItem('token')
     },
     revokeCurrentUser (state) {
       state.currentUser = {}
       state.isAuthenticated = false
-      state.token = ''
       localStorage.removeItem('token')
+      localStorage.clear()
     },
     setReloadPost(state, reloadState) {
       state.isReloadPost = reloadState

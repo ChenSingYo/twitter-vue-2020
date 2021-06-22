@@ -159,6 +159,7 @@
                 viewBox="0 0 487.38 487.38"
                 width="32px"
                 height="32px"
+                @click="showPostHandle"
               ></unicon>
               <button class="btn post-btn" @click="showPostHandle">推文</button>
             </div>
@@ -351,15 +352,11 @@ a.router-link-active {
       }
 
       .logout {
-        left: 50%;
-        transform: translateX(-50%);
-
+        justify-content: center;
+        margin: 0;
+        width: 100%;
         .nav-text {
           display: none;
-        }
-
-        img {
-          margin: 0;
         }
       }
     }

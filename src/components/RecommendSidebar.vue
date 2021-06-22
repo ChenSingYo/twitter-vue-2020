@@ -197,6 +197,7 @@ $border-style: 1px solid var(--light-gary-clr);
   flex-grow: 0;
   border-left: $border-style;
 }
+
 .recommend-container {
   .recommend-card {
     margin-top: 15px;
@@ -287,6 +288,14 @@ $border-style: 1px solid var(--light-gary-clr);
         padding: 0;
         color: var(--primary-clr);
       }
+    }
+  }
+}
+
+@media only screen and (max-width: 1240px) {
+  .recommend {
+    .recommend-container {
+      display: none;
     }
   }
 }

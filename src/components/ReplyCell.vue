@@ -48,7 +48,7 @@ export default {
     hour() {
       if (!this.reply.updatedAt) return ''
       moment.locale('zh_TW')
-      return moment.utc(this.reply.updatedAt).fromNow()
+      return moment(this.reply.updatedAt).fromNow()
     }
   },
   methods: {

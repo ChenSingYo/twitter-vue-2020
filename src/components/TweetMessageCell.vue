@@ -78,10 +78,10 @@ export default {
   computed: {
     formatTime() {
       moment.locale('zh-TW')
-      const today = moment.utc(this.tweet.createdAt).isSame(new Date(), 'day')
-      const date = moment.utc(this.tweet.createdAt)
+      const today = moment(this.tweet.createdAt).isSame(new Date(), 'day')
+      const date = moment(this.tweet.createdAt)
       return today
-        ? date.format('HH 小時').replace(/^0+/, '')
+        ? moment(this.tweet.createdAt, 'HH:mm:ss').fromNow()
         : date.format('MM月DD日').replace(/^0+/, '')
     }
   },

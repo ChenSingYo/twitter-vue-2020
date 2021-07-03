@@ -30,7 +30,7 @@
               ></router-link
             >
           </li>
-          <li>
+          <li style="display: none">
             <router-link
               to="/notification"
               custom
@@ -78,7 +78,7 @@
               ></router-link
             >
           </li>
-          <li>
+          <li style="display: none">
             <router-link
               :to="{ name: 'private-chatroom' }"
               custom

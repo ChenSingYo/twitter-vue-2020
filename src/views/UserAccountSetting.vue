@@ -105,6 +105,7 @@ export default {
 
 <style lang="scss" scoped>
 .setting-container {
+  padding: 0rem 2rem;
   display: flex;
   flex-direction: row;
   height: 100%;

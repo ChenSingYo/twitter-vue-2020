@@ -123,11 +123,12 @@ export default {
 }
 
 .setting-container {
-  margin-left: 16px;
-  width: 642px;
+  padding: 2rem;
+  padding-top: 1rem;
 }
 
 .input-wrapper {
+  max-width: 60%;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -165,7 +166,7 @@ export default {
 
 .btn-wrapper {
   margin-top: 30px;
-  text-align: right;
+  text-align: left;
 
   button {
     padding: 0;

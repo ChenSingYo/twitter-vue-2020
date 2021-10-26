@@ -108,8 +108,7 @@ export default {
 <style lang="scss" scoped>
 
 .container {
-  margin-top: 50px;
-  width: 50%;
+  padding: 5% 22%;
   justify-content: center;
 
   .header {
@@ -197,7 +196,7 @@ export default {
 /* mobile 尺寸 */
 @media screen and (max-width: 768px) {
   .container {
-    width: 80%;
+    padding: 3rem;
   }
 }
 </style>

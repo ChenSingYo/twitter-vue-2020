@@ -70,13 +70,15 @@ export default {
       onlineCount: 0,
       onlineUsers: [],
       chatRecords: [],
-      chatMessage: ''
+      chatMessage: '',
     }
   },
   computed: {
-    ...mapState(['currentUser'])
+    currentUserOnChat() {
+      return  this.$store.state.currentUser
+    }
   },
-  created() {
+  mounted() {
     this.connectSever()
   },
   watch: {
@@ -116,6 +118,7 @@ export default {
     },
     // 統計上線使用者
     onlineCount(onlineCount) {
+      this.onlineCount = 0
       this.onlineCount = onlineCount
     },
     // 向聊天室推播其他使用者上線訊息 msg-type:userOnline
@@ -136,7 +139,7 @@ export default {
         userId: data.UserId,
         text: data.text,
         msgType:
-          data.UserId === this.currentUser.id ? 'isLocalMsg' : 'isRemoteMsg',
+          data.UserId === this.currentUserOnChat.id ? 'isLocalMsg' : 'isRemoteMsg',
         name: data.username,
         avatar: data.avatar,
         time: moment
@@ -153,7 +156,7 @@ export default {
           id: data.id,
           userId: data.UserId,
           text: data.text,
-          msgType: data.UserId === this.currentUser.id ? 'isLocalMsg' : 'isRemoteMsg',
+          msgType: data.UserId === this.currentUserOnChat.id ? 'isLocalMsg' : 'isRemoteMsg',
           name: data.username,
           avatar: data.avatar,
           time: data.time
